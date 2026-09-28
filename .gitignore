@@ -1,0 +1,28 @@
+# Colcon build artifacts
+build/
+install/
+log/
+
+# Python cache & build files
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+
+# Editor and IDE configurations
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# Temporary / OS files
+*.bak
+*.orig
+*.log
+
+# Gazebo log files
+*.log
+~/.gazebo/
