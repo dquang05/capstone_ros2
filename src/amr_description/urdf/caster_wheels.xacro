@@ -14,7 +14,7 @@
 
     <link name="caster_${prefix}_link">
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="-0.0631 1.5650 -0.0335" rpy="${pi/2} 0 0"/>
         <geometry>
           <mesh filename="package://amr_description/meshes/visual/caster_wheel.stl" scale="1 1 1"/>
         </geometry>

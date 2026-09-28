@@ -5,11 +5,11 @@
   <!-- 2D LiDAR Sensor (Slamtec RPLIDAR A2M8)               -->
   <!-- ==================================================== -->
 
-  <!-- Mounted at the forward section with unobstructed 360° FOV -->
+  <!-- Mounted exactly on the circular pedestal of top_cover (X=0.190m, Y=0.000m, Z=0.281m) -->
   <joint name="laser_joint" type="fixed">
     <parent link="base_link"/>
     <child link="laser_frame"/>
-    <origin xyz="0.25 0 0.18" rpy="0 0 0"/>
+    <origin xyz="0.190 0 0.281" rpy="0 0 0"/>
   </joint>
 
   <link name="laser_frame">

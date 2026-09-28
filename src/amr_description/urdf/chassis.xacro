@@ -48,17 +48,17 @@
 
     <!-- Visual 3: Top Cover -->
     <visual>
-      <origin xyz="-0.38 -0.30 0.85" rpy="${pi/2} 0 ${pi/2}"/>
+      <origin xyz="-0.38 -0.30 0.15" rpy="0 0 0"/>
       <geometry>
         <mesh filename="package://amr_description/meshes/visual/top_cover.stl" scale="1 1 1"/>
       </geometry>
       <material name="robot_white"/>
     </visual>
 
-    <!-- Visual 4: Food Delivery Trays (3 Tiers) -->
+    <!-- Visual 4: Food Delivery Trays (3 Tiers - Exactly Centered at X=0, Y=0) -->
     <!-- Tier 1 Tray -->
     <visual>
-      <origin xyz="0 0 0.22" rpy="0 0 0"/>
+      <origin xyz="0.360 -0.1825 0.30" rpy="0 0 ${pi/2}"/>
       <geometry>
         <mesh filename="package://amr_description/meshes/visual/tray.stl" scale="1 1 1"/>
       </geometry>
@@ -67,7 +67,7 @@
 
     <!-- Tier 2 Tray -->
     <visual>
-      <origin xyz="0 0 0.48" rpy="0 0 0"/>
+      <origin xyz="0.360 -0.1825 0.52" rpy="0 0 ${pi/2}"/>
       <geometry>
         <mesh filename="package://amr_description/meshes/visual/tray.stl" scale="1 1 1"/>
       </geometry>
@@ -76,18 +76,86 @@
 
     <!-- Tier 3 Tray -->
     <visual>
-      <origin xyz="0 0 0.74" rpy="0 0 0"/>
+      <origin xyz="0.360 -0.1825 0.74" rpy="0 0 ${pi/2}"/>
       <geometry>
         <mesh filename="package://amr_description/meshes/visual/tray.stl" scale="1 1 1"/>
       </geometry>
       <material name="robot_metal"/>
     </visual>
 
-    <!-- Visual 5: Screen / Head Mount -->
+    <!-- Visual 5: Screen / Head Mount (Thickness scaled to exactly 150mm to match skeleton) -->
     <visual>
-      <origin xyz="0.10 0 0.95" rpy="0 0 0"/>
+      <origin xyz="0.075 -0.195 0.904" rpy="0 0 ${pi/2}"/>
       <geometry>
-        <mesh filename="package://amr_description/meshes/visual/head.stl" scale="1 1 1"/>
+        <mesh filename="package://amr_description/meshes/visual/head.stl" scale="1.0 0.9721 1.0"/>
+      </geometry>
+      <material name="robot_dark"/>
+    </visual>
+
+    <!-- ================================================================= -->
+    <!-- Parametric Offset for Side Assemblies (Wheel Covers, Skeletons, Spacers) -->
+    <!-- Adjust this property to translate both side assemblies inward (+) or outward (-) -->
+    <!-- E.g., value="0.0" is nominal CAD baseline, value="0.0155" retracts inward by 15.5mm -->
+    <!-- ================================================================= -->
+    <xacro:property name="side_inward_offset" value="0.0155"/>
+
+    <!-- Outward thickness expansion for wheel covers (default: 0.060 = 60mm) -->
+    <!-- Inner mating face against skeleton stays fixed while outer face expands outward -->
+    <xacro:property name="wheel_cover_extra_thickness" value="0.060"/>
+
+    <!-- Visual 6: Wheel Covers (Inverted U-arch over Drive Wheels) -->
+    <!-- Left Wheel Cover -->
+    <visual>
+      <origin xyz="-0.132 ${0.241 - side_inward_offset + wheel_cover_extra_thickness} -0.03" rpy="${pi/2} 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/wheel_cover.stl" scale="1.0 1.0 ${(0.083 + wheel_cover_extra_thickness) / 0.083}"/>
+      </geometry>
+      <material name="robot_dark"/>
+    </visual>
+
+    <!-- Right Wheel Cover -->
+    <visual>
+      <origin xyz="0.132 ${-(0.241 - side_inward_offset + wheel_cover_extra_thickness)} -0.03" rpy="${pi/2} 0 ${pi}"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/wheel_cover.stl" scale="1.0 1.0 ${(0.083 + wheel_cover_extra_thickness) / 0.083}"/>
+      </geometry>
+      <material name="robot_dark"/>
+    </visual>
+
+    <!-- Visual 7: Skeleton Pillars (Vertical Frame) -->
+    <!-- Left Skeleton Pillar -->
+    <visual>
+      <origin xyz="-0.101 ${0.398 - side_inward_offset} 0.905" rpy="${pi} 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/skeleton.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_metal"/>
+    </visual>
+
+    <!-- Right Skeleton Pillar -->
+    <visual>
+      <origin xyz="0.101 ${-(0.398 - side_inward_offset)} 0.905" rpy="0 ${pi} 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/skeleton.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_metal"/>
+    </visual>
+
+    <!-- Visual 8: Spacers (Positioned with Skeleton) -->
+    <!-- Left Spacer -->
+    <visual>
+      <origin xyz="-0.101 ${0.398 - side_inward_offset} 0.905" rpy="${pi} 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/spacer.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_dark"/>
+    </visual>
+
+    <!-- Right Spacer -->
+    <visual>
+      <origin xyz="0.101 ${-(0.398 - side_inward_offset)} 0.905" rpy="0 ${pi} 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/spacer.stl" scale="1 1 1"/>
       </geometry>
       <material name="robot_dark"/>
     </visual>
