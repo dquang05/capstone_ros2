@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================== -->
+  <!-- Active Differential Drive Wheels (Calibrated)        -->
+  <!-- ==================================================== -->
+
+  <!-- Left Drive Wheel -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="0 ${wheel_track/2.0} 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="-0.075 -0.025 -0.075" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/active_wheel.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_wheel"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="${pi/2.0} 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_width}" radius="${wheel_radius}">
+      <origin xyz="0 0 0" rpy="${pi/2.0} 0 0"/>
+    </xacro:inertial_cylinder>
+  </link>
+
+  <!-- Right Drive Wheel -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="0 -${wheel_track/2.0} 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="right_wheel_link">
+    <visual>
+      <origin xyz="-0.075 -0.025 -0.075" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/active_wheel.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_wheel"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="${pi/2.0} 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_width}" radius="${wheel_radius}">
+      <origin xyz="0 0 0" rpy="${pi/2.0} 0 0"/>
+    </xacro:inertial_cylinder>
+  </link>
+
+  <!-- Wheel Gazebo Material and Friction Settings -->
+  <gazebo reference="left_wheel_link">
+    <material>Gazebo/DarkGrey</material>
+    <mu1 value="0.6"/>
+    <mu2 value="0.4"/>
+    <kp value="1000000.0"/>
+    <kd value="100.0"/>
+  </gazebo>
+
+  <gazebo reference="right_wheel_link">
+    <material>Gazebo/DarkGrey</material>
+    <mu1 value="0.6"/>
+    <mu2 value="0.4"/>
+    <kp value="1000000.0"/>
+    <kd value="100.0"/>
+  </gazebo>
+
+</robot>

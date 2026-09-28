@@ -167,3 +167,5 @@ State estimation is handled by `ekf_node` from the `robot_localization` package:
 - **Floor Surface & Terrain Profile:**
   - Planar tiled flooring with discrete joint crevices and irregularities of $\pm 10\text{ mm}$.
   - The simulated suspension system must damp these high-frequency vibrations to ensure LiDAR scan stability and prevent point cloud distortion.
+
+

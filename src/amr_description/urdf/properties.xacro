@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================== -->
+  <!-- Robot Calibrated Properties (per Capstone Spec)       -->
+  <!-- ==================================================== -->
+
+  <!-- Dimensions -->
+  <xacro:property name="wheel_track" value="0.50"/>
+  <xacro:property name="wheel_radius" value="0.075"/>
+  <xacro:property name="wheel_width" value="0.05"/>
+  <xacro:property name="wheel_mass" value="2.0"/>
+
+  <!-- Caster parameters -->
+  <xacro:property name="caster_radius" value="0.025"/>
+  <xacro:property name="caster_mass" value="0.5"/>
+  <xacro:property name="caster_x_offset" value="0.33"/>
+  <xacro:property name="caster_y_offset" value="0.20"/>
+  <!-- Caster center is at -(wheel_radius - caster_radius) = -(0.075 - 0.025) = -0.05m relative to base_link -->
+  <xacro:property name="caster_z_offset" value="-0.050"/>
+
+  <!-- Chassis dimensions -->
+  <xacro:property name="chassis_length" value="0.76"/>
+  <xacro:property name="chassis_width" value="0.60"/>
+  <xacro:property name="chassis_height" value="1.15"/>
+  <xacro:property name="ground_clearance" value="0.035"/>
+
+  <!-- Mass & CoM -->
+  <!-- Total nominal mass = 45kg (Robot curb 30kg + Payload 15kg). Wheels: 2x2kg = 4kg. Base: 41kg -->
+  <xacro:property name="base_mass" value="41.0"/>
+  <!-- Center of mass height: 0.50m from ground -> 0.50 - 0.075 = 0.425m from base_link -->
+  <xacro:property name="com_x" value="0.0"/>
+  <xacro:property name="com_y" value="0.0"/>
+  <xacro:property name="com_z" value="0.425"/>
+
+</robot>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<robot name="amr_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================== -->
+  <!-- Food Delivery AMR - Master URDF / Xacro Assembly     -->
+  <!-- ==================================================== -->
+
+  <!-- Analytical & Helper Macros -->
+  <xacro:include filename="$(find amr_description)/urdf/macros_inertia.xacro"/>
+
+  <!-- Calibrated Geometric & Mass Properties -->
+  <xacro:include filename="$(find amr_description)/urdf/properties.xacro"/>
+
+  <!-- Material & Visual Appearance Palette -->
+  <xacro:include filename="$(find amr_description)/urdf/materials.xacro"/>
+
+  <!-- Base Footprint, Base Link & Chassis Assembly -->
+  <xacro:include filename="$(find amr_description)/urdf/chassis.xacro"/>
+
+  <!-- Active Differential Drive Wheels -->
+  <xacro:include filename="$(find amr_description)/urdf/drive_wheels.xacro"/>
+
+  <!-- Passive Caster Wheels Cluster (4x Casters) -->
+  <xacro:include filename="$(find amr_description)/urdf/caster_wheels.xacro"/>
+
+  <!-- Sensor Links: RPLIDAR A2 & BNO055 IMU -->
+  <xacro:include filename="$(find amr_description)/urdf/sensors.xacro"/>
+
+  <!-- Gazebo Simulation Plugins & Physics Properties -->
+  <xacro:include filename="$(find amr_description)/urdf/gazebo.xacro"/>
+
+</robot>
