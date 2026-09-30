@@ -1,32 +1,42 @@
 <?xml version="1.0"?>
-<robot name="amr_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="amr">
 
   <!-- ==================================================== -->
-  <!-- Food Delivery AMR - Master URDF / Xacro Assembly     -->
+  <!-- Core Modular Libraries                               -->
+  <!-- ==================================================== -->
+  <xacro:include filename="properties.xacro" />
+  <xacro:include filename="materials.xacro" />
+  <xacro:include filename="macros_inertia.xacro" />
+
+  <!-- ==================================================== -->
+  <!-- REP-105 Root Frames: base_footprint & base_link      -->
   <!-- ==================================================== -->
 
-  <!-- Analytical & Helper Macros -->
-  <xacro:include filename="$(find amr_description)/urdf/macros_inertia.xacro"/>
+  <!-- base_footprint: 2D projection on ground surface (Z = 0) -->
+  <link name="base_footprint"/>
 
-  <!-- Calibrated Geometric & Mass Properties -->
-  <xacro:include filename="$(find amr_description)/urdf/properties.xacro"/>
+  <!-- base_link: Center of rotation on active drive axle (Z = wheel_radius = 0.075m) -->
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
+  </joint>
 
-  <!-- Material & Visual Appearance Palette -->
-  <xacro:include filename="$(find amr_description)/urdf/materials.xacro"/>
+  <link name="base_link"/>
 
-  <!-- Base Footprint, Base Link & Chassis Assembly -->
-  <xacro:include filename="$(find amr_description)/urdf/chassis.xacro"/>
+  <!-- ==================================================== -->
+  <!-- Robot Structural Components                          -->
+  <!-- ==================================================== -->
+  <xacro:include filename="chassis.xacro" />
+  <xacro:include filename="drive_wheels.xacro" />
+  <xacro:include filename="caster_wheels.xacro" />
+  <xacro:include filename="food_trays.xacro" />
+  <xacro:include filename="lidar.xacro" />
+  <xacro:include filename="imu.xacro" />
 
-  <!-- Active Differential Drive Wheels -->
-  <xacro:include filename="$(find amr_description)/urdf/drive_wheels.xacro"/>
-
-  <!-- Passive Caster Wheels Cluster (4x Casters) -->
-  <xacro:include filename="$(find amr_description)/urdf/caster_wheels.xacro"/>
-
-  <!-- Sensor Links: RPLIDAR A2 & BNO055 IMU -->
-  <xacro:include filename="$(find amr_description)/urdf/sensors.xacro"/>
-
-  <!-- Gazebo Simulation Plugins & Physics Properties -->
-  <xacro:include filename="$(find amr_description)/urdf/gazebo.xacro"/>
+  <!-- ==================================================== -->
+  <!-- Gazebo Simulation Plugins & Encoder Feedback         -->
+  <!-- ==================================================== -->
+  <xacro:include filename="gazebo.xacro" />
 
 </robot>

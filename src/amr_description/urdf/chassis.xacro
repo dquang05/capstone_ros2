@@ -2,23 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- ==================================================== -->
-  <!-- Base Footprint & Base Link (REP-105 Compliant)       -->
-  <!-- ==================================================== -->
-
-  <!-- base_footprint: 2D projection on ground surface (z = 0) -->
-  <link name="base_footprint"/>
-
-  <!-- base_link: Center of rotation on active drive axle -->
-  <joint name="base_footprint_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
-    <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
-  </joint>
-
-  <link name="base_link"/>
-
-  <!-- ==================================================== -->
-  <!-- Chassis Body Link (Visual Meshes & Analytical Physics) -->
+  <!-- Base Chassis Plate (Centered at X=0, Y=0, Z_ground=40mm) -->
   <!-- ==================================================== -->
 
   <joint name="chassis_joint" type="fixed">
@@ -28,155 +12,31 @@
   </joint>
 
   <link name="chassis_link">
-    <!-- Visual 1: Main Base Chassis Structure -->
+    <!-- Visual: Base Chassis Plate STL -->
     <visual>
-      <origin xyz="-0.38 -0.30 -0.04" rpy="${pi/2} 0 ${pi/2}"/>
+      <origin xyz="${-chassis_length/2.0} ${-chassis_width/2.0} ${chassis_z_offset}" rpy="${pi/2} 0 ${pi/2}"/>
       <geometry>
         <mesh filename="package://amr_description/meshes/visual/chassis.stl" scale="1 1 1"/>
       </geometry>
-      <material name="robot_white"/>
-    </visual>
-
-    <!-- Visual 2: Exterior Body Housing -->
-    <visual>
-      <origin xyz="-0.38 -0.30 -0.04" rpy="${pi/2} 0 ${pi/2}"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/housing.stl" scale="1 1 1"/>
-      </geometry>
-      <material name="robot_accent"/>
-    </visual>
-
-    <!-- Visual 3: Top Cover -->
-    <visual>
-      <origin xyz="-0.38 -0.30 0.15" rpy="0 0 0"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/top_cover.stl" scale="1 1 1"/>
-      </geometry>
-      <material name="robot_white"/>
-    </visual>
-
-    <!-- Visual 4: Food Delivery Trays (3 Tiers - Exactly Centered at X=0, Y=0) -->
-    <!-- Tier 1 Tray -->
-    <visual>
-      <origin xyz="0.360 -0.1825 0.30" rpy="0 0 ${pi/2}"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/tray.stl" scale="1 1 1"/>
-      </geometry>
       <material name="robot_metal"/>
     </visual>
 
-    <!-- Tier 2 Tray -->
-    <visual>
-      <origin xyz="0.360 -0.1825 0.52" rpy="0 0 ${pi/2}"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/tray.stl" scale="1 1 1"/>
-      </geometry>
-      <material name="robot_metal"/>
-    </visual>
-
-    <!-- Tier 3 Tray -->
-    <visual>
-      <origin xyz="0.360 -0.1825 0.74" rpy="0 0 ${pi/2}"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/tray.stl" scale="1 1 1"/>
-      </geometry>
-      <material name="robot_metal"/>
-    </visual>
-
-    <!-- Visual 5: Screen / Head Mount (Thickness scaled to exactly 150mm to match skeleton) -->
-    <visual>
-      <origin xyz="0.075 -0.195 0.904" rpy="0 0 ${pi/2}"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/head.stl" scale="1.0 0.9721 1.0"/>
-      </geometry>
-      <material name="robot_dark"/>
-    </visual>
-
-    <!-- ================================================================= -->
-    <!-- Parametric Offset for Side Assemblies (Wheel Covers, Skeletons, Spacers) -->
-    <!-- Adjust this property to translate both side assemblies inward (+) or outward (-) -->
-    <!-- E.g., value="0.0" is nominal CAD baseline, value="0.0155" retracts inward by 15.5mm -->
-    <!-- ================================================================= -->
-    <xacro:property name="side_inward_offset" value="0.0155"/>
-
-    <!-- Outward thickness expansion for wheel covers (default: 0.060 = 60mm) -->
-    <!-- Inner mating face against skeleton stays fixed while outer face expands outward -->
-    <xacro:property name="wheel_cover_extra_thickness" value="0.060"/>
-
-    <!-- Visual 6: Wheel Covers (Inverted U-arch over Drive Wheels) -->
-    <!-- Left Wheel Cover -->
-    <visual>
-      <origin xyz="-0.132 ${0.241 - side_inward_offset + wheel_cover_extra_thickness} -0.03" rpy="${pi/2} 0 0"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/wheel_cover.stl" scale="1.0 1.0 ${(0.083 + wheel_cover_extra_thickness) / 0.083}"/>
-      </geometry>
-      <material name="robot_dark"/>
-    </visual>
-
-    <!-- Right Wheel Cover -->
-    <visual>
-      <origin xyz="0.132 ${-(0.241 - side_inward_offset + wheel_cover_extra_thickness)} -0.03" rpy="${pi/2} 0 ${pi}"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/wheel_cover.stl" scale="1.0 1.0 ${(0.083 + wheel_cover_extra_thickness) / 0.083}"/>
-      </geometry>
-      <material name="robot_dark"/>
-    </visual>
-
-    <!-- Visual 7: Skeleton Pillars (Vertical Frame) -->
-    <!-- Left Skeleton Pillar -->
-    <visual>
-      <origin xyz="-0.101 ${0.398 - side_inward_offset} 0.905" rpy="${pi} 0 0"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/skeleton.stl" scale="1 1 1"/>
-      </geometry>
-      <material name="robot_metal"/>
-    </visual>
-
-    <!-- Right Skeleton Pillar -->
-    <visual>
-      <origin xyz="0.101 ${-(0.398 - side_inward_offset)} 0.905" rpy="0 ${pi} 0"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/skeleton.stl" scale="1 1 1"/>
-      </geometry>
-      <material name="robot_metal"/>
-    </visual>
-
-    <!-- Visual 8: Spacers (Positioned with Skeleton) -->
-    <!-- Left Spacer -->
-    <visual>
-      <origin xyz="-0.101 ${0.398 - side_inward_offset} 0.905" rpy="${pi} 0 0"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/spacer.stl" scale="1 1 1"/>
-      </geometry>
-      <material name="robot_dark"/>
-    </visual>
-
-    <!-- Right Spacer -->
-    <visual>
-      <origin xyz="0.101 ${-(0.398 - side_inward_offset)} 0.905" rpy="0 ${pi} 0"/>
-      <geometry>
-        <mesh filename="package://amr_description/meshes/visual/spacer.stl" scale="1 1 1"/>
-      </geometry>
-      <material name="robot_dark"/>
-    </visual>
-
-    <!-- Collision Geometry: Simple Analytical Box for High Performance & Zero-Jitter Physics -->
+    <!-- Collision: Analytical Box Plate -->
     <collision>
-      <origin xyz="0 0 0.45" rpy="0 0 0"/>
+      <origin xyz="0 0 ${chassis_z_offset + chassis_thickness/2.0}" rpy="0 0 0"/>
       <geometry>
-        <box size="${chassis_length} ${chassis_width} 0.90"/>
+        <box size="${chassis_length} ${chassis_width} ${chassis_thickness}"/>
       </geometry>
     </collision>
 
-    <!-- Analytical Inertia: Strictly Positive Definite (Prevents Gazebo NaN explosions) -->
-    <xacro:inertial_box mass="${base_mass}" x="${chassis_length}" y="${chassis_width}" z="0.90">
-      <origin xyz="${com_x} ${com_y} ${com_z}" rpy="0 0 0"/>
+    <!-- Inertial: Analytical Box Inertia (${chassis_mass}kg steel/aluminum plate) -->
+    <xacro:inertial_box mass="${chassis_mass}" x="${chassis_length}" y="${chassis_width}" z="${chassis_thickness}">
+      <origin xyz="0 0 ${chassis_z_offset + chassis_thickness/2.0}" rpy="0 0 0"/>
     </xacro:inertial_box>
   </link>
 
-  <!-- Gazebo Material Settings for Chassis -->
   <gazebo reference="chassis_link">
-    <material>Gazebo/White</material>
+    <material>Gazebo/Grey</material>
   </gazebo>
 
 </robot>

@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================== -->
+  <!-- 2D LiDAR Sensor (Front-mounted, ROS Native Primitive) -->
+  <!-- ==================================================== -->
+
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser_frame"/>
+    <origin xyz="${lidar_x_offset} ${lidar_y_offset} ${lidar_z_offset}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="laser_frame">
+    <!-- Visual 1: Lower stationary base mount -->
+    <visual>
+      <origin xyz="0 0 ${lidar_height * 0.25}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${lidar_radius}" length="${lidar_height * 0.5}"/>
+      </geometry>
+      <material name="robot_dark"/>
+    </visual>
+
+    <!-- Visual 2: Upper rotating optical turret -->
+    <visual>
+      <origin xyz="0 0 ${lidar_height * 0.75}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${lidar_radius * 0.92}" length="${lidar_height * 0.5}"/>
+      </geometry>
+      <material name="robot_sensor"/>
+    </visual>
+
+    <!-- Visual 3: Forward optical lens indicator -->
+    <visual>
+      <origin xyz="${lidar_radius * 0.65} 0 ${lidar_height * 0.75}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${lidar_radius * 0.4} ${lidar_radius * 0.3} ${lidar_height * 0.25}"/>
+      </geometry>
+      <material name="robot_accent"/>
+    </visual>
+
+    <!-- Collision: Full cylindrical boundary -->
+    <collision>
+      <origin xyz="0 0 ${lidar_height / 2.0}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${lidar_radius}" length="${lidar_height}"/>
+      </geometry>
+    </collision>
+
+    <!-- Inertial: Analytical Cylinder Inertia (200g) -->
+    <xacro:inertial_cylinder mass="${lidar_mass}" length="${lidar_height}" radius="${lidar_radius}">
+      <origin xyz="0 0 ${lidar_height / 2.0}" rpy="0 0 0"/>
+    </xacro:inertial_cylinder>
+  </link>
+
+  <!-- Gazebo Sensor Simulation for LaserScan Data Collection -->
+  <gazebo reference="laser_frame">
+    <material>Gazebo/Black</material>
+    <sensor name="lidar_sensor" type="ray">
+      <pose>0 0 ${lidar_height * 0.75} 0 0 0</pose>
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159265</min_angle>
+            <max_angle>3.14159265</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.15</min>
+          <max>12.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="lidar_controller" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>laser_frame</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>

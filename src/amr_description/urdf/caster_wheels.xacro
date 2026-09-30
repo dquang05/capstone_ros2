@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- ==================================================== -->
-  <!-- Passive Caster Wheel Macro (Frictionless Sphere)    -->
+  <!-- Passive Caster Wheel Macro (Frictionless Sphere)     -->
   <!-- ==================================================== -->
 
   <xacro:macro name="caster_wheel" params="prefix x_pos y_pos">
@@ -13,25 +13,30 @@
     </joint>
 
     <link name="caster_${prefix}_link">
+      <!-- Visual: passive_wheel.stl centered at caster rotation center -->
       <visual>
         <origin xyz="-0.0631 1.5650 -0.0335" rpy="${pi/2} 0 0"/>
         <geometry>
-          <mesh filename="package://amr_description/meshes/visual/caster_wheel.stl" scale="1 1 1"/>
+          <mesh filename="package://amr_description/meshes/visual/passive_wheel.stl" scale="1 1 1"/>
         </geometry>
         <material name="robot_caster"/>
       </visual>
+
+      <!-- Collision: Analytical Sphere for omnidirectional rolling without jamming -->
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
           <sphere radius="${caster_radius}"/>
         </geometry>
       </collision>
+
+      <!-- Inertial: Analytical Sphere Inertia -->
       <xacro:inertial_sphere mass="${caster_mass}" radius="${caster_radius}">
         <origin xyz="0 0 0" rpy="0 0 0"/>
       </xacro:inertial_sphere>
     </link>
 
-    <!-- Gazebo physics: 0 friction ensures smooth omnidirectional sliding without jamming -->
+    <!-- Gazebo physics: Zero friction ensures smooth omnidirectional sliding -->
     <gazebo reference="caster_${prefix}_link">
       <material>Gazebo/Grey</material>
       <mu1 value="0.0"/>
@@ -41,7 +46,7 @@
     </gazebo>
   </xacro:macro>
 
-  <!-- Instantiate 4 Casters according to Capstone Specs (L = 0.33m, Spacing = 0.40m -> y = +/- 0.20m) -->
+  <!-- Instantiate 4 Casters from defined parametric offsets -->
   <xacro:caster_wheel prefix="fl" x_pos="${caster_x_offset}"  y_pos="${caster_y_offset}"/>
   <xacro:caster_wheel prefix="fr" x_pos="${caster_x_offset}"  y_pos="-${caster_y_offset}"/>
   <xacro:caster_wheel prefix="rl" x_pos="-${caster_x_offset}" y_pos="${caster_y_offset}"/>

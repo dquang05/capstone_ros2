@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================== -->
+  <!-- Food Delivery Trays Macro                            -->
+  <!-- ==================================================== -->
+
+  <xacro:macro name="food_tray" params="prefix z_pos">
+    <joint name="${prefix}_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${prefix}_link"/>
+      <origin xyz="0 0 ${z_pos}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="${prefix}_link">
+      <!-- Visual: Centered at X=0, Y=0 coinciding with chassis axes, bottom at Z=0 -->
+      <visual>
+        <origin xyz="${tray_length/2.0} ${-tray_width/2.0} 0" rpy="0 0 ${pi/2}"/>
+        <geometry>
+          <mesh filename="package://amr_description/meshes/visual/food_tray.stl" scale="1 1 1"/>
+        </geometry>
+        <material name="robot_white"/>
+      </visual>
+
+      <!-- Collision: Analytical Box matching tray outer boundary -->
+      <collision>
+        <origin xyz="0 0 ${tray_height/2.0}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${tray_length} ${tray_width} ${tray_height}"/>
+        </geometry>
+      </collision>
+
+      <!-- Inertial: Analytical Box (5kg per tray) -->
+      <xacro:inertial_box mass="${tray_mass}" x="${tray_length}" y="${tray_width}" z="${tray_height}">
+        <origin xyz="0 0 ${tray_height/2.0}" rpy="0 0 0"/>
+      </xacro:inertial_box>
+    </link>
+
+    <gazebo reference="${prefix}_link">
+      <material>Gazebo/White</material>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Instantiate 3 Food Trays -->
+  <!-- Tray 1: Bottom is 424mm above chassis bottom -->
+  <xacro:food_tray prefix="food_tray_1" z_pos="${tray_1_z}"/>
+
+  <!-- Tray 2: Bottom is 200mm above Tray 1 bottom -->
+  <xacro:food_tray prefix="food_tray_2" z_pos="${tray_2_z}"/>
+
+  <!-- Tray 3: Bottom is 200mm above Tray 2 bottom -->
+  <xacro:food_tray prefix="food_tray_3" z_pos="${tray_3_z}"/>
+
+</robot>
