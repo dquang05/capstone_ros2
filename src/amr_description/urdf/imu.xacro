@@ -36,13 +36,15 @@
     </xacro:inertial_box>
   </link>
 
-  <!-- Gazebo Sensor Simulation for IMU Data Collection -->
+  <!-- Gazebo Sensor Simulation for IMU Data Collection (Gazebo Harmonic) -->
   <gazebo reference="imu_link">
     <material>Gazebo/Blue</material>
     <sensor name="imu_sensor" type="imu">
       <always_on>true</always_on>
       <update_rate>100</update_rate>
       <visualize>false</visualize>
+      <topic>imu/data</topic>
+      <gz_frame_id>imu_link</gz_frame_id>
       <imu>
         <angular_velocity>
           <x>
@@ -85,13 +87,6 @@
           </z>
         </linear_acceleration>
       </imu>
-      <plugin name="imu_controller" filename="libgazebo_ros_imu_sensor.so">
-        <ros>
-          <remapping>~/out:=imu/data</remapping>
-        </ros>
-        <initial_orientation_as_reference>false</initial_orientation_as_reference>
-        <frame_name>imu_link</frame_name>
-      </plugin>
     </sensor>
   </gazebo>
 

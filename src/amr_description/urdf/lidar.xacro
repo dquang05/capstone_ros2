@@ -53,14 +53,16 @@
     </xacro:inertial_cylinder>
   </link>
 
-  <!-- Gazebo Sensor Simulation for LaserScan Data Collection -->
+  <!-- Gazebo Sensor Simulation for LaserScan Data Collection (Gazebo Harmonic) -->
   <gazebo reference="laser_frame">
     <material>Gazebo/Black</material>
-    <sensor name="lidar_sensor" type="ray">
+    <sensor name="lidar_sensor" type="gpu_lidar">
       <pose>0 0 ${lidar_height * 0.75} 0 0 0</pose>
       <always_on>true</always_on>
       <visualize>false</visualize>
       <update_rate>10</update_rate>
+      <topic>scan</topic>
+      <gz_frame_id>laser_frame</gz_frame_id>
       <ray>
         <scan>
           <horizontal>
@@ -81,13 +83,6 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <plugin name="lidar_controller" filename="libgazebo_ros_ray_sensor.so">
-        <ros>
-          <remapping>~/out:=scan</remapping>
-        </ros>
-        <output_type>sensor_msgs/LaserScan</output_type>
-        <frame_name>laser_frame</frame_name>
-      </plugin>
     </sensor>
   </gazebo>
 

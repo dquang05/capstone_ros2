@@ -1,0 +1,367 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="restaurant_world">
+
+    <!-- Physics Engine Configuration (Smooth 250 Hz for Differential Drive AMR) -->
+    <physics name="4ms" type="ignored">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Essential Gazebo Harmonic System Plugins -->
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin
+      filename="gz-sim-imu-system"
+      name="gz::sim::systems::Imu">
+    </plugin>
+
+    <!-- Sun Directional Light (Soft shadows disabled for maximum FPS) -->
+    <light type="directional" name="sun">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 15 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- Scene Lighting & Background (Even bright ambient lighting) -->
+    <scene>
+      <ambient>0.85 0.85 0.85 1.0</ambient>
+      <background>0.90 0.90 0.92 1.0</background>
+      <shadows>false</shadows>
+      <grid>false</grid>
+    </scene>
+
+    <!-- Global Ground Plane (Smooth polished restaurant tile floor) -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.88 0.88 0.90 1</ambient>
+            <diffuse>0.88 0.88 0.90 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================== -->
+    <!-- COMPLETE LOW-POLY RESTAURANT STRUCTURE (Exact Image Layout)    -->
+    <!-- ============================================================== -->
+    <model name="restaurant_structure">
+      <static>true</static>
+
+      <!-- ============================================================ -->
+      <!-- 1. Outer Boundary Walls (16.0m x 10.0m x 2.4m, thickness 0.15m) -->
+      <!-- ============================================================ -->
+      <link name="outer_walls">
+        <!-- North Wall (Y = +5.0) -->
+        <visual name="wall_north_vis">
+          <pose>0 5.0 1.2 0 0 0</pose>
+          <geometry><box><size>16.0 0.15 2.4</size></box></geometry>
+          <material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material>
+        </visual>
+        <collision name="wall_north_col">
+          <pose>0 5.0 1.2 0 0 0</pose>
+          <geometry><box><size>16.0 0.15 2.4</size></box></geometry>
+        </collision>
+
+        <!-- South Wall (Y = -5.0) -->
+        <visual name="wall_south_vis">
+          <pose>0 -5.0 1.2 0 0 0</pose>
+          <geometry><box><size>16.0 0.15 2.4</size></box></geometry>
+          <material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material>
+        </visual>
+        <collision name="wall_south_col">
+          <pose>0 -5.0 1.2 0 0 0</pose>
+          <geometry><box><size>16.0 0.15 2.4</size></box></geometry>
+        </collision>
+
+        <!-- West Wall (X = -8.0) -->
+        <visual name="wall_west_vis">
+          <pose>-8.0 0 1.2 0 0 0</pose>
+          <geometry><box><size>0.15 10.0 2.4</size></box></geometry>
+          <material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material>
+        </visual>
+        <collision name="wall_west_col">
+          <pose>-8.0 0 1.2 0 0 0</pose>
+          <geometry><box><size>0.15 10.0 2.4</size></box></geometry>
+        </collision>
+
+        <!-- East Wall (X = +8.0) -->
+        <visual name="wall_east_vis">
+          <pose>8.0 0 1.2 0 0 0</pose>
+          <geometry><box><size>0.15 10.0 2.4</size></box></geometry>
+          <material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material>
+        </visual>
+        <collision name="wall_east_col">
+          <pose>8.0 0 1.2 0 0 0</pose>
+          <geometry><box><size>0.15 10.0 2.4</size></box></geometry>
+        </collision>
+      </link>
+
+      <!-- ============================================================ -->
+      <!-- 2. Top Booth Partitions (5 Booths + Kitchen Divider)         -->
+      <!-- ============================================================ -->
+      <link name="top_partitions">
+        <!-- Divider 1 (X = -6.8) -->
+        <visual name="top_div_1_v"><pose>-6.8 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
+        <collision name="top_div_1_c"><pose>-6.8 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
+
+        <!-- Divider 2 (X = -5.1) -->
+        <visual name="top_div_2_v"><pose>-5.1 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
+        <collision name="top_div_2_c"><pose>-5.1 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
+
+        <!-- Divider 3 (X = -3.4) -->
+        <visual name="top_div_3_v"><pose>-3.4 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
+        <collision name="top_div_3_c"><pose>-3.4 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
+
+        <!-- Divider 4 (X = -1.7) -->
+        <visual name="top_div_4_v"><pose>-1.7 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
+        <collision name="top_div_4_c"><pose>-1.7 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
+
+        <!-- Divider 5 (X = 0.0) -->
+        <visual name="top_div_5_v"><pose>0.0 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
+        <collision name="top_div_5_c"><pose>0.0 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
+
+        <!-- Divider 6 (X = +1.7) -->
+        <visual name="top_div_6_v"><pose>1.7 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
+        <collision name="top_div_6_c"><pose>1.7 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
+      </link>
+
+      <!-- ============================================================ -->
+      <!-- 3. Top Booth Dining Tables (Table 1 to Table 5) & Benches    -->
+      <!-- ============================================================ -->
+      <link name="top_booth_furniture">
+        <!-- Table 1 (X = -5.95, Y = 3.65) -->
+        <visual name="tbl_1_top"><pose>-5.95 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <visual name="tbl_1_leg"><pose>-5.95 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
+        <collision name="tbl_1_col"><pose>-5.95 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
+        <visual name="bnch_1_l"><pose>-6.5 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_1_l_c"><pose>-6.5 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+        <visual name="bnch_1_r"><pose>-5.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_1_r_c"><pose>-5.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+
+        <!-- Table 2 (X = -4.25, Y = 3.65) -->
+        <visual name="tbl_2_top"><pose>-4.25 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <visual name="tbl_2_leg"><pose>-4.25 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
+        <collision name="tbl_2_col"><pose>-4.25 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
+        <visual name="bnch_2_l"><pose>-4.8 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_2_l_c"><pose>-4.8 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+        <visual name="bnch_2_r"><pose>-3.7 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_2_r_c"><pose>-3.7 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+
+        <!-- Table 3 (X = -2.55, Y = 3.65) -->
+        <visual name="tbl_3_top"><pose>-2.55 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <visual name="tbl_3_leg"><pose>-2.55 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
+        <collision name="tbl_3_col"><pose>-2.55 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
+        <visual name="bnch_3_l"><pose>-3.1 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_3_l_c"><pose>-3.1 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+        <visual name="bnch_3_r"><pose>-2.0 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_3_r_c"><pose>-2.0 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+
+        <!-- Table 4 (X = -0.85, Y = 3.65) -->
+        <visual name="tbl_4_top"><pose>-0.85 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <visual name="tbl_4_leg"><pose>-0.85 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
+        <collision name="tbl_4_col"><pose>-0.85 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
+        <visual name="bnch_4_l"><pose>-1.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_4_l_c"><pose>-1.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+        <visual name="bnch_4_r"><pose>-0.3 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_4_r_c"><pose>-0.3 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+
+        <!-- Table 5 (X = +0.85, Y = 3.65) -->
+        <visual name="tbl_5_top"><pose>0.85 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <visual name="tbl_5_leg"><pose>0.85 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
+        <collision name="tbl_5_col"><pose>0.85 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
+        <visual name="bnch_5_l"><pose>0.3 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_5_l_c"><pose>0.3 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+        <visual name="bnch_5_r"><pose>1.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_5_r_c"><pose>1.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+      </link>
+
+      <!-- ============================================================ -->
+      <!-- 4. Kitchen / Food Pickup & AMR Home Station (Top Right Zone) -->
+      <!-- ============================================================ -->
+      <link name="kitchen_area">
+        <!-- Kitchen West Divider Wall (from Y = 1.6 to 4.925) -->
+        <visual name="kitch_w_v"><pose>1.7 3.3 1.0 0 0 0</pose><geometry><box><size>0.15 3.4 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
+        <collision name="kitch_w_c"><pose>1.7 3.3 1.0 0 0 0</pose><geometry><box><size>0.15 3.4 2.0</size></box></geometry></collision>
+
+        <!-- Kitchen South Wall (doorway at X = 1.7 to 3.5, wall from X = 3.5 to 8.0) -->
+        <visual name="kitch_s_v"><pose>5.75 1.6 1.0 0 0 0</pose><geometry><box><size>4.5 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
+        <collision name="kitch_s_c"><pose>5.75 1.6 1.0 0 0 0</pose><geometry><box><size>4.5 0.15 2.0</size></box></geometry></collision>
+
+        <!-- Doorway lintel header (archway above door, clearance 2.0m) -->
+        <visual name="kitch_door_lintel"><pose>2.6 1.6 2.2 0 0 0</pose><geometry><box><size>1.8 0.15 0.4</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
+        <collision name="kitch_door_lintel_c"><pose>2.6 1.6 2.2 0 0 0</pose><geometry><box><size>1.8 0.15 0.4</size></box></geometry></collision>
+
+        <!-- Kitchen Food Dispatch & Serving Counter (X = 4.8, Y = 3.5) -->
+        <visual name="kitch_counter_v"><pose>4.8 3.5 0.45 0 0 0</pose><geometry><box><size>1.8 0.9 0.9</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="kitch_counter_c"><pose>4.8 3.5 0.45 0 0 0</pose><geometry><box><size>1.8 0.9 0.9</size></box></geometry></collision>
+        <!-- Serving meal trays on the dispatch counter -->
+        <visual name="kitch_tray_1"><pose>4.4 3.5 0.92 0 0 0</pose><geometry><box><size>0.35 0.25 0.03</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
+        <visual name="kitch_dish_1"><pose>4.4 3.5 0.97 0 0 0</pose><geometry><cylinder><radius>0.10</radius><length>0.08</length></cylinder></geometry><material><ambient>0.9 0.85 0.6 1</ambient><diffuse>0.9 0.85 0.6 1</diffuse></material></visual>
+        <visual name="kitch_tray_2"><pose>5.2 3.5 0.92 0 0 0</pose><geometry><box><size>0.35 0.25 0.03</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
+        <visual name="kitch_dish_2"><pose>5.2 3.5 0.97 0 0 0</pose><geometry><cylinder><radius>0.10</radius><length>0.08</length></cylinder></geometry><material><ambient>0.9 0.85 0.6 1</ambient><diffuse>0.9 0.85 0.6 1</diffuse></material></visual>
+
+        <!-- Kitchen Prep Shelving / Cabinets (X = 7.4, Y = 3.5) -->
+        <visual name="kitch_shelf_v"><pose>7.4 3.5 0.7 0 0 0</pose><geometry><box><size>0.8 2.0 1.4</size></box></geometry><material><ambient>0.2 0.2 0.22 1</ambient><diffuse>0.2 0.2 0.22 1</diffuse></material></visual>
+        <collision name="kitch_shelf_c"><pose>7.4 3.5 0.7 0 0 0</pose><geometry><box><size>0.8 2.0 1.4</size></box></geometry></collision>
+
+        <!-- Kitchen Top Cabinet (X = 4.8, Y = 4.6) -->
+        <visual name="kitch_top_cab"><pose>4.8 4.6 0.5 0 0 0</pose><geometry><box><size>1.6 0.6 1.0</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient></material></visual>
+        <collision name="kitch_top_cab_c"><pose>4.8 4.6 0.5 0 0 0</pose><geometry><box><size>1.6 0.6 1.0</size></box></geometry></collision>
+
+        <!-- ============================================================ -->
+        <!-- AMR ROBOT HOME STATION (Charging & Spawn Dock)               -->
+        <!-- Position: X = 2.6m, Y = 3.5m (Direct line to doorway Y=1.6)  -->
+        <!-- ============================================================ -->
+        <!-- Floor Docking & Charging Pad -->
+        <visual name="home_pad"><pose>2.6 3.5 0.002 0 0 0</pose><geometry><box><size>1.1 1.3 0.004</size></box></geometry><material><ambient>0.18 0.20 0.22 1</ambient><diffuse>0.18 0.20 0.22 1</diffuse></material></visual>
+        <!-- Yellow Safety Hazard Border Stripes -->
+        <visual name="home_stripe_l"><pose>2.08 3.5 0.003 0 0 0</pose><geometry><box><size>0.06 1.3 0.004</size></box></geometry><material><ambient>0.95 0.75 0.05 1</ambient><diffuse>0.95 0.75 0.05 1</diffuse></material></visual>
+        <visual name="home_stripe_r"><pose>3.12 3.5 0.003 0 0 0</pose><geometry><box><size>0.06 1.3 0.004</size></box></geometry><material><ambient>0.95 0.75 0.05 1</ambient><diffuse>0.95 0.75 0.05 1</diffuse></material></visual>
+        <visual name="home_stripe_back"><pose>2.6 4.12 0.003 0 0 0</pose><geometry><box><size>1.1 0.06 0.004</size></box></geometry><material><ambient>0.95 0.75 0.05 1</ambient><diffuse>0.95 0.75 0.05 1</diffuse></material></visual>
+
+        <!-- AMR Automatic Charging Tower / Kiosk -->
+        <visual name="charge_tower"><pose>2.6 4.4 0.50 0 0 0</pose><geometry><box><size>0.50 0.25 1.00</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
+        <collision name="charge_tower_c"><pose>2.6 4.4 0.50 0 0 0</pose><geometry><box><size>0.50 0.25 1.00</size></box></geometry></collision>
+        <!-- Glowing Cyan Status Display Screen -->
+        <visual name="charge_screen"><pose>2.6 4.27 0.75 0 0 0</pose><geometry><box><size>0.35 0.02 0.22</size></box></geometry><material><ambient>0.0 0.8 1.0 1</ambient><emissive>0.0 0.8 1.0 1</emissive></material></visual>
+        <!-- Green Ready Beacon LED -->
+        <visual name="charge_beacon"><pose>2.6 4.4 1.05 0 0 0</pose><geometry><cylinder><radius>0.05</radius><length>0.10</length></cylinder></geometry><material><ambient>0.0 1.0 0.4 1</ambient><emissive>0.0 1.0 0.4 1</emissive></material></visual>
+      </link>
+
+      <!-- ============================================================ -->
+      <!-- 5. Central Aisle Lounge Tables & Sofas (Tables C1 - C3)       -->
+      <!-- ============================================================ -->
+      <link name="central_lounge_furniture">
+        <!-- Center Table 1 (X = -5.0, Y = 0.0) -->
+        <visual name="c_tbl_1_v"><pose>-5.0 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="c_tbl_1_c"><pose>-5.0 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry></collision>
+        <visual name="c_sofa_1_l"><pose>-5.8 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_l_c"><pose>-5.8 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
+        <visual name="c_sofa_1_r"><pose>-4.2 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_r_c"><pose>-4.2 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
+
+        <!-- Center Table 2 (X = -1.5, Y = 0.0) -->
+        <visual name="c_tbl_2_v"><pose>-1.5 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="c_tbl_2_c"><pose>-1.5 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry></collision>
+        <visual name="c_sofa_2_l"><pose>-2.3 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_l_c"><pose>-2.3 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
+        <visual name="c_sofa_2_r"><pose>-0.7 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_r_c"><pose>-0.7 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
+
+        <!-- Center Table 3 (X = +2.0, Y = 0.0) -->
+        <visual name="c_tbl_3_v"><pose>2.0 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="c_tbl_3_c"><pose>2.0 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry></collision>
+        <visual name="c_sofa_3_l"><pose>1.2 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_l_c"><pose>1.2 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
+        <visual name="c_sofa_3_r"><pose>2.8 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_r_c"><pose>2.8 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
+      </link>
+
+      <!-- ============================================================ -->
+      <!-- 6. Bottom Private Dining Rooms (Rooms 1 - 4, Tables 6 - 9)   -->
+      <!-- ============================================================ -->
+      <link name="bottom_private_rooms">
+        <!-- Room Divider 1 (X = -4.2) -->
+        <visual name="b_div_1_v"><pose>-4.2 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
+        <collision name="b_div_1_c"><pose>-4.2 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry></collision>
+
+        <!-- Room Divider 2 (X = -0.4) -->
+        <visual name="b_div_2_v"><pose>-0.4 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
+        <collision name="b_div_2_c"><pose>-0.4 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry></collision>
+
+        <!-- Room Divider 3 (X = +3.4) -->
+        <visual name="b_div_3_v"><pose>3.4 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
+        <collision name="b_div_3_c"><pose>3.4 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry></collision>
+
+        <!-- Front Corridor Walls with Open Doorways (at Y = -1.8) -->
+        <visual name="b_front_1"><pose>-7.0 -1.8 1.0 0 0 0</pose><geometry><box><size>1.8 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
+        <collision name="b_front_1_c"><pose>-7.0 -1.8 1.0 0 0 0</pose><geometry><box><size>1.8 0.15 2.0</size></box></geometry></collision>
+
+        <visual name="b_front_2"><pose>-3.3 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
+        <collision name="b_front_2_c"><pose>-3.3 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry></collision>
+
+        <visual name="b_front_3"><pose>0.5 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
+        <collision name="b_front_3_c"><pose>0.5 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry></collision>
+
+        <visual name="b_front_4"><pose>4.3 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
+        <collision name="b_front_4_c"><pose>4.3 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry></collision>
+
+        <!-- Table 6 (Room 1, X = -6.1, Y = -3.5) -->
+        <visual name="tbl_6_top"><pose>-6.1 -3.5 0.72 0 0 0</pose><geometry><box><size>1.3 0.8 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_6_col"><pose>-6.1 -3.5 0.37 0 0 0</pose><geometry><box><size>1.3 0.8 0.75</size></box></geometry></collision>
+        <visual name="bnch_6"><pose>-6.1 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_6_c"><pose>-6.1 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry></collision>
+
+        <!-- Table 7 (Room 2, X = -2.3, Y = -3.5) -->
+        <visual name="tbl_7_top"><pose>-2.3 -3.5 0.72 0 0 0</pose><geometry><box><size>1.3 0.8 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_7_col"><pose>-2.3 -3.5 0.37 0 0 0</pose><geometry><box><size>1.3 0.8 0.75</size></box></geometry></collision>
+        <visual name="bnch_7"><pose>-2.3 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_7_c"><pose>-2.3 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry></collision>
+
+        <!-- Table 8 (Room 3, X = 1.5, Y = -3.5) -->
+        <visual name="tbl_8_top"><pose>1.5 -3.5 0.72 0 0 0</pose><geometry><box><size>1.3 0.8 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_8_col"><pose>1.5 -3.5 0.37 0 0 0</pose><geometry><box><size>1.3 0.8 0.75</size></box></geometry></collision>
+        <visual name="bnch_8"><pose>1.5 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_8_c"><pose>1.5 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry></collision>
+
+        <!-- Table 9 (Room 4, X = 5.5, Y = -3.5) -->
+        <visual name="tbl_9_top"><pose>5.5 -3.5 0.72 0 0 0</pose><geometry><box><size>1.3 0.8 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_9_col"><pose>5.5 -3.5 0.37 0 0 0</pose><geometry><box><size>1.3 0.8 0.75</size></box></geometry></collision>
+        <visual name="bnch_9"><pose>5.5 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_9_c"><pose>5.5 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry></collision>
+      </link>
+
+      <!-- ============================================================ -->
+      <!-- 7. Decorative Greenery / Indoor Plants                       -->
+      <!-- ============================================================ -->
+      <link name="decorative_plants">
+        <!-- Plant 1 (near bottom left room 1 entrance) -->
+        <visual name="pot_1"><pose>-7.3 -1.5 0.2 0 0 0</pose><geometry><cylinder><radius>0.20</radius><length>0.40</length></cylinder></geometry><material><ambient>0.15 0.15 0.15 1</ambient></material></visual>
+        <visual name="foliage_1"><pose>-7.3 -1.5 0.55 0 0 0</pose><geometry><cylinder><radius>0.24</radius><length>0.45</length></cylinder></geometry><material><ambient>0.1 0.65 0.3 1</ambient><diffuse>0.1 0.65 0.3 1</diffuse></material></visual>
+        <collision name="plant_1_c"><pose>-7.3 -1.5 0.4 0 0 0</pose><geometry><cylinder><radius>0.24</radius><length>0.8</length></cylinder></geometry></collision>
+
+        <!-- Plant 2 (near kitchen doorway in central corridor) -->
+        <visual name="pot_2"><pose>3.4 1.1 0.2 0 0 0</pose><geometry><cylinder><radius>0.20</radius><length>0.40</length></cylinder></geometry><material><ambient>0.15 0.15 0.15 1</ambient></material></visual>
+        <visual name="foliage_2"><pose>3.4 1.1 0.55 0 0 0</pose><geometry><cylinder><radius>0.24</radius><length>0.45</length></cylinder></geometry><material><ambient>0.1 0.65 0.3 1</ambient><diffuse>0.1 0.65 0.3 1</diffuse></material></visual>
+        <collision name="plant_2_c"><pose>3.4 1.1 0.4 0 0 0</pose><geometry><cylinder><radius>0.24</radius><length>0.8</length></cylinder></geometry></collision>
+      </link>
+
+    </model>
+
+  </world>
+</sdf>
