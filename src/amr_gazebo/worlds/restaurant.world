@@ -9,27 +9,11 @@
     </physics>
 
     <!-- Essential Gazebo Harmonic System Plugins -->
-    <plugin
-      filename="gz-sim-physics-system"
-      name="gz::sim::systems::Physics">
-    </plugin>
-    <plugin
-      filename="gz-sim-user-commands-system"
-      name="gz::sim::systems::UserCommands">
-    </plugin>
-    <plugin
-      filename="gz-sim-scene-broadcaster-system"
-      name="gz::sim::systems::SceneBroadcaster">
-    </plugin>
-    <plugin
-      filename="gz-sim-sensors-system"
-      name="gz::sim::systems::Sensors">
-      <render_engine>ogre2</render_engine>
-    </plugin>
-    <plugin
-      filename="gz-sim-imu-system"
-      name="gz::sim::systems::Imu">
-    </plugin>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors"><render_engine>ogre2</render_engine></plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
 
     <!-- Sun Directional Light (Soft shadows disabled for maximum FPS) -->
     <light type="directional" name="sun">
@@ -53,309 +37,548 @@
       <static>true</static>
       <link name="link">
         <collision name="collision">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>100 100</size>
-            </plane>
-          </geometry>
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
         </collision>
         <visual name="visual">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>100 100</size>
-            </plane>
-          </geometry>
-          <material>
-            <ambient>0.88 0.88 0.90 1</ambient>
-            <diffuse>0.88 0.88 0.90 1</diffuse>
-            <specular>0.1 0.1 0.1 1</specular>
-          </material>
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material><ambient>0.88 0.88 0.90 1</ambient><diffuse>0.88 0.88 0.90 1</diffuse><specular>0.1 0.1 0.1 1</specular></material>
         </visual>
       </link>
     </model>
 
     <!-- ============================================================== -->
     <!-- COMPLETE LOW-POLY RESTAURANT STRUCTURE (Exact Image Layout)    -->
+    <!-- Realistic 4-Legged Tables & Chairs (LiDAR passes under seats)  -->
     <!-- ============================================================== -->
     <model name="restaurant_structure">
       <static>true</static>
 
-      <!-- ============================================================ -->
       <!-- 1. Outer Boundary Walls (16.0m x 10.0m x 2.4m, thickness 0.15m) -->
-      <!-- ============================================================ -->
       <link name="outer_walls">
-        <!-- North Wall (Y = +5.0) -->
-        <visual name="wall_north_vis">
-          <pose>0 5.0 1.2 0 0 0</pose>
-          <geometry><box><size>16.0 0.15 2.4</size></box></geometry>
-          <material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material>
-        </visual>
-        <collision name="wall_north_col">
-          <pose>0 5.0 1.2 0 0 0</pose>
-          <geometry><box><size>16.0 0.15 2.4</size></box></geometry>
-        </collision>
-
-        <!-- South Wall (Y = -5.0) -->
-        <visual name="wall_south_vis">
-          <pose>0 -5.0 1.2 0 0 0</pose>
-          <geometry><box><size>16.0 0.15 2.4</size></box></geometry>
-          <material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material>
-        </visual>
-        <collision name="wall_south_col">
-          <pose>0 -5.0 1.2 0 0 0</pose>
-          <geometry><box><size>16.0 0.15 2.4</size></box></geometry>
-        </collision>
-
-        <!-- West Wall (X = -8.0) -->
-        <visual name="wall_west_vis">
-          <pose>-8.0 0 1.2 0 0 0</pose>
-          <geometry><box><size>0.15 10.0 2.4</size></box></geometry>
-          <material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material>
-        </visual>
-        <collision name="wall_west_col">
-          <pose>-8.0 0 1.2 0 0 0</pose>
-          <geometry><box><size>0.15 10.0 2.4</size></box></geometry>
-        </collision>
-
-        <!-- East Wall (X = +8.0) -->
-        <visual name="wall_east_vis">
-          <pose>8.0 0 1.2 0 0 0</pose>
-          <geometry><box><size>0.15 10.0 2.4</size></box></geometry>
-          <material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material>
-        </visual>
-        <collision name="wall_east_col">
-          <pose>8.0 0 1.2 0 0 0</pose>
-          <geometry><box><size>0.15 10.0 2.4</size></box></geometry>
-        </collision>
+        <visual name="wall_north_vis"><pose>0 5.0 1.2 0 0 0</pose><geometry><box><size>16.0 0.15 2.4</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
+        <collision name="wall_north_col"><pose>0 5.0 1.2 0 0 0</pose><geometry><box><size>16.0 0.15 2.4</size></box></geometry></collision>
+        <visual name="wall_south_vis"><pose>0 -5.0 1.2 0 0 0</pose><geometry><box><size>16.0 0.15 2.4</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
+        <collision name="wall_south_col"><pose>0 -5.0 1.2 0 0 0</pose><geometry><box><size>16.0 0.15 2.4</size></box></geometry></collision>
+        <visual name="wall_west_vis"><pose>-8.0 0 1.2 0 0 0</pose><geometry><box><size>0.15 10.0 2.4</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
+        <collision name="wall_west_col"><pose>-8.0 0 1.2 0 0 0</pose><geometry><box><size>0.15 10.0 2.4</size></box></geometry></collision>
+        <visual name="wall_east_vis"><pose>8.0 0 1.2 0 0 0</pose><geometry><box><size>0.15 10.0 2.4</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
+        <collision name="wall_east_col"><pose>8.0 0 1.2 0 0 0</pose><geometry><box><size>0.15 10.0 2.4</size></box></geometry></collision>
       </link>
 
-      <!-- ============================================================ -->
-      <!-- 2. Top Booth Partitions (5 Booths + Kitchen Divider)         -->
-      <!-- ============================================================ -->
+      <!-- 2. Top Booth Partitions (5 Booths + Kitchen Divider) -->
       <link name="top_partitions">
-        <!-- Divider 1 (X = -6.8) -->
         <visual name="top_div_1_v"><pose>-6.8 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
         <collision name="top_div_1_c"><pose>-6.8 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
-
-        <!-- Divider 2 (X = -5.1) -->
         <visual name="top_div_2_v"><pose>-5.1 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
         <collision name="top_div_2_c"><pose>-5.1 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
-
-        <!-- Divider 3 (X = -3.4) -->
         <visual name="top_div_3_v"><pose>-3.4 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
         <collision name="top_div_3_c"><pose>-3.4 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
-
-        <!-- Divider 4 (X = -1.7) -->
         <visual name="top_div_4_v"><pose>-1.7 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
         <collision name="top_div_4_c"><pose>-1.7 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
-
-        <!-- Divider 5 (X = 0.0) -->
         <visual name="top_div_5_v"><pose>0.0 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
         <collision name="top_div_5_c"><pose>0.0 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
-
-        <!-- Divider 6 (X = +1.7) -->
         <visual name="top_div_6_v"><pose>1.7 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry><material><ambient>0.92 0.92 0.94 1</ambient><diffuse>0.92 0.92 0.94 1</diffuse></material></visual>
         <collision name="top_div_6_c"><pose>1.7 3.7 0.8 0 0 0</pose><geometry><box><size>0.12 2.45 1.6</size></box></geometry></collision>
       </link>
 
-      <!-- ============================================================ -->
-      <!-- 3. Top Booth Dining Tables (Table 1 to Table 5) & Benches    -->
-      <!-- ============================================================ -->
+      <!-- 3. Top Booth Dining Tables (Table 1 to Table 5) & Benches (Realistic 4 Legs) -->
       <link name="top_booth_furniture">
-        <!-- Table 1 (X = -5.95, Y = 3.65) -->
-        <visual name="tbl_1_top"><pose>-5.95 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <visual name="tbl_1_leg"><pose>-5.95 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
-        <collision name="tbl_1_col"><pose>-5.95 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
-        <visual name="bnch_1_l"><pose>-6.5 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_1_l_c"><pose>-6.5 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
-        <visual name="bnch_1_r"><pose>-5.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_1_r_c"><pose>-5.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
-
-        <!-- Table 2 (X = -4.25, Y = 3.65) -->
-        <visual name="tbl_2_top"><pose>-4.25 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <visual name="tbl_2_leg"><pose>-4.25 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
-        <collision name="tbl_2_col"><pose>-4.25 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
-        <visual name="bnch_2_l"><pose>-4.8 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_2_l_c"><pose>-4.8 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
-        <visual name="bnch_2_r"><pose>-3.7 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_2_r_c"><pose>-3.7 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
-
-        <!-- Table 3 (X = -2.55, Y = 3.65) -->
-        <visual name="tbl_3_top"><pose>-2.55 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <visual name="tbl_3_leg"><pose>-2.55 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
-        <collision name="tbl_3_col"><pose>-2.55 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
-        <visual name="bnch_3_l"><pose>-3.1 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_3_l_c"><pose>-3.1 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
-        <visual name="bnch_3_r"><pose>-2.0 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_3_r_c"><pose>-2.0 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
-
-        <!-- Table 4 (X = -0.85, Y = 3.65) -->
-        <visual name="tbl_4_top"><pose>-0.85 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <visual name="tbl_4_leg"><pose>-0.85 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
-        <collision name="tbl_4_col"><pose>-0.85 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
-        <visual name="bnch_4_l"><pose>-1.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_4_l_c"><pose>-1.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
-        <visual name="bnch_4_r"><pose>-0.3 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_4_r_c"><pose>-0.3 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
-
-        <!-- Table 5 (X = +0.85, Y = 3.65) -->
-        <visual name="tbl_5_top"><pose>0.85 3.65 0.72 0 0 0</pose><geometry><box><size>0.75 1.3 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <visual name="tbl_5_leg"><pose>0.85 3.65 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
-        <collision name="tbl_5_col"><pose>0.85 3.65 0.37 0 0 0</pose><geometry><box><size>0.75 1.3 0.75</size></box></geometry></collision>
-        <visual name="bnch_5_l"><pose>0.3 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_5_l_c"><pose>0.3 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
-        <visual name="bnch_5_r"><pose>1.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_5_r_c"><pose>1.4 3.65 0.22 0 0 0</pose><geometry><box><size>0.3 1.3 0.45</size></box></geometry></collision>
+        <!-- 4-Legged Table: tbl_1 -->
+        <visual name="tbl_1_top"><pose>-5.95 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_1_top_c"><pose>-5.95 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry></collision>
+        <visual name="tbl_1_leg_nw"><pose>-6.270 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_1_leg_nw_c"><pose>-6.270 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_1_leg_ne"><pose>-5.630 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_1_leg_ne_c"><pose>-5.630 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_1_leg_sw"><pose>-6.270 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_1_leg_sw_c"><pose>-6.270 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_1_leg_se"><pose>-5.630 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_1_leg_se_c"><pose>-5.630 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_1_l -->
+        <visual name="bnch_1_l_seat"><pose>-6.5 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_1_l_seat_c"><pose>-6.5 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_1_l_back"><pose>-6.620 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_1_l_back_c"><pose>-6.620 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_1_l_leg_nw"><pose>-6.620 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_1_l_leg_nw_c"><pose>-6.620 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_1_l_leg_ne"><pose>-6.380 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_1_l_leg_ne_c"><pose>-6.380 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_1_l_leg_sw"><pose>-6.620 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_1_l_leg_sw_c"><pose>-6.620 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_1_l_leg_se"><pose>-6.380 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_1_l_leg_se_c"><pose>-6.380 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_1_r -->
+        <visual name="bnch_1_r_seat"><pose>-5.4 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_1_r_seat_c"><pose>-5.4 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_1_r_back"><pose>-5.280 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_1_r_back_c"><pose>-5.280 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_1_r_leg_nw"><pose>-5.520 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_1_r_leg_nw_c"><pose>-5.520 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_1_r_leg_ne"><pose>-5.280 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_1_r_leg_ne_c"><pose>-5.280 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_1_r_leg_sw"><pose>-5.520 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_1_r_leg_sw_c"><pose>-5.520 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_1_r_leg_se"><pose>-5.280 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_1_r_leg_se_c"><pose>-5.280 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Table: tbl_2 -->
+        <visual name="tbl_2_top"><pose>-4.25 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_2_top_c"><pose>-4.25 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry></collision>
+        <visual name="tbl_2_leg_nw"><pose>-4.570 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_2_leg_nw_c"><pose>-4.570 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_2_leg_ne"><pose>-3.930 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_2_leg_ne_c"><pose>-3.930 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_2_leg_sw"><pose>-4.570 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_2_leg_sw_c"><pose>-4.570 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_2_leg_se"><pose>-3.930 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_2_leg_se_c"><pose>-3.930 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_2_l -->
+        <visual name="bnch_2_l_seat"><pose>-4.8 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_2_l_seat_c"><pose>-4.8 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_2_l_back"><pose>-4.920 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_2_l_back_c"><pose>-4.920 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_2_l_leg_nw"><pose>-4.920 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_2_l_leg_nw_c"><pose>-4.920 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_2_l_leg_ne"><pose>-4.680 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_2_l_leg_ne_c"><pose>-4.680 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_2_l_leg_sw"><pose>-4.920 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_2_l_leg_sw_c"><pose>-4.920 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_2_l_leg_se"><pose>-4.680 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_2_l_leg_se_c"><pose>-4.680 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_2_r -->
+        <visual name="bnch_2_r_seat"><pose>-3.7 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_2_r_seat_c"><pose>-3.7 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_2_r_back"><pose>-3.580 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_2_r_back_c"><pose>-3.580 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_2_r_leg_nw"><pose>-3.820 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_2_r_leg_nw_c"><pose>-3.820 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_2_r_leg_ne"><pose>-3.580 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_2_r_leg_ne_c"><pose>-3.580 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_2_r_leg_sw"><pose>-3.820 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_2_r_leg_sw_c"><pose>-3.820 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_2_r_leg_se"><pose>-3.580 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_2_r_leg_se_c"><pose>-3.580 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Table: tbl_3 -->
+        <visual name="tbl_3_top"><pose>-2.55 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_3_top_c"><pose>-2.55 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry></collision>
+        <visual name="tbl_3_leg_nw"><pose>-2.870 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_3_leg_nw_c"><pose>-2.870 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_3_leg_ne"><pose>-2.230 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_3_leg_ne_c"><pose>-2.230 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_3_leg_sw"><pose>-2.870 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_3_leg_sw_c"><pose>-2.870 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_3_leg_se"><pose>-2.230 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_3_leg_se_c"><pose>-2.230 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_3_l -->
+        <visual name="bnch_3_l_seat"><pose>-3.0999999999999996 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_3_l_seat_c"><pose>-3.0999999999999996 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_3_l_back"><pose>-3.220 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_3_l_back_c"><pose>-3.220 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_3_l_leg_nw"><pose>-3.220 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_3_l_leg_nw_c"><pose>-3.220 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_3_l_leg_ne"><pose>-2.980 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_3_l_leg_ne_c"><pose>-2.980 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_3_l_leg_sw"><pose>-3.220 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_3_l_leg_sw_c"><pose>-3.220 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_3_l_leg_se"><pose>-2.980 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_3_l_leg_se_c"><pose>-2.980 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_3_r -->
+        <visual name="bnch_3_r_seat"><pose>-1.9999999999999998 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_3_r_seat_c"><pose>-1.9999999999999998 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_3_r_back"><pose>-1.880 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_3_r_back_c"><pose>-1.880 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_3_r_leg_nw"><pose>-2.120 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_3_r_leg_nw_c"><pose>-2.120 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_3_r_leg_ne"><pose>-1.880 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_3_r_leg_ne_c"><pose>-1.880 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_3_r_leg_sw"><pose>-2.120 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_3_r_leg_sw_c"><pose>-2.120 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_3_r_leg_se"><pose>-1.880 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_3_r_leg_se_c"><pose>-1.880 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Table: tbl_4 -->
+        <visual name="tbl_4_top"><pose>-0.85 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_4_top_c"><pose>-0.85 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry></collision>
+        <visual name="tbl_4_leg_nw"><pose>-1.170 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_4_leg_nw_c"><pose>-1.170 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_4_leg_ne"><pose>-0.530 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_4_leg_ne_c"><pose>-0.530 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_4_leg_sw"><pose>-1.170 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_4_leg_sw_c"><pose>-1.170 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_4_leg_se"><pose>-0.530 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_4_leg_se_c"><pose>-0.530 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_4_l -->
+        <visual name="bnch_4_l_seat"><pose>-1.4 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_4_l_seat_c"><pose>-1.4 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_4_l_back"><pose>-1.520 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_4_l_back_c"><pose>-1.520 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_4_l_leg_nw"><pose>-1.520 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_4_l_leg_nw_c"><pose>-1.520 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_4_l_leg_ne"><pose>-1.280 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_4_l_leg_ne_c"><pose>-1.280 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_4_l_leg_sw"><pose>-1.520 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_4_l_leg_sw_c"><pose>-1.520 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_4_l_leg_se"><pose>-1.280 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_4_l_leg_se_c"><pose>-1.280 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_4_r -->
+        <visual name="bnch_4_r_seat"><pose>-0.29999999999999993 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_4_r_seat_c"><pose>-0.29999999999999993 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_4_r_back"><pose>-0.180 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_4_r_back_c"><pose>-0.180 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_4_r_leg_nw"><pose>-0.420 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_4_r_leg_nw_c"><pose>-0.420 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_4_r_leg_ne"><pose>-0.180 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_4_r_leg_ne_c"><pose>-0.180 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_4_r_leg_sw"><pose>-0.420 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_4_r_leg_sw_c"><pose>-0.420 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_4_r_leg_se"><pose>-0.180 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_4_r_leg_se_c"><pose>-0.180 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Table: tbl_5 -->
+        <visual name="tbl_5_top"><pose>0.85 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_5_top_c"><pose>0.85 3.65 0.720 0 0 0</pose><geometry><box><size>0.75 1.3 0.04</size></box></geometry></collision>
+        <visual name="tbl_5_leg_nw"><pose>0.530 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_5_leg_nw_c"><pose>0.530 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_5_leg_ne"><pose>1.170 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_5_leg_ne_c"><pose>1.170 4.245 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_5_leg_sw"><pose>0.530 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_5_leg_sw_c"><pose>0.530 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_5_leg_se"><pose>1.170 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_5_leg_se_c"><pose>1.170 3.055 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_5_l -->
+        <visual name="bnch_5_l_seat"><pose>0.29999999999999993 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_5_l_seat_c"><pose>0.29999999999999993 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_5_l_back"><pose>0.180 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_5_l_back_c"><pose>0.180 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_5_l_leg_nw"><pose>0.180 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_5_l_leg_nw_c"><pose>0.180 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_5_l_leg_ne"><pose>0.420 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_5_l_leg_ne_c"><pose>0.420 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_5_l_leg_sw"><pose>0.180 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_5_l_leg_sw_c"><pose>0.180 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_5_l_leg_se"><pose>0.420 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_5_l_leg_se_c"><pose>0.420 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_5_r -->
+        <visual name="bnch_5_r_seat"><pose>1.4 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_5_r_seat_c"><pose>1.4 3.65 0.415 0 0 0</pose><geometry><box><size>0.32 1.3 0.070</size></box></geometry></collision>
+        <visual name="bnch_5_r_back"><pose>1.520 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_5_r_back_c"><pose>1.520 3.650 0.625 0 0 0</pose><geometry><box><size>0.08 1.3 0.35</size></box></geometry></collision>
+        <visual name="bnch_5_r_leg_nw"><pose>1.280 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_5_r_leg_nw_c"><pose>1.280 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_5_r_leg_ne"><pose>1.520 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_5_r_leg_ne_c"><pose>1.520 4.240 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_5_r_leg_sw"><pose>1.280 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_5_r_leg_sw_c"><pose>1.280 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_5_r_leg_se"><pose>1.520 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_5_r_leg_se_c"><pose>1.520 3.060 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
       </link>
 
-      <!-- ============================================================ -->
       <!-- 4. Kitchen / Food Pickup & AMR Home Station (Top Right Zone) -->
-      <!-- ============================================================ -->
       <link name="kitchen_area">
-        <!-- Kitchen West Divider Wall (from Y = 1.6 to 4.925) -->
+        <!-- Kitchen West Divider Wall -->
         <visual name="kitch_w_v"><pose>1.7 3.3 1.0 0 0 0</pose><geometry><box><size>0.15 3.4 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
         <collision name="kitch_w_c"><pose>1.7 3.3 1.0 0 0 0</pose><geometry><box><size>0.15 3.4 2.0</size></box></geometry></collision>
-
-        <!-- Kitchen South Wall (doorway at X = 1.7 to 3.5, wall from X = 3.5 to 8.0) -->
+        <!-- Kitchen South Wall -->
         <visual name="kitch_s_v"><pose>5.75 1.6 1.0 0 0 0</pose><geometry><box><size>4.5 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
         <collision name="kitch_s_c"><pose>5.75 1.6 1.0 0 0 0</pose><geometry><box><size>4.5 0.15 2.0</size></box></geometry></collision>
-
-        <!-- Doorway lintel header (archway above door, clearance 2.0m) -->
+        <!-- Doorway lintel header -->
         <visual name="kitch_door_lintel"><pose>2.6 1.6 2.2 0 0 0</pose><geometry><box><size>1.8 0.15 0.4</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
         <collision name="kitch_door_lintel_c"><pose>2.6 1.6 2.2 0 0 0</pose><geometry><box><size>1.8 0.15 0.4</size></box></geometry></collision>
 
-        <!-- Kitchen Food Dispatch & Serving Counter (X = 4.8, Y = 3.5) -->
-        <visual name="kitch_counter_v"><pose>4.8 3.5 0.45 0 0 0</pose><geometry><box><size>1.8 0.9 0.9</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <collision name="kitch_counter_c"><pose>4.8 3.5 0.45 0 0 0</pose><geometry><box><size>1.8 0.9 0.9</size></box></geometry></collision>
+        <!-- Kitchen Food Dispatch & Serving Table (4 Stainless Steel Legs) -->
+        <!-- 4-Legged Table: kitch_dispatch_table -->
+        <visual name="kitch_dispatch_table_top"><pose>4.8 3.5 0.880 0 0 0</pose><geometry><box><size>0.9 1.8 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="kitch_dispatch_table_top_c"><pose>4.8 3.5 0.880 0 0 0</pose><geometry><box><size>0.9 1.8 0.05</size></box></geometry></collision>
+        <visual name="kitch_dispatch_table_leg_nw"><pose>4.410 4.340 0.427 0 0 0</pose><geometry><box><size>0.06 0.06 0.855</size></box></geometry><material><ambient>0.75 0.78 0.82 1</ambient><diffuse>0.75 0.78 0.82 1</diffuse></material></visual>
+        <collision name="kitch_dispatch_table_leg_nw_c"><pose>4.410 4.340 0.427 0 0 0</pose><geometry><box><size>0.06 0.06 0.855</size></box></geometry></collision>
+        <visual name="kitch_dispatch_table_leg_ne"><pose>5.190 4.340 0.427 0 0 0</pose><geometry><box><size>0.06 0.06 0.855</size></box></geometry><material><ambient>0.75 0.78 0.82 1</ambient><diffuse>0.75 0.78 0.82 1</diffuse></material></visual>
+        <collision name="kitch_dispatch_table_leg_ne_c"><pose>5.190 4.340 0.427 0 0 0</pose><geometry><box><size>0.06 0.06 0.855</size></box></geometry></collision>
+        <visual name="kitch_dispatch_table_leg_sw"><pose>4.410 2.660 0.427 0 0 0</pose><geometry><box><size>0.06 0.06 0.855</size></box></geometry><material><ambient>0.75 0.78 0.82 1</ambient><diffuse>0.75 0.78 0.82 1</diffuse></material></visual>
+        <collision name="kitch_dispatch_table_leg_sw_c"><pose>4.410 2.660 0.427 0 0 0</pose><geometry><box><size>0.06 0.06 0.855</size></box></geometry></collision>
+        <visual name="kitch_dispatch_table_leg_se"><pose>5.190 2.660 0.427 0 0 0</pose><geometry><box><size>0.06 0.06 0.855</size></box></geometry><material><ambient>0.75 0.78 0.82 1</ambient><diffuse>0.75 0.78 0.82 1</diffuse></material></visual>
+        <collision name="kitch_dispatch_table_leg_se_c"><pose>5.190 2.660 0.427 0 0 0</pose><geometry><box><size>0.06 0.06 0.855</size></box></geometry></collision>
         <!-- Serving meal trays on the dispatch counter -->
-        <visual name="kitch_tray_1"><pose>4.4 3.5 0.92 0 0 0</pose><geometry><box><size>0.35 0.25 0.03</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
-        <visual name="kitch_dish_1"><pose>4.4 3.5 0.97 0 0 0</pose><geometry><cylinder><radius>0.10</radius><length>0.08</length></cylinder></geometry><material><ambient>0.9 0.85 0.6 1</ambient><diffuse>0.9 0.85 0.6 1</diffuse></material></visual>
-        <visual name="kitch_tray_2"><pose>5.2 3.5 0.92 0 0 0</pose><geometry><box><size>0.35 0.25 0.03</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
-        <visual name="kitch_dish_2"><pose>5.2 3.5 0.97 0 0 0</pose><geometry><cylinder><radius>0.10</radius><length>0.08</length></cylinder></geometry><material><ambient>0.9 0.85 0.6 1</ambient><diffuse>0.9 0.85 0.6 1</diffuse></material></visual>
+        <visual name="kitch_tray_1"><pose>4.8 3.1 0.93 0 0 0</pose><geometry><box><size>0.35 0.25 0.03</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
+        <visual name="kitch_dish_1"><pose>4.8 3.1 0.98 0 0 0</pose><geometry><cylinder><radius>0.10</radius><length>0.08</length></cylinder></geometry><material><ambient>0.9 0.85 0.6 1</ambient><diffuse>0.9 0.85 0.6 1</diffuse></material></visual>
+        <visual name="kitch_tray_2"><pose>4.8 3.9 0.93 0 0 0</pose><geometry><box><size>0.35 0.25 0.03</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
+        <visual name="kitch_dish_2"><pose>4.8 3.9 0.98 0 0 0</pose><geometry><cylinder><radius>0.10</radius><length>0.08</length></cylinder></geometry><material><ambient>0.9 0.85 0.6 1</ambient><diffuse>0.9 0.85 0.6 1</diffuse></material></visual>
 
         <!-- Kitchen Prep Shelving / Cabinets (X = 7.4, Y = 3.5) -->
         <visual name="kitch_shelf_v"><pose>7.4 3.5 0.7 0 0 0</pose><geometry><box><size>0.8 2.0 1.4</size></box></geometry><material><ambient>0.2 0.2 0.22 1</ambient><diffuse>0.2 0.2 0.22 1</diffuse></material></visual>
         <collision name="kitch_shelf_c"><pose>7.4 3.5 0.7 0 0 0</pose><geometry><box><size>0.8 2.0 1.4</size></box></geometry></collision>
-
         <!-- Kitchen Top Cabinet (X = 4.8, Y = 4.6) -->
         <visual name="kitch_top_cab"><pose>4.8 4.6 0.5 0 0 0</pose><geometry><box><size>1.6 0.6 1.0</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient></material></visual>
         <collision name="kitch_top_cab_c"><pose>4.8 4.6 0.5 0 0 0</pose><geometry><box><size>1.6 0.6 1.0</size></box></geometry></collision>
 
-        <!-- ============================================================ -->
-        <!-- AMR ROBOT HOME STATION (Charging & Spawn Dock)               -->
-        <!-- Position: X = 2.6m, Y = 3.5m (Direct line to doorway Y=1.6)  -->
-        <!-- ============================================================ -->
-        <!-- Floor Docking & Charging Pad -->
+        <!-- AMR ROBOT HOME STATION (Charging & Spawn Dock) -->
         <visual name="home_pad"><pose>2.6 3.5 0.002 0 0 0</pose><geometry><box><size>1.1 1.3 0.004</size></box></geometry><material><ambient>0.18 0.20 0.22 1</ambient><diffuse>0.18 0.20 0.22 1</diffuse></material></visual>
-        <!-- Yellow Safety Hazard Border Stripes -->
         <visual name="home_stripe_l"><pose>2.08 3.5 0.003 0 0 0</pose><geometry><box><size>0.06 1.3 0.004</size></box></geometry><material><ambient>0.95 0.75 0.05 1</ambient><diffuse>0.95 0.75 0.05 1</diffuse></material></visual>
         <visual name="home_stripe_r"><pose>3.12 3.5 0.003 0 0 0</pose><geometry><box><size>0.06 1.3 0.004</size></box></geometry><material><ambient>0.95 0.75 0.05 1</ambient><diffuse>0.95 0.75 0.05 1</diffuse></material></visual>
         <visual name="home_stripe_back"><pose>2.6 4.12 0.003 0 0 0</pose><geometry><box><size>1.1 0.06 0.004</size></box></geometry><material><ambient>0.95 0.75 0.05 1</ambient><diffuse>0.95 0.75 0.05 1</diffuse></material></visual>
-
-        <!-- AMR Automatic Charging Tower / Kiosk -->
         <visual name="charge_tower"><pose>2.6 4.4 0.50 0 0 0</pose><geometry><box><size>0.50 0.25 1.00</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
         <collision name="charge_tower_c"><pose>2.6 4.4 0.50 0 0 0</pose><geometry><box><size>0.50 0.25 1.00</size></box></geometry></collision>
-        <!-- Glowing Cyan Status Display Screen -->
         <visual name="charge_screen"><pose>2.6 4.27 0.75 0 0 0</pose><geometry><box><size>0.35 0.02 0.22</size></box></geometry><material><ambient>0.0 0.8 1.0 1</ambient><emissive>0.0 0.8 1.0 1</emissive></material></visual>
-        <!-- Green Ready Beacon LED -->
         <visual name="charge_beacon"><pose>2.6 4.4 1.05 0 0 0</pose><geometry><cylinder><radius>0.05</radius><length>0.10</length></cylinder></geometry><material><ambient>0.0 1.0 0.4 1</ambient><emissive>0.0 1.0 0.4 1</emissive></material></visual>
       </link>
 
-      <!-- ============================================================ -->
-      <!-- 5. Central Aisle Lounge Tables & Sofas (Tables C1 - C3)       -->
-      <!-- ============================================================ -->
+      <!-- 5. Central Aisle Lounge Tables & Sofas (Tables C1 - C3) (Realistic 4 Legs) -->
       <link name="central_lounge_furniture">
-        <!-- Center Table 1 (X = -5.0, Y = 0.0) -->
-        <visual name="c_tbl_1_v"><pose>-5.0 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <collision name="c_tbl_1_c"><pose>-5.0 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry></collision>
-        <visual name="c_sofa_1_l"><pose>-5.8 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
-        <collision name="c_sofa_1_l_c"><pose>-5.8 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
-        <visual name="c_sofa_1_r"><pose>-4.2 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
-        <collision name="c_sofa_1_r_c"><pose>-4.2 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
-
-        <!-- Center Table 2 (X = -1.5, Y = 0.0) -->
-        <visual name="c_tbl_2_v"><pose>-1.5 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <collision name="c_tbl_2_c"><pose>-1.5 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry></collision>
-        <visual name="c_sofa_2_l"><pose>-2.3 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
-        <collision name="c_sofa_2_l_c"><pose>-2.3 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
-        <visual name="c_sofa_2_r"><pose>-0.7 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
-        <collision name="c_sofa_2_r_c"><pose>-0.7 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
-
-        <!-- Center Table 3 (X = +2.0, Y = 0.0) -->
-        <visual name="c_tbl_3_v"><pose>2.0 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <collision name="c_tbl_3_c"><pose>2.0 0.0 0.27 0 0 0</pose><geometry><box><size>0.7 1.0 0.55</size></box></geometry></collision>
-        <visual name="c_sofa_3_l"><pose>1.2 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
-        <collision name="c_sofa_3_l_c"><pose>1.2 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
-        <visual name="c_sofa_3_r"><pose>2.8 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
-        <collision name="c_sofa_3_r_c"><pose>2.8 0.0 0.35 0 0 0</pose><geometry><box><size>0.6 0.8 0.7</size></box></geometry></collision>
+        <!-- 4-Legged Table: c_tbl_1 -->
+        <visual name="c_tbl_1_top"><pose>-5.0 0.0 0.520 0 0 0</pose><geometry><box><size>0.7 1.0 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="c_tbl_1_top_c"><pose>-5.0 0.0 0.520 0 0 0</pose><geometry><box><size>0.7 1.0 0.04</size></box></geometry></collision>
+        <visual name="c_tbl_1_leg_nw"><pose>-5.295 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_1_leg_nw_c"><pose>-5.295 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <visual name="c_tbl_1_leg_ne"><pose>-4.705 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_1_leg_ne_c"><pose>-4.705 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <visual name="c_tbl_1_leg_sw"><pose>-5.295 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_1_leg_sw_c"><pose>-5.295 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <visual name="c_tbl_1_leg_se"><pose>-4.705 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_1_leg_se_c"><pose>-4.705 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <!-- 4-Legged Lounge Sofa: c_sofa_1_l -->
+        <visual name="c_sofa_1_l_seat"><pose>-5.85 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_l_seat_c"><pose>-5.85 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry></collision>
+        <visual name="c_sofa_1_l_back"><pose>-6.175 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_l_back_c"><pose>-6.175 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry></collision>
+        <visual name="c_sofa_1_l_arm_0"><pose>-5.850 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_l_arm_0_c"><pose>-5.850 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_1_l_arm_1"><pose>-5.850 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_l_arm_1_c"><pose>-5.850 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_1_l_leg_nw"><pose>-6.070 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_1_l_leg_nw_c"><pose>-6.070 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_1_l_leg_ne"><pose>-5.630 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_1_l_leg_ne_c"><pose>-5.630 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_1_l_leg_sw"><pose>-6.070 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_1_l_leg_sw_c"><pose>-6.070 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_1_l_leg_se"><pose>-5.630 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_1_l_leg_se_c"><pose>-5.630 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <!-- 4-Legged Lounge Sofa: c_sofa_1_r -->
+        <visual name="c_sofa_1_r_seat"><pose>-4.15 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_r_seat_c"><pose>-4.15 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry></collision>
+        <visual name="c_sofa_1_r_back"><pose>-3.825 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_r_back_c"><pose>-3.825 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry></collision>
+        <visual name="c_sofa_1_r_arm_0"><pose>-4.150 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_r_arm_0_c"><pose>-4.150 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_1_r_arm_1"><pose>-4.150 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_1_r_arm_1_c"><pose>-4.150 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_1_r_leg_nw"><pose>-4.370 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_1_r_leg_nw_c"><pose>-4.370 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_1_r_leg_ne"><pose>-3.930 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_1_r_leg_ne_c"><pose>-3.930 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_1_r_leg_sw"><pose>-4.370 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_1_r_leg_sw_c"><pose>-4.370 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_1_r_leg_se"><pose>-3.930 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_1_r_leg_se_c"><pose>-3.930 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <!-- 4-Legged Table: c_tbl_2 -->
+        <visual name="c_tbl_2_top"><pose>-1.5 0.0 0.520 0 0 0</pose><geometry><box><size>0.7 1.0 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="c_tbl_2_top_c"><pose>-1.5 0.0 0.520 0 0 0</pose><geometry><box><size>0.7 1.0 0.04</size></box></geometry></collision>
+        <visual name="c_tbl_2_leg_nw"><pose>-1.795 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_2_leg_nw_c"><pose>-1.795 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <visual name="c_tbl_2_leg_ne"><pose>-1.205 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_2_leg_ne_c"><pose>-1.205 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <visual name="c_tbl_2_leg_sw"><pose>-1.795 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_2_leg_sw_c"><pose>-1.795 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <visual name="c_tbl_2_leg_se"><pose>-1.205 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_2_leg_se_c"><pose>-1.205 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <!-- 4-Legged Lounge Sofa: c_sofa_2_l -->
+        <visual name="c_sofa_2_l_seat"><pose>-2.35 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_l_seat_c"><pose>-2.35 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry></collision>
+        <visual name="c_sofa_2_l_back"><pose>-2.675 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_l_back_c"><pose>-2.675 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry></collision>
+        <visual name="c_sofa_2_l_arm_0"><pose>-2.350 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_l_arm_0_c"><pose>-2.350 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_2_l_arm_1"><pose>-2.350 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_l_arm_1_c"><pose>-2.350 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_2_l_leg_nw"><pose>-2.570 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_2_l_leg_nw_c"><pose>-2.570 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_2_l_leg_ne"><pose>-2.130 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_2_l_leg_ne_c"><pose>-2.130 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_2_l_leg_sw"><pose>-2.570 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_2_l_leg_sw_c"><pose>-2.570 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_2_l_leg_se"><pose>-2.130 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_2_l_leg_se_c"><pose>-2.130 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <!-- 4-Legged Lounge Sofa: c_sofa_2_r -->
+        <visual name="c_sofa_2_r_seat"><pose>-0.65 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_r_seat_c"><pose>-0.65 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry></collision>
+        <visual name="c_sofa_2_r_back"><pose>-0.325 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_r_back_c"><pose>-0.325 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry></collision>
+        <visual name="c_sofa_2_r_arm_0"><pose>-0.650 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_r_arm_0_c"><pose>-0.650 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_2_r_arm_1"><pose>-0.650 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_2_r_arm_1_c"><pose>-0.650 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_2_r_leg_nw"><pose>-0.870 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_2_r_leg_nw_c"><pose>-0.870 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_2_r_leg_ne"><pose>-0.430 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_2_r_leg_ne_c"><pose>-0.430 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_2_r_leg_sw"><pose>-0.870 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_2_r_leg_sw_c"><pose>-0.870 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_2_r_leg_se"><pose>-0.430 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_2_r_leg_se_c"><pose>-0.430 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <!-- 4-Legged Table: c_tbl_3 -->
+        <visual name="c_tbl_3_top"><pose>2.0 0.0 0.520 0 0 0</pose><geometry><box><size>0.7 1.0 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="c_tbl_3_top_c"><pose>2.0 0.0 0.520 0 0 0</pose><geometry><box><size>0.7 1.0 0.04</size></box></geometry></collision>
+        <visual name="c_tbl_3_leg_nw"><pose>1.705 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_3_leg_nw_c"><pose>1.705 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <visual name="c_tbl_3_leg_ne"><pose>2.295 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_3_leg_ne_c"><pose>2.295 0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <visual name="c_tbl_3_leg_sw"><pose>1.705 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_3_leg_sw_c"><pose>1.705 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <visual name="c_tbl_3_leg_se"><pose>2.295 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_tbl_3_leg_se_c"><pose>2.295 -0.445 0.250 0 0 0</pose><geometry><box><size>0.05 0.05 0.500</size></box></geometry></collision>
+        <!-- 4-Legged Lounge Sofa: c_sofa_3_l -->
+        <visual name="c_sofa_3_l_seat"><pose>1.15 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_l_seat_c"><pose>1.15 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry></collision>
+        <visual name="c_sofa_3_l_back"><pose>0.825 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_l_back_c"><pose>0.825 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry></collision>
+        <visual name="c_sofa_3_l_arm_0"><pose>1.150 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_l_arm_0_c"><pose>1.150 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_3_l_arm_1"><pose>1.150 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_l_arm_1_c"><pose>1.150 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_3_l_leg_nw"><pose>0.930 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_3_l_leg_nw_c"><pose>0.930 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_3_l_leg_ne"><pose>1.370 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_3_l_leg_ne_c"><pose>1.370 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_3_l_leg_sw"><pose>0.930 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_3_l_leg_sw_c"><pose>0.930 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_3_l_leg_se"><pose>1.370 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_3_l_leg_se_c"><pose>1.370 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <!-- 4-Legged Lounge Sofa: c_sofa_3_r -->
+        <visual name="c_sofa_3_r_seat"><pose>2.85 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_r_seat_c"><pose>2.85 0.0 0.395 0 0 0</pose><geometry><box><size>0.55 0.8 0.110</size></box></geometry></collision>
+        <visual name="c_sofa_3_r_back"><pose>3.175 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_r_back_c"><pose>3.175 0.0 0.575 0 0 0</pose><geometry><box><size>0.1 0.8 0.35</size></box></geometry></collision>
+        <visual name="c_sofa_3_r_arm_0"><pose>2.850 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_r_arm_0_c"><pose>2.850 0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_3_r_arm_1"><pose>2.850 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry><material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual>
+        <collision name="c_sofa_3_r_arm_1_c"><pose>2.850 -0.350 0.515 0 0 0</pose><geometry><box><size>0.55 0.10 0.20</size></box></geometry></collision>
+        <visual name="c_sofa_3_r_leg_nw"><pose>2.630 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_3_r_leg_nw_c"><pose>2.630 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_3_r_leg_ne"><pose>3.070 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_3_r_leg_ne_c"><pose>3.070 0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_3_r_leg_sw"><pose>2.630 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_3_r_leg_sw_c"><pose>2.630 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
+        <visual name="c_sofa_3_r_leg_se"><pose>3.070 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="c_sofa_3_r_leg_se_c"><pose>3.070 -0.335 0.170 0 0 0</pose><geometry><box><size>0.05 0.05 0.340</size></box></geometry></collision>
       </link>
 
-      <!-- ============================================================ -->
-      <!-- 6. Bottom Private Dining Rooms (Rooms 1 - 4, Tables 6 - 9)   -->
-      <!-- ============================================================ -->
+      <!-- 6. Bottom Private Dining Rooms (Rooms 1 - 4, Tables 6 - 9) (Realistic 4 Legs) -->
       <link name="bottom_private_rooms">
-        <!-- Room Divider 1 (X = -4.2) -->
+        <!-- Room Dividers -->
         <visual name="b_div_1_v"><pose>-4.2 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
         <collision name="b_div_1_c"><pose>-4.2 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry></collision>
-
-        <!-- Room Divider 2 (X = -0.4) -->
         <visual name="b_div_2_v"><pose>-0.4 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
         <collision name="b_div_2_c"><pose>-0.4 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry></collision>
-
-        <!-- Room Divider 3 (X = +3.4) -->
         <visual name="b_div_3_v"><pose>3.4 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient><diffuse>0.3 0.3 0.32 1</diffuse></material></visual>
         <collision name="b_div_3_c"><pose>3.4 -3.4 1.0 0 0 0</pose><geometry><box><size>0.15 3.05 2.0</size></box></geometry></collision>
-
-        <!-- Front Corridor Walls with Open Doorways (at Y = -1.8) -->
+        <!-- Front Corridor Walls with Open Doorways -->
         <visual name="b_front_1"><pose>-7.0 -1.8 1.0 0 0 0</pose><geometry><box><size>1.8 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
         <collision name="b_front_1_c"><pose>-7.0 -1.8 1.0 0 0 0</pose><geometry><box><size>1.8 0.15 2.0</size></box></geometry></collision>
-
         <visual name="b_front_2"><pose>-3.3 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
         <collision name="b_front_2_c"><pose>-3.3 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry></collision>
-
         <visual name="b_front_3"><pose>0.5 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
         <collision name="b_front_3_c"><pose>0.5 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry></collision>
-
         <visual name="b_front_4"><pose>4.3 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry><material><ambient>0.3 0.3 0.32 1</ambient></material></visual>
         <collision name="b_front_4_c"><pose>4.3 -1.8 1.0 0 0 0</pose><geometry><box><size>1.6 0.15 2.0</size></box></geometry></collision>
 
-        <!-- Table 6 (Room 1, X = -6.1, Y = -3.5) -->
-        <visual name="tbl_6_top"><pose>-6.1 -3.5 0.72 0 0 0</pose><geometry><box><size>1.3 0.8 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <collision name="tbl_6_col"><pose>-6.1 -3.5 0.37 0 0 0</pose><geometry><box><size>1.3 0.8 0.75</size></box></geometry></collision>
-        <visual name="bnch_6"><pose>-6.1 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_6_c"><pose>-6.1 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry></collision>
-
-        <!-- Table 7 (Room 2, X = -2.3, Y = -3.5) -->
-        <visual name="tbl_7_top"><pose>-2.3 -3.5 0.72 0 0 0</pose><geometry><box><size>1.3 0.8 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <collision name="tbl_7_col"><pose>-2.3 -3.5 0.37 0 0 0</pose><geometry><box><size>1.3 0.8 0.75</size></box></geometry></collision>
-        <visual name="bnch_7"><pose>-2.3 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_7_c"><pose>-2.3 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry></collision>
-
-        <!-- Table 8 (Room 3, X = 1.5, Y = -3.5) -->
-        <visual name="tbl_8_top"><pose>1.5 -3.5 0.72 0 0 0</pose><geometry><box><size>1.3 0.8 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <collision name="tbl_8_col"><pose>1.5 -3.5 0.37 0 0 0</pose><geometry><box><size>1.3 0.8 0.75</size></box></geometry></collision>
-        <visual name="bnch_8"><pose>1.5 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_8_c"><pose>1.5 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry></collision>
-
-        <!-- Table 9 (Room 4, X = 5.5, Y = -3.5) -->
-        <visual name="tbl_9_top"><pose>5.5 -3.5 0.72 0 0 0</pose><geometry><box><size>1.3 0.8 0.05</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
-        <collision name="tbl_9_col"><pose>5.5 -3.5 0.37 0 0 0</pose><geometry><box><size>1.3 0.8 0.75</size></box></geometry></collision>
-        <visual name="bnch_9"><pose>5.5 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
-        <collision name="bnch_9_c"><pose>5.5 -4.2 0.22 0 0 0</pose><geometry><box><size>1.3 0.35 0.45</size></box></geometry></collision>
+        <!-- 4-Legged Table: tbl_6 -->
+        <visual name="tbl_6_top"><pose>-6.1 -3.5 0.720 0 0 0</pose><geometry><box><size>1.3 0.8 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_6_top_c"><pose>-6.1 -3.5 0.720 0 0 0</pose><geometry><box><size>1.3 0.8 0.04</size></box></geometry></collision>
+        <visual name="tbl_6_leg_nw"><pose>-6.695 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_6_leg_nw_c"><pose>-6.695 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_6_leg_ne"><pose>-5.505 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_6_leg_ne_c"><pose>-5.505 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_6_leg_sw"><pose>-6.695 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_6_leg_sw_c"><pose>-6.695 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_6_leg_se"><pose>-5.505 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_6_leg_se_c"><pose>-5.505 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_6 -->
+        <visual name="bnch_6_seat"><pose>-6.1 -4.2 0.415 0 0 0</pose><geometry><box><size>1.3 0.35 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_6_seat_c"><pose>-6.1 -4.2 0.415 0 0 0</pose><geometry><box><size>1.3 0.35 0.070</size></box></geometry></collision>
+        <visual name="bnch_6_back"><pose>-6.100 -4.335 0.625 0 0 0</pose><geometry><box><size>1.3 0.08 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_6_back_c"><pose>-6.100 -4.335 0.625 0 0 0</pose><geometry><box><size>1.3 0.08 0.35</size></box></geometry></collision>
+        <visual name="bnch_6_leg_nw"><pose>-6.710 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_6_leg_nw_c"><pose>-6.710 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_6_leg_ne"><pose>-5.490 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_6_leg_ne_c"><pose>-5.490 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_6_leg_sw"><pose>-6.710 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_6_leg_sw_c"><pose>-6.710 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_6_leg_se"><pose>-5.490 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_6_leg_se_c"><pose>-5.490 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Table: tbl_7 -->
+        <visual name="tbl_7_top"><pose>-2.3 -3.5 0.720 0 0 0</pose><geometry><box><size>1.3 0.8 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_7_top_c"><pose>-2.3 -3.5 0.720 0 0 0</pose><geometry><box><size>1.3 0.8 0.04</size></box></geometry></collision>
+        <visual name="tbl_7_leg_nw"><pose>-2.895 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_7_leg_nw_c"><pose>-2.895 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_7_leg_ne"><pose>-1.705 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_7_leg_ne_c"><pose>-1.705 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_7_leg_sw"><pose>-2.895 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_7_leg_sw_c"><pose>-2.895 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_7_leg_se"><pose>-1.705 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_7_leg_se_c"><pose>-1.705 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_7 -->
+        <visual name="bnch_7_seat"><pose>-2.3 -4.2 0.415 0 0 0</pose><geometry><box><size>1.3 0.35 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_7_seat_c"><pose>-2.3 -4.2 0.415 0 0 0</pose><geometry><box><size>1.3 0.35 0.070</size></box></geometry></collision>
+        <visual name="bnch_7_back"><pose>-2.300 -4.335 0.625 0 0 0</pose><geometry><box><size>1.3 0.08 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_7_back_c"><pose>-2.300 -4.335 0.625 0 0 0</pose><geometry><box><size>1.3 0.08 0.35</size></box></geometry></collision>
+        <visual name="bnch_7_leg_nw"><pose>-2.910 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_7_leg_nw_c"><pose>-2.910 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_7_leg_ne"><pose>-1.690 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_7_leg_ne_c"><pose>-1.690 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_7_leg_sw"><pose>-2.910 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_7_leg_sw_c"><pose>-2.910 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_7_leg_se"><pose>-1.690 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_7_leg_se_c"><pose>-1.690 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Table: tbl_8 -->
+        <visual name="tbl_8_top"><pose>1.5 -3.5 0.720 0 0 0</pose><geometry><box><size>1.3 0.8 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_8_top_c"><pose>1.5 -3.5 0.720 0 0 0</pose><geometry><box><size>1.3 0.8 0.04</size></box></geometry></collision>
+        <visual name="tbl_8_leg_nw"><pose>0.905 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_8_leg_nw_c"><pose>0.905 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_8_leg_ne"><pose>2.095 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_8_leg_ne_c"><pose>2.095 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_8_leg_sw"><pose>0.905 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_8_leg_sw_c"><pose>0.905 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_8_leg_se"><pose>2.095 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_8_leg_se_c"><pose>2.095 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_8 -->
+        <visual name="bnch_8_seat"><pose>1.5 -4.2 0.415 0 0 0</pose><geometry><box><size>1.3 0.35 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_8_seat_c"><pose>1.5 -4.2 0.415 0 0 0</pose><geometry><box><size>1.3 0.35 0.070</size></box></geometry></collision>
+        <visual name="bnch_8_back"><pose>1.500 -4.335 0.625 0 0 0</pose><geometry><box><size>1.3 0.08 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_8_back_c"><pose>1.500 -4.335 0.625 0 0 0</pose><geometry><box><size>1.3 0.08 0.35</size></box></geometry></collision>
+        <visual name="bnch_8_leg_nw"><pose>0.890 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_8_leg_nw_c"><pose>0.890 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_8_leg_ne"><pose>2.110 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_8_leg_ne_c"><pose>2.110 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_8_leg_sw"><pose>0.890 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_8_leg_sw_c"><pose>0.890 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_8_leg_se"><pose>2.110 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_8_leg_se_c"><pose>2.110 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <!-- 4-Legged Table: tbl_9 -->
+        <visual name="tbl_9_top"><pose>5.5 -3.5 0.720 0 0 0</pose><geometry><box><size>1.3 0.8 0.04</size></box></geometry><material><ambient>0.82 0.52 0.22 1</ambient><diffuse>0.82 0.52 0.22 1</diffuse></material></visual>
+        <collision name="tbl_9_top_c"><pose>5.5 -3.5 0.720 0 0 0</pose><geometry><box><size>1.3 0.8 0.04</size></box></geometry></collision>
+        <visual name="tbl_9_leg_nw"><pose>4.905 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_9_leg_nw_c"><pose>4.905 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_9_leg_ne"><pose>6.095 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_9_leg_ne_c"><pose>6.095 -3.155 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_9_leg_sw"><pose>4.905 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_9_leg_sw_c"><pose>4.905 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <visual name="tbl_9_leg_se"><pose>6.095 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="tbl_9_leg_se_c"><pose>6.095 -3.845 0.350 0 0 0</pose><geometry><box><size>0.05 0.05 0.700</size></box></geometry></collision>
+        <!-- 4-Legged Bench: bnch_9 -->
+        <visual name="bnch_9_seat"><pose>5.5 -4.2 0.415 0 0 0</pose><geometry><box><size>1.3 0.35 0.070</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_9_seat_c"><pose>5.5 -4.2 0.415 0 0 0</pose><geometry><box><size>1.3 0.35 0.070</size></box></geometry></collision>
+        <visual name="bnch_9_back"><pose>5.500 -4.335 0.625 0 0 0</pose><geometry><box><size>1.3 0.08 0.35</size></box></geometry><material><ambient>0.35 0.35 0.38 1</ambient><diffuse>0.35 0.35 0.38 1</diffuse></material></visual>
+        <collision name="bnch_9_back_c"><pose>5.500 -4.335 0.625 0 0 0</pose><geometry><box><size>1.3 0.08 0.35</size></box></geometry></collision>
+        <visual name="bnch_9_leg_nw"><pose>4.890 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_9_leg_nw_c"><pose>4.890 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_9_leg_ne"><pose>6.110 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_9_leg_ne_c"><pose>6.110 -4.085 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_9_leg_sw"><pose>4.890 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_9_leg_sw_c"><pose>4.890 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
+        <visual name="bnch_9_leg_se"><pose>6.110 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry><material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material></visual>
+        <collision name="bnch_9_leg_se_c"><pose>6.110 -4.315 0.190 0 0 0</pose><geometry><box><size>0.04 0.04 0.380</size></box></geometry></collision>
       </link>
 
-      <!-- ============================================================ -->
-      <!-- 7. Decorative Greenery / Indoor Plants                       -->
-      <!-- ============================================================ -->
+      <!-- 7. Decorative Greenery / Indoor Plants -->
       <link name="decorative_plants">
-        <!-- Plant 1 (near bottom left room 1 entrance) -->
         <visual name="pot_1"><pose>-7.3 -1.5 0.2 0 0 0</pose><geometry><cylinder><radius>0.20</radius><length>0.40</length></cylinder></geometry><material><ambient>0.15 0.15 0.15 1</ambient></material></visual>
         <visual name="foliage_1"><pose>-7.3 -1.5 0.55 0 0 0</pose><geometry><cylinder><radius>0.24</radius><length>0.45</length></cylinder></geometry><material><ambient>0.1 0.65 0.3 1</ambient><diffuse>0.1 0.65 0.3 1</diffuse></material></visual>
         <collision name="plant_1_c"><pose>-7.3 -1.5 0.4 0 0 0</pose><geometry><cylinder><radius>0.24</radius><length>0.8</length></cylinder></geometry></collision>
-
-        <!-- Plant 2 (near kitchen doorway in central corridor) -->
         <visual name="pot_2"><pose>3.4 1.1 0.2 0 0 0</pose><geometry><cylinder><radius>0.20</radius><length>0.40</length></cylinder></geometry><material><ambient>0.15 0.15 0.15 1</ambient></material></visual>
         <visual name="foliage_2"><pose>3.4 1.1 0.55 0 0 0</pose><geometry><cylinder><radius>0.24</radius><length>0.45</length></cylinder></geometry><material><ambient>0.1 0.65 0.3 1</ambient><diffuse>0.1 0.65 0.3 1</diffuse></material></visual>
         <collision name="plant_2_c"><pose>3.4 1.1 0.4 0 0 0</pose><geometry><cylinder><radius>0.24</radius><length>0.8</length></cylinder></geometry></collision>
