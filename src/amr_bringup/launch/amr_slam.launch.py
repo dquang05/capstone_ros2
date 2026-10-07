@@ -1,10 +1,26 @@
+#!/usr/bin/env python3
+"""
+One-command bringup for Gazebo Simulation + EKF + SLAM Toolbox + RViz2
+Project: Autonomous Mobile Robot (AMR) for Food Delivery
+
+Usage:
+    # Scan new main (realistic blueprint) restaurant:
+    ros2 launch amr_bringup amr_slam.launch.py
+
+    # Scan test (simple rectangular) restaurant:
+    ros2 launch amr_bringup amr_slam.launch.py world_type:=test
+
+    # Headless simulation (RViz2 only):
+    ros2 launch amr_bringup amr_slam.launch.py gui:=false
+"""
+
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 
 
@@ -18,6 +34,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     gui = LaunchConfiguration('gui')
     rviz = LaunchConfiguration('rviz')
+    world_type = LaunchConfiguration('world_type')
 
     declare_use_sim_time = DeclareLaunchArgument(
         'use_sim_time',
@@ -37,15 +54,34 @@ def generate_launch_description():
         description='Whether to start RViz2'
     )
 
-    # 1. Gazebo Harmonic Simulation with Restaurant World & AMR
-    gazebo_cmd = IncludeLaunchDescription(
+    declare_world_type = DeclareLaunchArgument(
+        'world_type',
+        default_value='main',
+        description='Restaurant world to simulate: "main" (realistic blueprint) or "test" (rectangular)'
+    )
+
+    # 1a. Gazebo Harmonic Simulation with Main Restaurant (Default)
+    gazebo_main_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_amr_gazebo, 'launch', 'restaurant_world.launch.py')
+            os.path.join(pkg_amr_gazebo, 'launch', 'restaurant_main.launch.py')
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
             'gui': gui,
-        }.items()
+        }.items(),
+        condition=IfCondition(PythonExpression(["'", world_type, "' == 'main'"]))
+    )
+
+    # 1b. Gazebo Harmonic Simulation with Test Restaurant
+    gazebo_test_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_amr_gazebo, 'launch', 'restaurant_test.launch.py')
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'gui': gui,
+        }.items(),
+        condition=IfCondition(PythonExpression(["'", world_type, "' == 'test'"]))
     )
 
     # 2. Extended Kalman Filter (EKF) Node
@@ -58,7 +94,7 @@ def generate_launch_description():
         }.items()
     )
 
-    # 3. SLAM Toolbox Node
+    # 3. SLAM Toolbox Node (Asynchronous Mapping)
     slam_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_amr_navigation, 'launch', 'slam.launch.py')
@@ -84,7 +120,9 @@ def generate_launch_description():
         declare_use_sim_time,
         declare_gui,
         declare_rviz,
-        gazebo_cmd,
+        declare_world_type,
+        gazebo_main_cmd,
+        gazebo_test_cmd,
         ekf_cmd,
         slam_cmd,
         rviz_cmd

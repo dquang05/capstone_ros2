@@ -44,10 +44,10 @@ amcl:
     scan_topic: /scan
     set_initial_pose: true
     initial_pose:
-      x: 0.0
-      y: 0.0
+      x: 1.70
+      y: -1.79
       z: 0.0
-      yaw: 0.0
+      yaw: 3.14159
 
 bt_navigator:
   ros__parameters:
@@ -115,9 +115,9 @@ controller_server:
       decel_lim_y: 0.0
       decel_lim_theta: -0.60
 
-      vx_samples: 20
+      vx_samples: 30
       vy_samples: 1
-      vtheta_samples: 25
+      vtheta_samples: 35
       sim_time: 1.4
       linear_granularity: 0.05
       angular_granularity: 0.025
@@ -139,18 +139,18 @@ controller_server:
       ]
 
       # Critic weights and parameters
-      BaseObstacle.scale: 0.02
-      ObstacleFootprint.scale: 0.05
+      BaseObstacle.scale: 0.01
+      ObstacleFootprint.scale: 0.01
       PathAlign.scale: 32.0
-      PathAlign.forward_point_distance: 0.32
-      GoalAlign.scale: 24.0
-      GoalAlign.forward_point_distance: 0.32
-      PathDist.scale: 32.0
-      GoalDist.scale: 24.0
+      PathAlign.forward_point_distance: 0.25
+      GoalAlign.scale: 0.0
+      GoalAlign.forward_point_distance: 0.25
+      PathDist.scale: 12.0
+      GoalDist.scale: 8.0
       RotateToGoal.scale: 32.0
       RotateToGoal.slowing_factor: 5.0
       RotateToGoal.lookahead_time: -1.0
-      Oscillation.scale: 1.0
+      Oscillation.scale: 0.2
       Oscillation.x_only_threshold: 0.05
 
 local_costmap:
@@ -181,8 +181,8 @@ local_costmap:
           obstacle_max_range: 10.0
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 5.0
-        inflation_radius: 0.48
+        cost_scaling_factor: 15.0
+        inflation_radius: 0.31
       always_send_full_costmap: True
 
 global_costmap:
@@ -213,8 +213,8 @@ global_costmap:
           obstacle_max_range: 10.0
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 5.0
-        inflation_radius: 0.48
+        cost_scaling_factor: 15.0
+        inflation_radius: 0.31
       always_send_full_costmap: True
 
 # =========================================================================
@@ -259,7 +259,7 @@ behavior_server:
     global_frame: map
     robot_base_frame: base_footprint
     transform_timeout: 0.1
-    simulate_ahead_time: 2.0
+    simulate_ahead_time: 1.0
     max_rotational_vel: 0.8
     min_rotational_vel: 0.1
     rotational_acc_lim: 0.6
@@ -294,7 +294,7 @@ collision_monitor:
       type: "polygon"
       action_type: "approach"
       footprint_topic: "/local_costmap/published_footprint"
-      time_before_collision: 1.2
+      time_before_collision: 0.6
       simulation_time_step: 0.1
       min_points: 6
       visualize: False

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Alias launch file: forwards to restaurant_test.launch.py.
+Alias launch file: forwards to restaurant_main.launch.py with spawn_robot:=false.
 Kept for backward compatibility.
 """
 
@@ -16,7 +16,8 @@ def generate_launch_description():
     return LaunchDescription([
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(pkg_amr_gazebo, 'launch', 'restaurant_test.launch.py')
-            )
+                os.path.join(pkg_amr_gazebo, 'launch', 'restaurant_main.launch.py')
+            ),
+            launch_arguments={'spawn_robot': 'false'}.items()
         )
     ])
