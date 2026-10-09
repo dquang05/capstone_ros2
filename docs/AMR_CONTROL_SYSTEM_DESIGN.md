@@ -225,6 +225,6 @@ $$\begin{cases} \omega_R^* = \dfrac{2v^* + b\omega^*}{2r} = \dfrac{v^* + 0.25 \o
 | **EKF Fusion** | Embedded EKF Node on Jetson/PC | `robot_localization` (`ekf_node`) | Fuses `/wheel/odom` + `/imu/data` $\to$ `/odometry/filtered` |
 | **Environment SLAM** | Onboard SLAM Processor | `slam_toolbox` (`async_slam`) | Subscribes to `/scan` + TF, generates `/map` |
 | **Global Localization** | Monte Carlo Particle Filter | `nav2_amcl` | Estimates pose on static occupancy grid |
-| **Global Planning** | $A^*$ Search Algorithm | `nav2_navfn_planner` (`use_astar: true`) | Global Costmap $\to$ Global Reference Plan |
+| **Global Planning** | Cost-Aware A* with Path Smoother | `nav2_smac_planner::SmacPlanner2D` | Global Costmap $\to$ Optimal Smooth Path |
 | **Local Navigation** | Dynamic Window Approach (DWB) | `nav2_dwb_controller` | Local Costmap $\to$ Command velocities (`/cmd_vel`) |
 | **Anti-Spill Protection**| Smooth Acceleration / Jerk Limits | DWB Controller & Costmap parameters | Bounded $a_{\text{lat}} \le 0.4\text{ m/s}^2, |a| \le 0.4\text{ m/s}^2$ |

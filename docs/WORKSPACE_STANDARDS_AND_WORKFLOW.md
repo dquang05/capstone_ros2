@@ -13,7 +13,10 @@ All robotic functional blocks are divided into modular, single-responsibility pa
 capstone_ros2/
 ├── .gitignore                      # Excludes build artifacts, logs, and temp files
 ├── docs/                           # Centralized documentation and engineering specs
+│   ├── AMR_CONTROL_SYSTEM_DESIGN.md
 │   ├── AMR_SIMULATION_SPECIFICATIONS.md
+│   ├── LAUNCH_COMMANDS_GUIDE.md
+│   ├── PROJECT_PROGRESS.md
 │   ├── SOLIDWORKS_TO_ROS2_IMPORT_GUIDE.md
 │   └── WORKSPACE_STANDARDS_AND_WORKFLOW.md
 ├── src/
