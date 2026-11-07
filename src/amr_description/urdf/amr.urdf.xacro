@@ -30,6 +30,10 @@
   <xacro:include filename="chassis.xacro" />
   <xacro:include filename="drive_wheels.xacro" />
   <xacro:include filename="caster_wheels.xacro" />
+  <xacro:include filename="skeleton.xacro" />
+  <xacro:include filename="housing.xacro" />
+  <xacro:include filename="mini_top_cover.xacro" />
+  <xacro:include filename="head.xacro" />
   <xacro:include filename="food_trays.xacro" />
   <xacro:include filename="lidar.xacro" />
   <xacro:include filename="imu.xacro" />

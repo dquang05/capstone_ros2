@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- ==================================================== -->
-  <!-- Base Chassis Plate (Centered at X=0, Y=0, Z_ground=40mm) -->
+  <!-- Base Chassis Plate (Centered at X=0, Y=0, Z_ground=27mm) -->
   <!-- ==================================================== -->
 
   <joint name="chassis_joint" type="fixed">
@@ -12,11 +12,11 @@
   </joint>
 
   <link name="chassis_link">
-    <!-- Visual: Base Chassis Plate STL -->
+    <!-- Visual: Base Chassis Plate STL (Chassis2.STL: 600x600x10mm) -->
     <visual>
-      <origin xyz="${-chassis_length/2.0} ${-chassis_width/2.0} ${chassis_z_offset}" rpy="${pi/2} 0 ${pi/2}"/>
+      <origin xyz="0.300 0.300 ${chassis_z_offset}" rpy="${pi/2} 0 -${pi/2}"/>
       <geometry>
-        <mesh filename="package://amr_description/meshes/visual/chassis.stl" scale="1 1 1"/>
+        <mesh filename="package://amr_description/meshes/visual/Chassis2.STL" scale="1 1 1"/>
       </geometry>
       <material name="robot_metal"/>
     </visual>

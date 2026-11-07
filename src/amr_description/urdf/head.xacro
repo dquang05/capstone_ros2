@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================== -->
+  <!-- Robot Head / Display Unit (P_Head.STL)               -->
+  <!-- ==================================================== -->
+
+  <joint name="head_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="head_link"/>
+    <origin xyz="${head_x} ${head_y} ${head_z_center}" rpy="0 0 ${head_yaw}"/>
+  </joint>
+
+  <link name="head_link">
+    <!-- Visual: P_Head.STL centered at link origin -->
+    <visual>
+      <origin xyz="${-head_width/2.0} ${-head_length/2.0} ${-head_height/2.0}" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/P_Head.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_accent"/>
+    </visual>
+
+    <!-- Collision: Analytical Box -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${head_width} ${head_length} ${head_height}"/>
+      </geometry>
+    </collision>
+
+    <!-- Inertial: Analytical Box Inertia -->
+    <xacro:inertial_box mass="${head_mass}" x="${head_width}" y="${head_length}" z="${head_height}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_box>
+  </link>
+
+  <gazebo reference="head_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+</robot>

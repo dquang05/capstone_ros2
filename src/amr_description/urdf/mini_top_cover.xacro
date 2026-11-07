@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================== -->
+  <!-- Mini Top Covers (P_mini-top_cover.STL)               -->
+  <!-- Dual symmetric panels mirrored across X-Z plane   -->
+  <!-- ==================================================== -->
+
+  <!-- Right Mini Top Cover (-Y side) -->
+  <joint name="right_mini_top_cover_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_mini_top_cover_link"/>
+    <origin xyz="${mini_top_cover_x} -${mini_top_cover_y_offset} ${mini_top_cover_z}" rpy="${pi/2} 0 0"/>
+  </joint>
+
+  <link name="right_mini_top_cover_link">
+    <visual>
+      <origin xyz="${-mini_top_cover_length/2.0} ${-mini_top_cover_thickness/2.0} ${-mini_top_cover_width/2.0}" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/P_mini-top_cover.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_accent"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${mini_top_cover_length} ${mini_top_cover_thickness} ${mini_top_cover_width}"/>
+      </geometry>
+    </collision>
+
+    <xacro:inertial_box mass="${mini_top_cover_mass}" x="${mini_top_cover_length}" y="${mini_top_cover_thickness}" z="${mini_top_cover_width}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_box>
+  </link>
+
+  <gazebo reference="right_mini_top_cover_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <!-- Left Mini Top Cover (+Y side, mirror symmetric across X-Z plane via rpy="${pi/2} 0 ${pi}") -->
+  <joint name="left_mini_top_cover_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_mini_top_cover_link"/>
+    <origin xyz="${mini_top_cover_x} ${mini_top_cover_y_offset} ${mini_top_cover_z}" rpy="${pi/2} 0 ${pi}"/>
+  </joint>
+
+  <link name="left_mini_top_cover_link">
+    <visual>
+      <origin xyz="${-mini_top_cover_length/2.0} ${-mini_top_cover_thickness/2.0} ${-mini_top_cover_width/2.0}" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/P_mini-top_cover.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_accent"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${mini_top_cover_length} ${mini_top_cover_thickness} ${mini_top_cover_width}"/>
+      </geometry>
+    </collision>
+
+    <xacro:inertial_box mass="${mini_top_cover_mass}" x="${mini_top_cover_length}" y="${mini_top_cover_thickness}" z="${mini_top_cover_width}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_box>
+  </link>
+
+  <gazebo reference="left_mini_top_cover_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+</robot>

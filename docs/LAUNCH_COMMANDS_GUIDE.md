@@ -62,29 +62,96 @@ ros2 launch amr_bringup amr_navigation.launch.py gui:=false
 
 ---
 
-## 3. Standalone Gazebo Simulation (`amr_gazebo`)
+## 3. Autonomous Food Delivery Mission Dispatcher (`dispatch_table`)
+
+The `dispatch_table` mission dispatcher ([dispatch_table.py](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/amr_navigation/dispatch_table.py)) enables end-to-end autonomous food delivery missions to predefined dining tables configured in [restaurant_tables.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/restaurant_tables.yaml).
+
+### 3.1. Key Capabilities & Engineering Features
+* **Single-Command ID Dispatch:** Send AMR directly to any dining cluster or service station across the restaurant world using numeric IDs (`0` to `20`).
+* **Cluster / Group Fallback Recovery Mechanism:** If the primary destination table is blocked by dynamic obstacles, customers, or narrow bottlenecks, the dispatcher automatically diverts to alternative fallback tables within the same dining cluster group instead of failing the mission.
+* **Aisle Standoff Poses (Anti-Deadlock):** All target coordinates are positioned on open main corridors ($0.82\text{ m} - 1.35\text{ m}$ clearance) outside the costmap inflation layer ($0.40\text{ m}$). This guarantees the robot's $0.484\text{ m}$ diagonal turning radius has complete freedom for $360^\circ$ in-place rotation maneuvers without wedging between customer chairs.
+* **Autonomous Meal Service Countdown:** Upon arrival, the AMR parks facing the customer table with its delivery tray, begins a 10-second countdown for meal retrieval, and signals mission completion.
+* **One-Touch Home Return:** Dispatching ID 0 or using `--home` recalls the robot directly back to the Kitchen Docking Station.
+
+### 3.2. Usage Syntax & Command Examples
+```bash
+# Ensure workspace environment is sourced in your mission terminal
+source /opt/ros/jazzy/setup.bash
+source ~/Projects/capstone_ros2/install/setup.bash
+
+# 1. Display the complete interactive dining table catalog and current statuses:
+ros2 run amr_navigation dispatch_table --list
+
+# 2. Dispatch robot to a specific dining table (e.g. Group 02 NE Table 12):
+ros2 run amr_navigation dispatch_table 12
+
+# 3. Dispatch to other dining clusters (e.g. Center Greenery Island Table 4):
+ros2 run amr_navigation dispatch_table 4
+
+# 4. Recall robot back to Kitchen / Home Charging Dock:
+ros2 run amr_navigation dispatch_table 0
+# Or using the convenience flag:
+ros2 run amr_navigation dispatch_table --home
+```
+
+### 3.3. Complete Restaurant Dining Table Catalog (IDs 0..20)
+All target coordinates are referenced in the map frame and configured in `restaurant_tables.yaml`:
+
+| ID | Table Code | Name & Description | Cluster Group | Target Pose $(X, Y, \text{Yaw})$ | Fallback IDs |
+| :---: | :--- | :--- | :--- | :---: | :---: |
+| **0** | `HOME_DOCK` | Trạm Đỗ Sạc & Nhận Món (Home Dock - Area 08) | Trạm Đỗ Sạc & Xuất Phát | `(0.00, 0.00, 0.0°)` | *None* |
+| **1** | `CIRC_SE_NORTH` | Cụm Tròn ĐN - Bàn Bắc (North Set) | Cụm Bàn Tròn Đông Nam | `(8.96, -3.37, +30.5°)` | `[2, 3]` |
+| **2** | `CIRC_SE_SW` | Cụm Tròn ĐN - Bàn Tây Nam (SW Set) | Cụm Bàn Tròn Đông Nam | `(11.75, +0.64, 180.0°)` | `[1, 3]` |
+| **3** | `CIRC_SE_SE` | Cụm Tròn ĐN - Bàn Đông Nam (SE Set) | Cụm Bàn Tròn Đông Nam | `(8.75, +1.53, -160.1°)` | `[1, 2]` |
+| **4** | `CENTER_NORTH` | Đảo Trung Tâm - Bàn Bắc (North Table) | Đảo Cây Xanh Trung Tâm | `(11.92, -6.28, +59.5°)` | `[5, 6, 7]` |
+| **5** | `CENTER_SOUTH` | Đảo Trung Tâm - Bàn Nam (South Table) | Đảo Cây Xanh Trung Tâm | `(12.30, -1.06, -149.5°)` | `[4, 6, 7]` |
+| **6** | `CENTER_EAST` | Đảo Trung Tâm - Bàn Đông (East Table) | Đảo Cây Xanh Trung Tâm | `(9.50, -3.43, -59.5°)` | `[4, 5, 7]` |
+| **7** | `CENTER_WEST` | Đảo Trung Tâm - Bàn Tây (West Table) | Đảo Cây Xanh Trung Tâm | `(14.75, -3.66, 180.0°)` | `[4, 5, 6]` |
+| **8** | `CIRC_N_SW` | Cụm Tròn Bắc - Bàn Tây Nam (SW Set) | Cụm Bàn Tròn Phía Bắc | `(15.46, -7.94, +119.7°)` | `[9, 10]` |
+| **9** | `CIRC_N_SE` | Cụm Tròn Bắc - Bàn Đông Nam (SE Set) | Cụm Bàn Tròn Phía Bắc | `(10.49, -7.16, -69.8°)` | `[8, 10]` |
+| **10** | `CIRC_N_SOUTH` | Cụm Tròn Bắc - Điểm Cận Nam (South Approach)| Cụm Bàn Tròn Phía Bắc | `(12.83, -6.86, -98.5°)` | `[8, 9]` |
+| **11** | `G02_NE_NORTH` | Group 02 ĐB - Bàn Bắc (North Table) | Group 02 (Nam Cột ĐB) | `(7.35, -7.74, +8.5°)` | `[12, 13]` |
+| **12** | `G02_NE_SW` | Group 02 ĐB - Bàn Tây Nam (SW Table) | Group 02 (Nam Cột ĐB) | `(9.35, -4.05, -135.0°)` | `[11, 13]` |
+| **13** | `G02_NE_SE` | Group 02 ĐB - Bàn Đông Nam (SE Table) | Group 02 (Nam Cột ĐB) | `(6.44, -4.56, -69.8°)` | `[11, 12]` |
+| **14** | `G02_SW_NORTH` | Group 02 TN - Bàn Bắc (North Table) | Group 02 (Bắc Cột TN) | `(16.47, -2.98, +30.5°)` | `[15, 16]` |
+| **15** | `G02_SW_SW` | Group 02 TN - Bàn Tây Nam (SW Table) | Group 02 (Bắc Cột TN) | `(14.80, +0.40, -149.9°)` | `[14, 16]` |
+| **16** | `G02_SW_SE` | Group 02 TN - Bàn Đông Nam (SE Table) | Group 02 (Bắc Cột TN) | `(14.99, +0.45, -69.8°)` | `[14, 15]` |
+| **17** | `WEST_ROW_NORTH`| Dãy Cột Tây - Bàn Bắc (North Table) | Dãy Bàn Dọc Cột Tây Bắc | `(14.58, -6.13, -49.1°)` | `[18]` |
+| **18** | `WEST_ROW_SOUTH`| Dãy Cột Tây - Bàn Nam (South Table) | Dãy Bàn Dọc Cột Tây Bắc | `(14.58, -4.75, -49.1°)` | `[17]` |
+| **19** | `GROUP_01_SE` | Bàn Tiêu Chuẩn Group 01 (Cạnh Cột SE) | Bàn Tiêu Chuẩn Group 01 | `(8.66, +1.50, -159.9°)` | `[3]` |
+| **20** | `AREA_08_BAR` | Quầy Bar 04 / Bàn Đứng Khu 08 | Khu 08 Quầy Bar & Bàn Đứng| `(-1.55, +0.50, 180.0°)` | *None* |
+
+### 3.4. Mission Execution Flow & Architecture
+1. **Nav2 Lifecycle Validation:** Checks `bt_navigator` action server readiness before issuing goals.
+2. **Autonomous Trajectory Tracking:** Publishes goal to Nav2 and displays real-time telemetry (distance remaining, mission timer).
+3. **Arrival & Table Service:** Automatically confirms arrival within tolerance (`xy_goal_tolerance <= 0.25m`), parks with delivery tray oriented toward customers, and executes the 10-second service wait countdown.
+4. **Dynamic Cluster Fallback:** If Nav2 encounters an impassable bottleneck, the dispatcher seamlessly attempts alternate table targets in the same cluster group (`fallback_table_ids`).
+
+---
+
+## 4. Standalone Gazebo Simulation (`amr_gazebo`)
 
 Use these commands when developing or testing physics, sensor plugins, or robot spawn mechanics without launching navigation:
 
-### 3.1. Main Restaurant Blueprint with AMR Spawned
+### 4.1. Main Restaurant Blueprint with AMR Spawned
 Spawns the complete restaurant environment with hollow furniture and places AMR at the home dock:
 ```bash
 ros2 launch amr_gazebo restaurant_main.launch.py
 ```
 
-### 3.2. Inspect Main Restaurant World Only (No Robot)
+### 4.2. Inspect Main Restaurant World Only (No Robot)
 Loads the 3D restaurant blueprint model without spawning the robot entity or the ROS-Gz bridge:
 ```bash
 ros2 launch amr_gazebo restaurant_main.launch.py spawn_robot:=false
 ```
 
-### 3.3. Test Rectangular World
+### 4.3. Test Rectangular World
 Loads the lightweight 16m x 10m benchmark restaurant world:
 ```bash
 ros2 launch amr_gazebo restaurant_test.launch.py
 ```
 
-### 3.4. Custom Spawn Coordinates
+### 4.4. Custom Spawn Coordinates
 Spawn AMR at custom world coordinates:
 ```bash
 ros2 launch amr_gazebo restaurant_main.launch.py x_pose:=0.0 y_pose:=0.0 yaw_pose:=0.0
@@ -92,14 +159,14 @@ ros2 launch amr_gazebo restaurant_main.launch.py x_pose:=0.0 y_pose:=0.0 yaw_pos
 
 ---
 
-## 4. Standalone Visualization & Robot Inspection (`RViz2`)
+## 5. Standalone Visualization & Robot Inspection (`RViz2`)
 
-### 4.1. Open RViz2 with Pre-configured Navigation Layout
+### 5.1. Open RViz2 with Pre-configured Navigation Layout
 ```bash
 rviz2 -d ~/Projects/capstone_ros2/src/amr_bringup/rviz/nav2.rviz --ros-args -p use_sim_time:=true
 ```
 
-### 4.2. View Robot URDF Kinematics & TF Model
+### 5.2. View Robot URDF Kinematics & TF Model
 Loads the robot description, joint state publisher GUI slider, and RViz2 to verify physical dimensions, wheel joints, and sensor frames:
 ```bash
 ros2 launch amr_description view_robot.launch.py
@@ -107,7 +174,7 @@ ros2 launch amr_description view_robot.launch.py
 
 ---
 
-## 5. SLAM Mapping Workflow (`amr_bringup` + `slam_toolbox`)
+## 6. SLAM Mapping Workflow (`amr_bringup` + `slam_toolbox`)
 
 To re-map the restaurant environment from scratch:
 
@@ -133,9 +200,9 @@ ros2 run nav2_map_server map_saver_cli -f ~/Projects/capstone_ros2/src/amr_navig
 
 ---
 
-## 6. Teleoperation & Runtime Diagnostics
+## 7. Teleoperation & Runtime Diagnostics
 
-### 6.1. Manual Driving via Keyboard Teleop
+### 7.1. Manual Driving via Keyboard Teleop
 ```bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/cmd_vel
 ```
@@ -146,7 +213,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/cmd
 * `q`/`z`: Increase / decrease linear max speed
 * `w`/`x`: Increase / decrease angular max speed
 
-### 6.2. Send Navigation Goal via CLI
+### 7.2. Send Navigation Goal via CLI
 In addition to clicking **Nav2 Goal** in RViz2, you can dispatch food delivery goals directly via CLI:
 ```bash
 ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose "
@@ -161,7 +228,7 @@ ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose "
 }"
 ```
 
-### 6.3. Monitor Critical System Topics
+### 7.3. Monitor Critical System Topics
 ```bash
 # Verify EKF filtered odometry (50 Hz)
 ros2 topic hz /odometry/filtered
@@ -177,7 +244,7 @@ ros2 topic hz /imu/data
 ros2 topic echo /cmd_vel
 ```
 
-### 6.4. Verify TF Coordinate Transform Tree
+### 7.4. Verify TF Coordinate Transform Tree
 ```bash
 # Check TF transformation frames (map -> odom -> base_footprint -> base_link -> ...)
 ros2 run tf2_tools view_frames
@@ -186,11 +253,12 @@ ros2 run tf2_tools view_frames
 
 ---
 
-## 7. Quick Reference Cheat Sheet
+## 8. Quick Reference Cheat Sheet
 
 | Task / Purpose | Launch / Run Command | Key Parameters / Options |
 | :--- | :--- | :--- |
 | **All-in-One Autonomous Nav** | `ros2 launch amr_bringup amr_navigation.launch.py` | `world_type:=main\|test`, `gui:=true\|false`, `map:=<path>` |
+| **Autonomous Table Dispatcher** | `ros2 run amr_navigation dispatch_table <ID>` | `<ID>` (`0..20`), `--list`, `--home` |
 | **Gazebo Main World** | `ros2 launch amr_gazebo restaurant_main.launch.py` | `spawn_robot:=true\|false`, `x_pose:=<x>`, `y_pose:=<y>` |
 | **Gazebo Test World** | `ros2 launch amr_gazebo restaurant_test.launch.py` | `spawn_robot:=true\|false` |
 | **SLAM Mapping Bringup** | `ros2 launch amr_bringup amr_slam.launch.py` | `world_type:=main\|test`, `gui:=true\|false` |

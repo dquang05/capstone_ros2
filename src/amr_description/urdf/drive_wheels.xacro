@@ -14,11 +14,11 @@
   </joint>
 
   <link name="left_wheel_link">
-    <!-- Visual: active_wheel.stl centered at wheel rotational center -->
+    <!-- Visual: Active_wheel.STL centered at wheel rotational center -->
     <visual>
-      <origin xyz="-0.075 -0.025 -0.075" rpy="0 0 0"/>
+      <origin xyz="${-wheel_radius} ${-wheel_width/2.0} ${-wheel_radius}" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://amr_description/meshes/visual/active_wheel.stl" scale="1 1 1"/>
+        <mesh filename="package://amr_description/meshes/visual/Active_wheel.STL" scale="1 1 1"/>
       </geometry>
       <material name="robot_wheel"/>
     </visual>
@@ -54,11 +54,11 @@
   </joint>
 
   <link name="right_wheel_link">
-    <!-- Visual: active_wheel.stl centered at wheel rotational center -->
+    <!-- Visual: Active_wheel.STL mirrored symmetrically (rim faces outward) -->
     <visual>
-      <origin xyz="-0.075 -0.025 -0.075" rpy="0 0 0"/>
+      <origin xyz="${wheel_radius} ${wheel_width/2.0} ${-wheel_radius}" rpy="0 0 ${pi}"/>
       <geometry>
-        <mesh filename="package://amr_description/meshes/visual/active_wheel.stl" scale="1 1 1"/>
+        <mesh filename="package://amr_description/meshes/visual/Active_wheel.STL" scale="1 1 1"/>
       </geometry>
       <material name="robot_wheel"/>
     </visual>

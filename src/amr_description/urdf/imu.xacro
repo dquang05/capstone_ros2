@@ -50,19 +50,19 @@
           <x>
             <noise type="gaussian">
               <mean>0.0</mean>
-              <stddev>2e-4</stddev>
+              <stddev>0.00115758</stddev> <!-- Var: 1.34e-6 (rad/s)^2 -->
             </noise>
           </x>
           <y>
             <noise type="gaussian">
               <mean>0.0</mean>
-              <stddev>2e-4</stddev>
+              <stddev>0.00212838</stddev> <!-- Var: 4.53e-6 (rad/s)^2 -->
             </noise>
           </y>
           <z>
             <noise type="gaussian">
               <mean>0.0</mean>
-              <stddev>2e-4</stddev>
+              <stddev>0.00126886</stddev> <!-- Var: 1.61e-6 (rad/s)^2 -->
             </noise>
           </z>
         </angular_velocity>
@@ -70,19 +70,19 @@
           <x>
             <noise type="gaussian">
               <mean>0.0</mean>
-              <stddev>1.7e-2</stddev>
+              <stddev>0.01090871</stddev> <!-- Var: 1.19e-4 (m/s^2)^2 -->
             </noise>
           </x>
           <y>
             <noise type="gaussian">
               <mean>0.0</mean>
-              <stddev>1.7e-2</stddev>
+              <stddev>0.01170470</stddev> <!-- Var: 1.37e-4 (m/s^2)^2 -->
             </noise>
           </y>
           <z>
             <noise type="gaussian">
               <mean>0.0</mean>
-              <stddev>1.7e-2</stddev>
+              <stddev>0.01292285</stddev> <!-- Var: 1.67e-4 (m/s^2)^2 -->
             </noise>
           </z>
         </linear_acceleration>

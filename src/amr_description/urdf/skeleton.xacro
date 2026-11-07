@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================== -->
+  <!-- Superstructure Side Skeletons (P_skeleton.STL)       -->
+  <!-- ==================================================== -->
+
+  <!-- Left Skeleton Frame (Centered above left active wheel) -->
+  <joint name="left_skeleton_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_skeleton_link"/>
+    <origin xyz="0 ${skeleton_y_offset} ${skeleton_z_offset}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="left_skeleton_link">
+    <!-- Visual: P_skeleton.STL centered at link origin (facing inward) -->
+    <visual>
+      <origin xyz="${-skeleton_length/2.0} ${skeleton_thickness/2.0} ${skeleton_height/2.0}" rpy="${pi} 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/P_skeleton.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_metal"/>
+    </visual>
+
+    <!-- Collision: Analytical Box -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${skeleton_length} ${skeleton_thickness} ${skeleton_height}"/>
+      </geometry>
+    </collision>
+
+    <!-- Inertial: Analytical Box Inertia -->
+    <xacro:inertial_box mass="${skeleton_mass}" x="${skeleton_length}" y="${skeleton_thickness}" z="${skeleton_height}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_box>
+  </link>
+
+  <gazebo reference="left_skeleton_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <!-- Right Skeleton Frame (Symmetric across X-axis via yaw pi) -->
+  <joint name="right_skeleton_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_skeleton_link"/>
+    <origin xyz="0 -${skeleton_y_offset} ${skeleton_z_offset}" rpy="0 0 ${pi}"/>
+  </joint>
+
+  <link name="right_skeleton_link">
+    <!-- Visual: P_skeleton.STL centered at link origin (facing inward) -->
+    <visual>
+      <origin xyz="${-skeleton_length/2.0} ${skeleton_thickness/2.0} ${skeleton_height/2.0}" rpy="${pi} 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/P_skeleton.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_metal"/>
+    </visual>
+
+    <!-- Collision: Analytical Box -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${skeleton_length} ${skeleton_thickness} ${skeleton_height}"/>
+      </geometry>
+    </collision>
+
+    <!-- Inertial: Analytical Box Inertia -->
+    <xacro:inertial_box mass="${skeleton_mass}" x="${skeleton_length}" y="${skeleton_thickness}" z="${skeleton_height}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_box>
+  </link>
+
+  <gazebo reference="right_skeleton_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+</robot>

@@ -39,13 +39,30 @@ Thuật toán EKF hoạt động lặp tuần tự qua hai bước chính:
     *   **Trường hợp 1:** Khi bánh xe bị trượt trên sàn gạch trơn, sai số mô hình $P$ tăng vọt ($K \to 1$), EKF sẽ tin tưởng dữ liệu đo từ cảm biến ngoài (đặc biệt là con quay hồi chuyển IMU).
     *   **Trường hợp 2:** Khi cảm biến ngoài bị nhiễu rung lắc gờ sàn đột ngột dẫn đến ma trận nhiễu đo $R$ lớn ($K \to 0$), EKF sẽ ưu tiên tin vào mô hình động học suy diễn từ bánh xe.
 
-#### Thiết lập thông số ROS 2 cho node `ekf_filter_node` ([ekf.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_localization/config/ekf.yaml))
+#### a) Tần số lấy mẫu các cảm biến đầu vào và Cơ chế hợp nhất đa tần số (Multi-rate Fusion)
+
+Trong kiến trúc của AMR, các cảm biến hoạt động ở các tần số lấy mẫu vật lý hoàn toàn khác nhau để tối ưu giữa độ nhạy động học và băng thông xử lý. Bảng dưới đây thể hiện chi tiết tần số hoạt động riêng của từng cảm biến trong hệ thống:
+
+| Cảm biến / Module | Tần số thiết lập | Chu kỳ lấy mẫu ($\Delta t$) | Căn cứ thiết lập & File cấu hình | Lý do thiết kế kỹ thuật |
+| :--- | :--- | :--- | :--- | :--- |
+| **9-DOF IMU (Bosch BNO055)** | **100.0 Hz** | $10\text{ ms}$ | `update_rate: 100`<br>([imu.xacro](file:///home/quangtran/Projects/capstone_ros2/src/amr_description/urdf/imu.xacro#L44)) | Con quay hồi chuyển (Gyroscope) cần tần số lấy mẫu cao ($100\text{ Hz}$) để phát hiện tức thì các biến thiên vận tốc góc đột ngột khi bánh xe bắt đầu trượt (slip onset) hoặc khi robot bắt đầu quay đổi hướng, giúp bù trôi góc Yaw cực kỳ nhạy và loại bỏ trễ pha. |
+| **Wheel Encoder (Động cơ BLDC)** | **50.0 Hz** | $20\text{ ms}$ | `odom_publish_frequency: 50`<br>([gazebo.xacro](file:///home/quangtran/Projects/capstone_ros2/src/amr_description/urdf/gazebo.xacro#L30)) | Chu kỳ $20\text{ ms}$ là tốc độ lấy mẫu chuẩn mực cho cơ cấu phản hồi bánh xe; vừa đủ mịn để tính toán vi phân vận tốc $(\dot{x}, \dot{\psi})$, vừa không gây quá tải hàng đợi ngắt trên vi điều khiển STM32 hoặc tràn bus giao tiếp UART/CAN sang máy tính nhúng ROS 2. |
+| **Bộ lọc EKF (`ekf_filter_node`)** | **50.0 Hz** | $20\text{ ms}$ | `frequency: 50.0`<br>([ekf.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_localization/config/ekf.yaml#L7)) | Tần số thực thi chu kỳ chính của EKF được chọn đồng bộ với tần số xuất của Wheel Odometry ($50\text{ Hz}$), đảm bảo xuất dữ liệu `/odometry/filtered` và TF `odom -> base_footprint` liên tục, không bị trễ nhịp cung cấp cho bộ điều khiển bám quỹ đạo DWB ($10\text{ Hz}$). |
+| **2D LiDAR (RPLIDAR A2M8)** | **10.0 Hz** | $100\text{ ms}$ | `update_rate: 10`<br>([lidar.xacro](file:///home/quangtran/Projects/capstone_ros2/src/amr_description/urdf/lidar.xacro#L63)) | Tốc độ quay quang học của đầu quét RPLIDAR A2 được cố định ở $10\text{ vòng/giây}$ ($600\text{ RPM}$). Khoảng cách $100\text{ ms}$ giữa 2 lần quét laser chính là lý do bắt buộc phải có EKF (chạy ở $50 - 100\text{ Hz}$) để "nội suy lấp đầy" vị trí của robot giữa 2 lần LiDAR nhận dữ liệu mới. |
+
+**Cơ chế hợp nhất đa tần số bất đồng bộ (Asynchronous Multi-rate Fusion):**  
+Node `ekf_node` (`robot_localization`) vận hành theo cơ chế bất đồng bộ dựa trên nhãn thời gian chuẩn (ROS 2 Header Timestamps):
+* Cứ mỗi **$10\text{ ms}$**, gói tin IMU ($100\text{ Hz}$) đưa vào sẽ kích hoạt ngay một chu kỳ hiệu chỉnh góc xoay $\psi$ và gia tốc $a_x$.
+* Cứ mỗi **$20\text{ ms}$**, gói tin Wheel Odom ($50\text{ Hz}$) đưa vào sẽ kích hoạt bước dự đoán động học và hiệu chỉnh vận tốc dài $v_x$.
+* Giữa 2 khung quét của LiDAR cách nhau $100\text{ ms}$, bộ lọc EKF đã thực thi **5 lần cập nhật từ Encoder** và **10 lần cập nhật từ IMU**, giúp trạng thái tư thế của robot luôn mượt mà và triệt tiêu hoàn toàn độ giật khi robot vào cua ở tốc độ cao.
+
+#### b) Thiết lập thông số ROS 2 cho node `ekf_filter_node` ([ekf.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_localization/config/ekf.yaml))
 
 | Thông số cấu hình | Giá trị thiết lập | Lý do thiết kế & Căn cứ kỹ thuật |
 | :--- | :--- | :--- |
-| `frequency` | `50.0` Hz | Đồng bộ với tần số xuất dữ liệu Odometry của động cơ bánh xe ($50\text{ Hz}$), đảm bảo độ trễ ước lượng tư thế tối thiểu ($\Delta t = 20\text{ ms}$) cung cấp kịp thời cho bộ điều khiển DWB. |
+| `frequency` | `50.0` Hz | Tần số xuất dữ liệu tư thế lọc `/odometry/filtered` và phát TF liên tục ($20\text{ ms}$/lần), đồng bộ nhịp với Wheel Odometry và gấp 5 lần tần số của bộ điều khiển DWB ($10\text{ Hz}$). |
 | `two_d_mode` | `true` | Robot chỉ vận hành trên mặt bằng phẳng của sàn nhà hàng 2D ($z = 0$). Ép các bậc tự do ngoài mặt phẳng ($z, \text{roll}, \text{pitch}$) về 0 giúp triệt tiêu hoàn toàn sai số trôi trục thẳng đứng do rung xóc khi đi qua gờ ron gạch. |
-| `sensor_timeout` | `0.1` s | Nếu một cảm biến bị đứt kết nối hoặc trễ quá $100\text{ ms}$ (tương đương 5 chu kỳ lấy mẫu), EKF sẽ tạm ngắt phép đo đó để tránh làm sai lệch ước lượng. |
+| `sensor_timeout` | `0.1` s | Nếu một cảm biến bị đứt kết nối hoặc trễ quá $100\text{ ms}$ (tương đương 5 chu kỳ lấy mẫu của encoder hoặc 10 chu kỳ của IMU), EKF sẽ tạm ngắt phép đo đó để tránh làm sai lệch ước lượng. |
 | `publish_tf` | `true` | Công bố phép biến đổi hệ tọa độ liên tục chuẩn REP-105: `odom -> base_footprint`. |
 | `odom0` (`/wheel/odom`) | `odom0_config`:<br>`[vx: true, vyaw: true]`<br>*(tất cả các trường khác `false`)* | **Chỉ lấy vận tốc vi sai:** Vận tốc dài tịnh tiến dọc trục $\dot{x} = v_x$ và vận tốc góc quay $\dot{\psi} = \omega_z$.<br>**Lý do cốt lõi:** Tuyệt đối **không** chọn tích phân vị trí tuyệt đối $(x, y)$ từ bánh xe; vì nếu bánh xe bị trượt quay tại chỗ khi va quệt, việc đọc tọa độ $(x, y)$ từ encoder sẽ làm sai số tích lũy vĩnh viễn không thể hồi phục. |
 | `imu0` (`/imu/data`) | `imu0_config`:<br>`[yaw: true, vyaw: true, ax: true]`<br>`imu0_relative: true`<br>`imu0_remove_gravitational_acceleration: true` | **Lấy góc hướng, tốc độ góc và gia tốc dài:**<br>1. Góc hướng $\psi$ và tốc độ góc $\dot{\psi} = \omega_z$ từ con quay hồi chuyển BNO055 ($100\text{ Hz}$) hoàn toàn độc lập với hiện tượng trượt bánh xe, khử triệt để hiện tượng xoay lệch hướng.<br>2. Gia tốc $a_x$ hỗ trợ phản ứng tức thời khi xe phanh khẩn cấp.<br>3. `imu0_relative: true` giúp đặt mốc hướng ban đầu về 0, và tự động khử gia tốc trọng trường $9.81\text{ m/s}^2$. |
@@ -134,7 +151,7 @@ Bản đồ tĩnh 2D thu được từ SLAM được chuyển đổi thành **Co
 
 ```mermaid
 graph TD
-    StaticMapGrid["Bản đồ Tĩnh Lưới Ô Vuông (0.05m)"] --> InflationLayer["Lớp Lạm phát Inflation Layer<br/>r_inscribed = 0.30m | inflation_radius = 0.55m<br/>cost(d) = 253 * exp(-8.0 * (d - r_in))"]
+    StaticMapGrid["Bản đồ Tĩnh Lưới Ô Vuông (0.05m)"] --> InflationLayer["Lớp Lạm phát Inflation Layer<br/>r_inscribed = 0.30m | inflation_radius = 0.45m<br/>cost(d) = 253 * exp(-3.5 * (d - r_in))"]
     InflationLayer --> GlobalCostmap["Global Costmap (Cost: 0 -> 254)"]
     
     subgraph SmacSearch ["Giải thuật Smac Planner 2D (Cost-Aware A*)"]
@@ -150,13 +167,14 @@ graph TD
 
 #### a) Mô hình hình học thân xe và Cơ chế Lạm phát Costmap
 
-*   **Kích thước bao thân xe (URDF):** Chiều dài $L = 760\text{ mm} = 0.76\text{ m}$, Chiều rộng $W = 600\text{ mm} = 0.60\text{ m}$.
+*   **Kích thước bao thân xe (URDF):** Chiều dài $L = 600\text{ mm} = 0.60\text{ m}$, Chiều rộng $W = 600\text{ mm} = 0.60\text{ m}$ (Khung vuông đối xứng).
 *   **Đa giác Footprint đối xứng qua tâm trục bánh chủ động (`base_link`):**
-    $$\text{footprint} = [[0.38, 0.30], [0.38, -0.30], [-0.38, -0.30], [-0.38, 0.30]]$$
+    $$\text{footprint} = [[0.30, 0.30], [0.30, -0.30], [-0.30, -0.30], [-0.30, 0.30]]$$
 *   **Bán kính nội tiếp ($r_{\text{inscribed}}$):** Khoảng cách từ tâm đến mép hẹp nhất:
     $$r_{\text{inscribed}} = \frac{W}{2} = 0.30\text{ m}$$
-*   **Bán kính ngoại tiếp ($r_{\text{circumscribed}}$):** Khoảng cách từ tâm đến đỉnh xa nhất của thân xe:
-    $$r_{\text{circumscribed}} = \sqrt{\left(\frac{L}{2}\right)^2 + \left(\frac{W}{2}\right)^2} = \sqrt{0.38^2 + 0.30^2} \approx 0.4841\text{ m} \quad (\approx 0.4982\text{ m} \text{ trên lưới đa giác có dung sai biên})$$
+*   **Bán kính ngoại tiếp ($r_{\text{circumscribed}}$) & Vòng quay quét ($D_{\text{sweep}}$):**
+    *   Theo mô hình CAD Mesh thực tế (có bo tròn 4 góc $R_{\text{fillet}} = 50\text{ mm}$): $r_{\text{circumscribed}} = 0.4036\text{ m}$, đường kính quét vòng quay thực tế $D_{\text{sweep}} = 807.1\text{ mm} < 810\text{ mm}$ (giảm $161\text{ mm}$ so với xe chữ nhật cũ $968\text{ mm}$).
+    *   Theo đa giác 4 đỉnh vuông cấu hình trên Nav2: $r_{\text{circumscribed}} = \sqrt{0.30^2 + 0.30^2} \approx 0.4243\text{ m}$ ($D_{\text{sweep}} \approx 848.5\text{ mm}$). Việc dùng 4 đỉnh vuông tạo một lớp đệm an toàn dự phòng $+2.0\text{ cm}$ tại 4 góc nhọn khi robot xoay chuyển hướng.
 *   **Hàm suy giảm chi phí lạm phát số mũ:**
     $$\text{cost}(d) = 253 \cdot e^{-\alpha (d - r_{\text{inscribed}})}$$
     Trong đó $d$ là khoảng cách từ ô lưới đến vật thể gần nhất, $\alpha$ là hệ số suy giảm chi phí (`cost_scaling_factor`).
@@ -170,7 +188,7 @@ Trong đó:
 *   $g(n)$ **(Chi phí tích lũy thực tế):** Khi di chuyển từ ô $n_u$ sang ô lân cận $n_v$:
     $$\Delta g(n_u, n_v) = Cost_{\text{move}}(n_u, n_v) + \omega_c \cdot CostMap(n_v)$$
     *   $Cost_{\text{move}}$: Chi phí hình học cơ bản ($1.0$ cho hướng thẳng, $\sqrt{2} \approx 1.414$ cho hướng chéo).
-    *   $\omega_c$: Trọng số phạt rủi ro (`cost_travel_multiplier = 2.0`).
+    *   $\omega_c$: Trọng số phạt rủi ro (`cost_travel_multiplier = 5.0`).
     *   $CostMap(n_v)$: Giá trị chi phí của ô lưới trên bản đồ lạm phát, đóng vai trò tạo lực đẩy ép quỹ đạo ra xa chân bàn ghế và bám theo tim đường hành lang.
 *   $h(n)$ **(Hàm Heuristic Euclidean):** Ước lượng khoảng cách đường chim bay đến vị trí đích:
     $$h(n) = \sqrt{(x_{\text{goal}} - x_n)^2 + (y_{\text{goal}} - y_n)^2}$$
@@ -181,12 +199,12 @@ Trong đó:
 
 | Thông số cấu hình | Giá trị thiết lập | Lý do thiết kế & Căn cứ kỹ thuật |
 | :--- | :--- | :--- |
-| `global_costmap -> inflation_radius` | `0.55` m | **Hiệu chỉnh đặc biệt quan trọng:** Ban đầu đặt $0.48\text{ m} < r_{\text{circumscribed}} \approx 0.4982\text{ m}$, hệ thống báo lỗi cảnh báo không thể dùng potential field để tăng tốc kiểm tra va chạm SE(2). Nâng lên **$0.55\text{ m}$** ($> r_{\text{circumscribed}}$) giúp robot xoay tròn tại chỗ an toàn mà không va quệt 4 góc xe, đồng thời tạo trường thế năng chi phí đẩy quỹ đạo toàn cục ra chính giữa hành lang nhà hàng ($1.3 - 2.4\text{ m}$). |
-| `global_costmap -> cost_scaling_factor` ($\alpha$) | `8.0` $\text{m}^{-1}$ | Độ dốc suy giảm chi phí $e^{-8.0(d - 0.30)}$. Đảm bảo chi phí giảm nhanh khi cách xa mép bàn quá $0.55\text{ m}$, không gây nghẽn đường (choke-point) khi robot phải lách qua các cửa phòng hẹp $1.0\text{ m}$. |
+| `global_costmap -> inflation_radius` | `0.45` m | **Hiệu chỉnh theo hình học xe vuông:** $0.45\text{ m} > r_{\text{circumscribed}} \approx 0.4243\text{ m}$ (đa giác 4 đỉnh) và $> 0.4036\text{ m}$ (CAD mesh $807\text{ mm}$), đảm bảo phủ trọn vẹn bán kính quay của thân xe, tránh cảnh báo thiếu bán kính lạm phát và đẩy đường đi toàn cục ra giữa hành lang. |
+| `global_costmap -> cost_scaling_factor` ($\alpha$) | `3.5` $\text{m}^{-1}$ | Độ dốc suy giảm chi phí $e^{-3.5(d - 0.30)}$. Đảm bảo chi phí giảm hợp lý khi ra xa mép bàn, không gây nghẽn đường (choke-point) khi robot phải lách qua các cửa phòng hẹp $1.0 - 1.1\text{ m}$. |
 | `local_costmap -> inflation_radius` | `0.36` m | Bán kính lạm phát cục bộ được đặt bằng $r_{\text{inscribed}} + 0.06\text{ m} = 0.36\text{ m}$ để bộ điều khiển DWB có thể tự do tìm kiếm các quỹ đạo bám sát không gian thực tế mà không bị hiệu ứng "tường vô hình" ngăn cản việc len lỏi vào các khe bàn ăn chật hẹp ($1.0\text{ m}$). |
-| `local_costmap -> cost_scaling_factor` | `10.0` $\text{m}^{-1}$ | Độ dốc chi phí cục bộ cao hơn nhằm kích hoạt phản ứng phanh né tránh dứt khoát khi có thực khách bất ngờ bước tới gần thân xe. |
+| `local_costmap -> cost_scaling_factor` | `5.0` $\text{m}^{-1}$ | Độ dốc chi phí cục bộ cao hơn nhằm kích hoạt phản ứng phanh né tránh dứt khoát khi có thực khách bất ngờ bước tới gần thân xe. |
 | `planner_server -> plugin` | `"nav2_smac_planner::SmacPlanner2D"` | Lựa chọn tối ưu sau khi kiểm chứng thực tế: Loại bỏ hiện tượng bo góc cắt tường của `NavfnPlanner` và triệt tiêu các vòng cua chữ U (U-turn loop) không cần thiết của `SmacPlannerLattice`, cho phép robot vi sai tận dụng lợi thế quay tại chỗ ($R = 0$) để chuyển hướng. |
-| `cost_travel_multiplier` ($\omega_c$) | `2.0` | Tăng gấp đôi trọng số chi phí vật cản ô lưới, ưu tiên chọn lộ trình thoáng đãng ở giữa sảnh thay vì chọn đường ngắn nhất nhưng bám sát mép bàn ghế. |
+| `cost_travel_multiplier` ($\omega_c$) | `5.0` | Tăng trọng số chi phí vật cản ô lưới, ưu tiên chọn lộ trình thoáng đãng ở giữa sảnh thay vì chọn đường ngắn nhất nhưng bám sát mép bàn ghế. |
 | `tolerance` | `0.5` m | Dung sai chấp nhận vị trí đích. Cho phép robot lập kế hoạch dừng phục vụ ngay cạnh bàn ăn kể cả khi vị trí mục tiêu lý thuyết bị ghế hoặc chân khách lấn chiếm nhẹ. |
 | `allow_unknown` | `true` | Cho phép hoạch định xuyên qua vùng xám chưa quan sát (ví dụ góc khuất sau vách ngăn khi mới khởi động), tránh việc robot từ chối lập đường đi (`failed to compute path`). |
 | `smoother -> w_smooth` / `w_data` | `0.3` / `0.2` | Tỉ lệ trọng số làm mượt: Nắn các góc cua gấp $45^\circ / 90^\circ$ của lưới ô vuông thành các đường lượn tiếp tuyến trơn tru, giúp bộ điều khiển DWB bám quỹ đạo mà không bị giật khựng. |
@@ -218,7 +236,7 @@ graph TD
     *   $\omega_{\max} = 0.80\text{ rad/s}$ (~$45.8^\circ/\text{s}$): Khống chế gia tốc hướng tâm $a_{\text{lat}} = v \cdot \omega \le 0.40\text{ m/s}^2$ để chống sóng sánh trào đổ nước uống trên khay.
 2.  **Ràng buộc gia tốc chống đổ thức ăn ($V_d$ - Anti-Spill Limits):**
     $$V_d = \{(v, \omega) \mid v \in [v_c - a_{\text{break}}\Delta t, \; v_c + a_{\text{acc}}\Delta t], \; \omega \in [\omega_c - \alpha_{\text{break}}\Delta t, \; \omega_c + \alpha_{\text{acc}}\Delta t]\}$$
-    *   Khống chế gia tốc dài: $a_{\text{acc}} = 0.40\text{ m/s}^2$, $a_{\text{break}} = 0.40\text{ m/s}^2$. Thân xe có tải trọng danh định $45\text{ kg}$ với trọng tâm cao ($h \approx 0.5\text{ m}$), việc giới hạn gia tốc dưới $0.4\text{ m/s}^2$ giúp triệt tiêu hoàn toàn nguy cơ xô đổ thức ăn dạng lỏng (canh, súp).
+    *   Khống chế gia tốc dài: $a_{\text{acc}} = 0.40\text{ m/s}^2$, $a_{\text{break}} = 0.40\text{ m/s}^2$. Thân xe có tải trọng danh định $65\text{ kg}$ với trọng tâm thấp ($h \approx 0.16\text{ m}$ so với mặt đế), việc giới hạn gia tốc dưới $0.4\text{ m/s}^2$ giúp triệt tiêu hoàn toàn nguy cơ xô đổ thức ăn dạng lỏng (canh, súp).
     *   Khống chế gia tốc góc: $\alpha_{\text{acc}} = 0.60\text{ rad/s}^2$, $\alpha_{\text{break}} = 0.60\text{ rad/s}^2$.
 3.  **Ràng buộc khoảng cách phanh dừng an toàn ($V_a$):**
     Loại bỏ các quỹ đạo không thể dừng xe trước khi va chạm với vật cản ở khoảng cách đo được từ LiDAR.

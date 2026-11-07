@@ -9,68 +9,145 @@
   <xacro:property name="wheel_radius"   value="0.075"/>
   <xacro:property name="wheel_width"    value="0.050"/>
   <xacro:property name="wheel_mass"     value="2.0"/>
-  <!-- Distance from robot center (Y-axis): 250mm -->
+  <!-- Distance from robot center (Y-axis): 250mm (Track width = 500mm) -->
   <xacro:property name="wheel_y_offset" value="0.250"/>
   <xacro:property name="wheel_track"    value="${2.0 * wheel_y_offset}"/>
 
-  <!-- Passive Caster Wheels specifications -->
+  <!-- Passive Caster Wheels specifications (Ball transfer unit D = 50mm) -->
   <xacro:property name="caster_radius"   value="0.025"/>
-  <xacro:property name="caster_width"    value="0.027"/>
-  <xacro:property name="caster_mass"     value="0.5"/>
-  <!-- Distance from drive axle (X-axis): 220mm -->
-  <xacro:property name="caster_x_offset" value="0.22"/>
-  <!-- Distance from robot center (Y-axis): 230mm -->
-  <xacro:property name="caster_y_offset" value="0.23"/>
+  <xacro:property name="caster_mass"     value="0.25"/>
+  <!-- Distance to drive wheel axle (Y-axis), along X direction: 193mm -->
+  <xacro:property name="caster_x_offset" value="0.193"/>
+  <!-- Distance to robot centerline (X-axis), along Y direction: 225mm -->
+  <xacro:property name="caster_y_offset" value="0.225"/>
   <!-- Z offset so casters touch ground (Z_ground = 0) -->
   <xacro:property name="caster_z_offset" value="${-(wheel_radius - caster_radius)}"/>
 
-  <!-- Chassis dimensions -->
-  <xacro:property name="chassis_length"    value="0.760"/>
+  <!-- Chassis dimensions (Chassis2.STL: 600x600x10mm, mass 7.5kg) -->
+  <xacro:property name="chassis_length"    value="0.600"/>
   <xacro:property name="chassis_width"     value="0.600"/>
   <xacro:property name="chassis_thickness" value="0.010"/>
-  <xacro:property name="chassis_mass"      value="25.0"/>
-  <xacro:property name="ground_clearance"  value="0.040"/>
+  <xacro:property name="chassis_mass"      value="7.5"/>
+  <!-- Chassis bottom elevation from ground: 27mm -->
+  <xacro:property name="ground_clearance"  value="0.027"/>
 
   <!-- Elevation of bottom of chassis relative to base_link (at wheel axle: 0.075m) -->
-  <!-- z_offset = ground_clearance - wheel_radius = 0.040 - 0.075 = -0.035m -->
+  <!-- z_offset = ground_clearance - wheel_radius = 0.027 - 0.075 = -0.048m -->
   <xacro:property name="chassis_z_offset" value="${ground_clearance - wheel_radius}"/>
 
   <!-- ==================================================== -->
-  <!-- Food Delivery Trays Specifications                  -->
+  <!-- Superstructure Side Skeletons (P_skeleton.STL)       -->
   <!-- ==================================================== -->
-  <xacro:property name="tray_length" value="0.720"/>
-  <xacro:property name="tray_width"  value="0.365"/>
-  <xacro:property name="tray_height" value="0.080"/>
-  <xacro:property name="tray_mass"   value="5.0"/>
+  <xacro:property name="skeleton_length"    value="0.150"/> <!-- along X -->
+  <xacro:property name="skeleton_thickness" value="0.083"/> <!-- along Y -->
+  <xacro:property name="skeleton_height"    value="0.750"/> <!-- along Z -->
+  <xacro:property name="skeleton_mass"      value="3.0"/>
 
-  <!-- Elevation parameters -->
-  <!-- Tray 1 bottom from chassis bottom: 424mm -->
-  <xacro:property name="tray_1_bottom_from_chassis" value="0.424"/>
-  <!-- Distance between consecutive tray bottoms: 200mm -->
+  <!-- Outer edge is 71mm inward from chassis side edge (chassis_width/2.0 = 0.300m) -->
+  <!-- Outer edge at Y = 0.300 - 0.071 = 0.229m -->
+  <!-- Center Y = 0.229 - skeleton_thickness/2.0 = 0.1875m -->
+  <xacro:property name="skeleton_y_offset"  value="${chassis_width/2.0 - 0.071 - skeleton_thickness/2.0}"/>
+
+  <!-- Bottom of skeleton is 162mm above chassis top edge -->
+  <!-- Chassis top = chassis_z_offset + chassis_thickness = -0.048 + 0.010 = -0.038m -->
+  <!-- Skeleton bottom Z = -0.038 + 0.162 = +0.124m -->
+  <!-- Skeleton center Z = 0.124 + skeleton_height/2.0 = +0.499m -->
+  <xacro:property name="skeleton_bottom_z"  value="${chassis_z_offset + chassis_thickness + 0.162}"/>
+  <xacro:property name="skeleton_z_offset"   value="${skeleton_bottom_z + skeleton_height/2.0}"/>
+
+  <!-- ==================================================== -->
+  <!-- Lower Body Housing & Top Cover (P_housing1, P_top_cover) -->
+  <!-- ==================================================== -->
+  <xacro:property name="housing_length"    value="0.600"/>
+  <xacro:property name="housing_width"     value="0.600"/>
+  <xacro:property name="housing_height"    value="0.200"/>
+  <xacro:property name="housing_mass"      value="26.35"/> <!-- Calibrated to 26.35kg to reach nominal 65.0kg total robot mass -->
+  <!-- Housing bottom rests directly on chassis top: -0.038m -->
+  <xacro:property name="housing_bottom_z"  value="${chassis_z_offset + chassis_thickness}"/>
+  <xacro:property name="housing_z_center"  value="${housing_bottom_z + housing_height/2.0}"/>
+
+  <xacro:property name="top_cover_length"   value="0.600"/>
+  <xacro:property name="top_cover_width"    value="0.600"/>
+  <xacro:property name="top_cover_height"   value="0.080"/>
+  <xacro:property name="top_cover_mass"     value="2.0"/>
+  <xacro:property name="top_cover_bottom_z" value="${housing_bottom_z + housing_height - 0.01}"/>
+  <xacro:property name="top_cover_z_center" value="${top_cover_bottom_z + top_cover_height/2.0}"/>
+
+  <!-- ==================================================== -->
+  <!-- Mini Top Cover Specifications (P_mini-top_cover.STL)-->
+  <!-- ==================================================== -->
+  <xacro:property name="mini_top_cover_length"    value="0.220"/>
+  <xacro:property name="mini_top_cover_width"     value="0.160"/>
+  <xacro:property name="mini_top_cover_thickness" value="0.020"/>
+  <xacro:property name="mini_top_cover_mass"      value="0.2"/>
+
+  <!-- X coordinate: Centered at 0.0 -->
+  <xacro:property name="mini_top_cover_x" value="0.0"/>
+
+  <!-- Y offset: Shifted along Y so outer edge aligns with housing side boundary -->
+  <!-- (chassis_width/2.0 - mini_top_cover_width/2.0 = 0.300 - 0.080 = 0.220m) -->
+  <xacro:property name="mini_top_cover_y_offset" value="0.220"/>
+
+  <!-- Z coordinate: Elevation of mini top cover -->
+  <xacro:property name="mini_top_cover_z" value="0.170"/>
+
+  <!-- ==================================================== -->
+  <!-- Robot Head / Display Unit (P_Head.STL)               -->
+  <!-- ==================================================== -->
+  <xacro:property name="head_width"        value="0.395"/> <!-- Spans across Y in robot frame -->
+  <xacro:property name="head_length"       value="0.150"/> <!-- Spans along X in robot frame -->
+  <xacro:property name="head_height"       value="0.200"/> <!-- Along Z in robot frame -->
+  <xacro:property name="head_mass"         value="2.5"/>
+
+  <!-- X, Y coordinates: Centered at robot origin (0, 0) -->
+  <xacro:property name="head_x"            value="0.0"/>
+  <xacro:property name="head_y"            value="0.0"/>
+
+  <!-- Bottom of P_head contacts top edge of skeletons: -->
+  <!-- Skeleton top = skeleton_bottom_z + skeleton_height = 0.124 + 0.750 = 0.874m -->
+  <xacro:property name="head_bottom_z"     value="${skeleton_bottom_z + skeleton_height}"/>
+  <xacro:property name="head_z_center"     value="${head_bottom_z + head_height/2.0}"/>
+  <!-- Yaw rotation: pi/2 so display unit spans along Y matching side skeletons -->
+  <xacro:property name="head_yaw"          value="${pi/2}"/>
+
+  <!-- ==================================================== -->
+  <!-- Food Delivery Trays Specifications (P_tray.STL)     -->
+  <!-- ==================================================== -->
+  <xacro:property name="tray_length" value="0.600"/> <!-- Length along X: 600mm -->
+  <xacro:property name="tray_width"  value="0.375"/> <!-- Width along Y: 375mm (fits between side skeletons) -->
+  <xacro:property name="tray_height" value="0.080"/> <!-- Tray height: 80mm -->
+  <xacro:property name="tray_mass"   value="5.0"/>   <!-- Mass: 5.0kg per tray -->
+
+  <!-- Bottom of each tray relative to chassis bottom: 362mm, 562mm, 762mm -->
+  <xacro:property name="tray_1_bottom_from_chassis" value="0.362"/>
+  <xacro:property name="tray_2_bottom_from_chassis" value="0.562"/>
+  <xacro:property name="tray_3_bottom_from_chassis" value="0.762"/>
   <xacro:property name="tray_spacing"               value="0.200"/>
 
-  <!-- Tray bottom Z positions relative to base_link -->
-  <!-- Bottom of chassis is at chassis_z_offset (-0.035m) -->
+  <!-- Tray bottom Z elevation relative to base_link (chassis_z_offset = -0.048m) -->
   <xacro:property name="tray_1_z" value="${chassis_z_offset + tray_1_bottom_from_chassis}"/>
-  <xacro:property name="tray_2_z" value="${tray_1_z + tray_spacing}"/>
-  <xacro:property name="tray_3_z" value="${tray_2_z + tray_spacing}"/>
+  <xacro:property name="tray_2_z" value="${chassis_z_offset + tray_2_bottom_from_chassis}"/>
+  <xacro:property name="tray_3_z" value="${chassis_z_offset + tray_3_bottom_from_chassis}"/>
 
   <!-- ==================================================== -->
   <!-- 2D LiDAR Sensor Specifications                      -->
   <!-- ==================================================== -->
-  <xacro:property name="lidar_radius"          value="0.038"/> <!-- Radius 38mm (Max diameter 76mm - standard RPLIDAR A2) -->
+  <xacro:property name="lidar_radius"          value="0.038"/> <!-- Radius 38mm (Max diameter 76mm - RPLIDAR A2) -->
   <xacro:property name="lidar_height"          value="0.040"/> <!-- Height 40mm -->
   <xacro:property name="lidar_mass"            value="0.200"/> <!-- Mass 200g -->
 
-  <!-- LiDAR Placement -->
-  <!-- Clearance from LiDAR max diameter front edge to vehicle front edge: 15mm -->
-  <xacro:property name="lidar_front_clearance" value="0.015"/>
-  <xacro:property name="lidar_x_offset"        value="${chassis_length/2.0 - lidar_front_clearance - lidar_radius}"/>
+  <!-- LiDAR Placement (150 deg forward optical FOV): -->
+  <!-- Front clearance between lidar outer cylinder and housing front edge: 10mm (0.010m) -->
+  <!-- Housing front edge at X = housing_length/2.0 = 0.300m -->
+  <!-- Lidar origin X = 0.300 - 0.010 - 0.038 = 0.252m -->
+  <!-- Optical center is 48mm behind front wall. With 364mm cutout, FOV reaches full 150 deg -->
+  <xacro:property name="lidar_front_clearance" value="0.010"/>
+  <xacro:property name="lidar_x_offset"        value="${housing_length/2.0 - lidar_front_clearance - lidar_radius}"/>
   <xacro:property name="lidar_y_offset"        value="0.0"/>
 
-  <!-- Elevation Z: offset from chassis bottom -->
-  <xacro:property name="lidar_z_from_chassis"  value="0.150"/>
-  <xacro:property name="lidar_z_offset"        value="${chassis_z_offset + lidar_z_from_chassis}"/>
+  <!-- LiDAR Z elevation: Laser plane is 70mm above chassis top to align with rectangular window -->
+  <xacro:property name="lidar_z_from_chassis"  value="0.070"/>
+  <xacro:property name="lidar_z_offset"        value="${chassis_z_offset + chassis_thickness + lidar_z_from_chassis - lidar_height * 0.75}"/>
 
   <!-- ==================================================== -->
   <!-- 9-DOF IMU Sensor Specifications                     -->
@@ -80,9 +157,10 @@
   <xacro:property name="imu_size_y"   value="0.025"/> <!-- Width 25mm -->
   <xacro:property name="imu_size_z"   value="0.005"/> <!-- Height 5mm -->
 
-  <!-- IMU Placement (rigidly mounted near center of rotation) -->
-  <xacro:property name="imu_x_offset" value="0.0"/>
-  <xacro:property name="imu_y_offset" value="0.0"/>
-  <xacro:property name="imu_z_offset" value="0.050"/>
+  <!-- IMU Placement: Geometric center (X=0, Y=0), elevation 0.150m above chassis plate top -->
+  <xacro:property name="imu_x_offset"          value="0.0"/>
+  <xacro:property name="imu_y_offset"          value="0.0"/>
+  <xacro:property name="imu_z_from_chassis"    value="0.150"/>
+  <xacro:property name="imu_z_offset"          value="${chassis_z_offset + chassis_thickness + imu_z_from_chassis}"/>
 
 </robot>

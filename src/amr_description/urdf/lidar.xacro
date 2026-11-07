@@ -66,10 +66,10 @@
       <ray>
         <scan>
           <horizontal>
-            <samples>720</samples>
+            <samples>360</samples>
             <resolution>1</resolution>
-            <min_angle>-3.14159265</min_angle>
-            <max_angle>3.14159265</max_angle>
+            <min_angle>-1.3089969</min_angle> <!-- -75 degrees -->
+            <max_angle>1.3089969</max_angle>   <!-- +75 degrees (Total FOV 150 deg looking through housing front opening) -->
           </horizontal>
         </scan>
         <range>
@@ -80,7 +80,7 @@
         <noise>
           <type>gaussian</type>
           <mean>0.0</mean>
-          <stddev>0.01</stddev>
+          <stddev>0.00324037</stddev> <!-- Var: 1.05e-5 m^2 -->
         </noise>
       </ray>
     </sensor>

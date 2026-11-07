@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ==================================================== -->
+  <!-- Lower Body Housing (P_housing1.STL)                  -->
+  <!-- ==================================================== -->
+
+  <joint name="housing_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="housing_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="housing_link">
+    <!-- Visual: P_housing1.STL resting directly on Chassis2.STL with rectangular hole facing front (+X) -->
+    <visual>
+      <origin xyz="-0.300 -0.300 ${housing_bottom_z}" rpy="${pi/2} 0 ${pi/2}"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/P_housing1.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_white"/>
+    </visual>
+
+    <!-- Collision: Upper boundary above active wheels to prevent wheel contact forces -->
+    <collision>
+      <origin xyz="0 0 0.1185" rpy="0 0 0"/>
+      <geometry>
+        <box size="${housing_length} ${housing_width} 0.087"/>
+      </geometry>
+    </collision>
+
+    <!-- Inertial: Analytical Box Inertia (${housing_mass}kg) -->
+    <xacro:inertial_box mass="${housing_mass}" x="${housing_length}" y="${housing_width}" z="${housing_height}">
+      <origin xyz="0 0 ${housing_z_center}" rpy="0 0 0"/>
+    </xacro:inertial_box>
+  </link>
+
+  <gazebo reference="housing_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- ==================================================== -->
+  <!-- Top Cover (P_top_cover.STL)                          -->
+  <!-- ==================================================== -->
+
+  <joint name="top_cover_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="top_cover_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="top_cover_link">
+    <!-- Visual: P_top_cover.STL resting directly on P_housing1.STL -->
+    <visual>
+      <origin xyz="${-top_cover_length/2.0} ${-top_cover_width/2.0} ${top_cover_bottom_z}" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://amr_description/meshes/visual/P_top_cover.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="robot_white"/>
+    </visual>
+
+    <!-- Collision: Analytical Box -->
+    <collision>
+      <origin xyz="0 0 ${top_cover_z_center}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${top_cover_length} ${top_cover_width} ${top_cover_height}"/>
+      </geometry>
+    </collision>
+
+    <!-- Inertial: Analytical Box Inertia (2.0kg) -->
+    <xacro:inertial_box mass="${top_cover_mass}" x="${top_cover_length}" y="${top_cover_width}" z="${top_cover_height}">
+      <origin xyz="0 0 ${top_cover_z_center}" rpy="0 0 0"/>
+    </xacro:inertial_box>
+  </link>
+
+  <gazebo reference="top_cover_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+</robot>

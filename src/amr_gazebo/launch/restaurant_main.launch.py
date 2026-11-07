@@ -199,6 +199,8 @@ def generate_launch_description():
             '/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',
             # Wheel Odometry
             '/wheel/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',
+            # Ground Truth Odometry (for EKF Benchmarking)
+            '/ground_truth/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',
             # Joint states (Encoder feedback)
             '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
         ],

@@ -29,6 +29,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'dispatch_table = amr_navigation.dispatch_table:main',
         ],
     },
 )

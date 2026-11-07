@@ -193,6 +193,7 @@ def generate_launch_description():
             '/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU',
             '/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',
             '/wheel/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',
+            '/ground_truth/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',
             '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
         ],
         condition=IfCondition(spawn_robot)
