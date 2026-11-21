@@ -113,8 +113,8 @@
       <!-- 2. OUTER PERIMETER BOUNDARY WALLS -->
       <link name="perimeter_walls">
 
-        <!-- [WALL 1] Tường Bắc (North Wall - 24.27m) -->
-        <!-- Từ (-12.135, 6.890) đến (12.135, 6.890) -->
+        <!-- [WALL 1] North wall (North Wall - 24.27m) -->
+        <!-- from (-12.135, 6.890) to (12.135, 6.890) -->
         <visual name="wall_north_vis">
           <pose>0.0 6.890 1.40 0 0 0</pose>
           <geometry><box><size>24.27 0.20 2.80</size></box></geometry>
@@ -125,8 +125,8 @@
           <geometry><box><size>24.27 0.20 2.80</size></box></geometry>
         </collision>
 
-        <!-- [WALL 2] Tường Đông (East Wall - 13.78m) -->
-        <!-- Từ (12.135, 6.890) đến (12.135, -6.890) -->
+        <!-- [WALL 2] East wall (East Wall - 13.78m) -->
+        <!-- from (12.135, 6.890) to (12.135, -6.890) -->
         <visual name="wall_east_vis">
           <pose>12.135 0.0 1.40 0 0 -1.570796</pose>
           <geometry><box><size>13.78 0.20 2.80</size></box></geometry>
@@ -137,8 +137,8 @@
           <geometry><box><size>13.78 0.20 2.80</size></box></geometry>
         </collision>
 
-        <!-- [WALL 3] Tường Nam bên phải (South-East Wall - 12.78m) -->
-        <!-- Từ (12.135, -6.890) đến (-0.645, -6.890) -->
+        <!-- [WALL 3] Right-hand south wall (South-East Wall - 12.78m) -->
+        <!-- from (12.135, -6.890) to (-0.645, -6.890) -->
         <visual name="wall_south_east_vis">
           <pose>5.745 -6.890 1.40 0 0 0</pose>
           <geometry><box><size>12.78 0.20 2.80</size></box></geometry>
@@ -149,8 +149,8 @@
           <geometry><box><size>12.78 0.20 2.80</size></box></geometry>
         </collision>
 
-        <!-- [WALL 4] Đoạn vát sảnh vào bên phải (Entrance Slant Right - 2.00m) -->
-        <!-- Từ (-0.645, -6.890) đến (-2.059, -8.304) -->
+        <!-- [WALL 4] Right entrance slant (Entrance Slant Right - 2.00m) -->
+        <!-- from (-0.645, -6.890) to (-2.059, -8.304) -->
         <visual name="wall_entrance_slant_right_vis">
           <pose>-1.352 -7.597 1.40 0 0 -2.356194</pose>
           <geometry><box><size>2.00 0.20 2.80</size></box></geometry>
@@ -161,8 +161,8 @@
           <geometry><box><size>2.00 0.20 2.80</size></box></geometry>
         </collision>
 
-        <!-- [WALL 5] Mặt tiền sảnh chính (Main Entrance Facade - 6.25m) -->
-        <!-- Từ (-2.059, -8.304) đến (-7.833, -5.912) -->
+        <!-- [WALL 5] Main entrance facade (Main Entrance Facade - 6.25m) -->
+        <!-- from (-2.059, -8.304) to (-7.833, -5.912) -->
         <visual name="wall_main_entrance_vis">
           <pose>-4.946 -7.108 1.40 0 0 2.74889</pose>
           <geometry><box><size>6.25 0.20 2.80</size></box></geometry>
@@ -173,8 +173,8 @@
           <geometry><box><size>6.25 0.20 2.80</size></box></geometry>
         </collision>
 
-        <!-- [WALL 6] Đoạn gấp khúc thụt vào bên trái cửa (Entrance Indent - 1.30m) -->
-        <!-- Từ (-7.833, -5.912) đến (-9.128, -6.025) -->
+        <!-- [WALL 6] Recessed segment left of the doorway (Entrance Indent - 1.30m) -->
+        <!-- from (-7.833, -5.912) to (-9.128, -6.025) -->
         <visual name="wall_entrance_indent_vis">
           <pose>-8.481 -5.969 1.40 0 0 -3.0545</pose>
           <geometry><box><size>1.30 0.20 2.80</size></box></geometry>
@@ -185,8 +185,8 @@
           <geometry><box><size>1.30 0.20 2.80</size></box></geometry>
         </collision>
 
-        <!-- [WALL 7] Tường chéo bên Tây (West Slanted Wall - 13.96m) -->
-        <!-- Từ (-9.128, -6.025) đến (-12.135, 6.890) -->
+        <!-- [WALL 7] Slanted west wall (West Slanted Wall - 13.96m) -->
+        <!-- from (-9.128, -6.025) to (-12.135, 6.890) -->
         <visual name="wall_west_slant_vis">
           <pose>-10.631 0.432 1.40 0 0 1.7994</pose>
           <geometry><box><size>13.96 0.20 2.80</size></box></geometry>
@@ -199,16 +199,16 @@
 
       </link>
 
-      <!-- 3. KITCHEN INTERIOR PARTITION WALLS & ROBOT SERVICE DOCK (Khu Bếp 09) -->
-      <!-- Chuẩn hóa theo số đo thực tế lấy đường 5.53m làm chuẩn: -->
-      <!--   - Đoạn tường màu xanh lá 1.00m (chỗ Robot quay lưng vào) -->
-      <!--   - Cửa đi / Lối ra vào rộng 1.00m -->
-      <!--   - Đoạn tường ngang màu tím hồng 1.00m -->
-      <!--   - Khối lò nướng / bếp dày phía Đông -->
+      <!-- 3. KITCHEN INTERIOR PARTITION WALLS & ROBOT SERVICE DOCK (Kitchen Area 09) -->
+      <!-- Normalized to measured dimensions using the 5.53m line as reference: -->
+      <!--   - 1.00m green wall segment (behind the robot) -->
+      <!--   - Doorway / entrance width 1.00m -->
+      <!--   - Horizontal magenta wall segment 1.00m -->
+      <!--   - Thick eastern oven / kitchen block -->
       <link name="kitchen_walls">
 
-        <!-- [TƯỜNG DỌC CHÍNH BẾP] Từ tường Bắc xuống đến lối vào bếp: dài 8.40m -->
-        <!-- Từ (6.605, 6.890) xuống (6.605, -1.510) -->
+        <!-- [MAIN LONGITUDINAL KITCHEN WALL] From the north wall to the kitchen entrance: length 8.40m -->
+        <!-- from (6.605, 6.890) down to (6.605, -1.510) -->
         <visual name="kitchen_vert_main_vis">
           <pose>6.605 2.690 1.40 0 0 -1.570796</pose>
           <geometry><box><size>8.40 0.15 2.80</size></box></geometry>
@@ -219,8 +219,8 @@
           <geometry><box><size>8.40 0.15 2.80</size></box></geometry>
         </collision>
 
-        <!-- [TƯỜNG XANH LÁ 1.00M] Đoạn tường Robot quay lưng vào để sạc / nhận thức ăn -->
-        <!-- Từ (6.605, -1.510) xuống đến đường chuẩn (6.605, -2.510) -->
+        <!-- [1.00M GREEN WALL] Wall behind the robot for charging / food pickup -->
+        <!-- from (6.605, -1.510) down to to reference line (6.605, -2.510) -->
         <visual name="wall_robot_dock_green_vis">
           <pose>6.605 -2.010 1.40 0 0 -1.570796</pose>
           <geometry><box><size>1.00 0.15 2.80</size></box></geometry>
@@ -235,8 +235,8 @@
           <geometry><box><size>1.00 0.15 2.80</size></box></geometry>
         </collision>
 
-        <!-- [ĐOẠN TƯỜNG NGẮN CẠNH CỬA] Nối từ tường xanh lá ra mép cửa: dài 0.78m -->
-        <!-- Tại Y = -1.510, từ X = 6.605 đến X = 7.385 -->
+        <!-- [SHORT WALL SEGMENT BESIDE DOOR] Connects the green wall to the door edge: length 0.78m -->
+        <!-- at Y = -1.510, from X = 6.605 to X = 7.385 -->
         <visual name="wall_dock_stub_vis">
           <pose>6.995 -1.510 1.40 0 0 0</pose>
           <geometry><box><size>0.78 0.15 2.80</size></box></geometry>
@@ -247,11 +247,11 @@
           <geometry><box><size>0.78 0.15 2.80</size></box></geometry>
         </collision>
 
-        <!-- KHOẢNG MỞ CỬA BẾP: Cửa rộng 1.00m (từ X = 7.385 đến X = 8.385 tại Y = -1.510) -->
-        <!-- (Khoảng trống không có tường để Robot di chuyển ra vào) -->
+        <!-- KITCHEN DOOR OPENING: Door width 1.00m (from X = 7.385 to X = 8.385 at Y = -1.510) -->
+        <!-- (Wall-free opening for robot access) -->
 
-        <!-- [TƯỜNG TÍM HỒNG 1.00M] Đoạn tường bên phải cửa bếp: dài 1.00m -->
-        <!-- Tại Y = -1.510, từ X = 8.385 đến X = 9.385 -->
+        <!-- [1.00M MAGENTA WALL] Wall segment right of the kitchen door: length 1.00m -->
+        <!-- at Y = -1.510, from X = 8.385 to X = 9.385 -->
         <visual name="wall_dock_magenta_vis">
           <pose>8.885 -1.510 1.40 0 0 0</pose>
           <geometry><box><size>1.00 0.15 2.80</size></box></geometry>
@@ -265,7 +265,7 @@
           <geometry><box><size>1.00 0.15 2.80</size></box></geometry>
         </collision>
 
-        <!-- [KHỐI LÒ NƯỚNG / BẾP NẤU PHÍA ĐÔNG] Khối tường dày từ X = 9.385 đến tường Đông -->
+        <!-- [EASTERN OVEN / COOKING BLOCK] Thick wall block from X = 9.385 to East wall -->
         <visual name="kitchen_oven_block_vis">
           <pose>10.760 -2.010 1.40 0 0 0</pose>
           <geometry><box><size>2.75 1.00 2.80</size></box></geometry>
@@ -276,8 +276,8 @@
           <geometry><box><size>2.75 1.00 2.80</size></box></geometry>
         </collision>
 
-        <!-- [TƯỜNG ĐƯỜNG CHUẨN ĐÃ KHOÉT CỬA 1.00M CHO ROBOT RA ĐẠI SẢNH (AREA 08)] -->
-        <!-- Đoạn tường bên trái cửa: dài 1.78m từ X = 6.605 đến X = 8.385 tại Y = -2.510 -->
+        <!-- [REFERENCE-LINE WALL WITH 1.00M DOOR FOR ROBOT ACCESS TO MAIN HALL (AREA 08)] -->
+        <!-- Wall segment left of the door: length 1.78m from X = 6.605 to X = 8.385 at Y = -2.510 -->
         <visual name="kitchen_horiz_left_vis">
           <pose>7.495 -2.510 1.40 0 0 0</pose>
           <geometry><box><size>1.78 0.15 2.80</size></box></geometry>
@@ -288,11 +288,11 @@
           <geometry><box><size>1.78 0.15 2.80</size></box></geometry>
         </collision>
 
-        <!-- KHOẢNG MỞ RA ĐẠI SẢNH: Cửa rộng 1.00m (từ X = 8.385 đến X = 9.385 tại Y = -2.510) -->
-        <!-- Nằm đối diện trực diện với đoạn tường màu tím hồng để Robot đi thẳng ra đại sảnh -->
+        <!-- MAIN HALL OPENING: Door width 1.00m (from X = 8.385 to X = 9.385 at Y = -2.510) -->
+        <!-- Opposite the magenta wall segment so the robot can travel straight into the main hall -->
 
-        <!-- [VỊ TRÍ ĐỖ XE ROBOT (HOME DOCK) - AREA 08 MAIN HALL] -->
-        <!-- Đặt tại X = 8.85, Y = -3.80 (sảnh mở Area 08 ngoài cửa bếp, quay mặt về hướng Tây 3.14159 rad) -->
+        <!-- [ROBOT PARKING POSITION (HOME DOCK) - AREA 08 MAIN HALL] -->
+        <!-- Placed at X = 8.85, Y = -3.80 (open Area 08 hall outside the kitchen, facing west at 3.14159 rad) -->
         <visual name="robot_dock_pad_vis">
           <pose>8.85 -3.80 0.008 0 0 3.14159</pose>
           <geometry><box><size>0.80 0.65 0.016</size></box></geometry>
@@ -309,17 +309,17 @@
 
       </link>
 
-      <!-- 4. AREA 08 STANDING COUNTERS & BAR 04 (Khu 08: Dãy bàn phục vụ khách đứng & Quầy Bar 04) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Bàn đứng dựa tường Đông: Rộng 0.69m x Dài 3.58m x Cao 1.05m -->
-      <!--   - Bàn đứng dựa tường Nam: Rộng 0.69m x Dài 6.02m x Cao 1.05m -->
-      <!--   - Góc tiếp giáp Đông - Nam: 0.69m x 0.69m x 1.05m -->
-      <!--   - Quầy Bar 04: Thân dọc rộng 0.60m x dài 2.735m, đầu quầy rộng 0.42m, giật cấp 0.41m, lối đi 1.00m -->
-      <!--   - 2 Bàn tròn quầy Booth trung tâm khu 08 -->
+      <!-- 4. AREA 08 STANDING COUNTERS & BAR 04 (Area 08: Standing counters and Bar 04) -->
+      <!-- Dimensions based on drawing measurements: -->
+      <!--   - Standing counter against east wall: width 0.69m x length 3.58m x height 1.05m -->
+      <!--   - Standing counter against south wall: width 0.69m x length 6.02m x height 1.05m -->
+      <!--   - Southeast corner connection: 0.69m x 0.69m x 1.05m -->
+      <!--   - Bar 04: Longitudinal body width 0.60m x length 2.735m, counter head width 0.42m, step offset 0.41m, aisle width 1.00m -->
+      <!--   - 2 round booth tables in central Area 08 -->
       <link name="area_08_furniture">
 
-        <!-- [DÃY BÀN KHÁCH ĐỨNG - CẠNH ĐÔNG: 0.69m x 3.58m] -->
-        <!-- Tựa vào tường Đông (X = 12.135m), dài 3.58m từ Y = -2.510 xuống Y = -6.090 -->
+        <!-- [STANDING COUNTER ROW - EAST SIDE: 0.69m x 3.58m] -->
+        <!-- Against the east wall (X = 12.135m), length 3.58m from Y = -2.510 down to Y = -6.090 -->
         <visual name="standing_counter_east_vis">
           <pose>11.790 -4.300 0.525 0 0 0</pose>
           <geometry><box><size>0.69 3.58 1.05</size></box></geometry>
@@ -333,7 +333,7 @@
           <geometry><box><size>0.69 3.58 1.05</size></box></geometry>
         </collision>
 
-        <!-- [GÓC NỐI ĐÔNG - NAM CỦA DÃY BÀN ĐỨNG: 0.69m x 0.69m] -->
+        <!-- [SOUTHEAST CONNECTION OF STANDING COUNTERS: 0.69m x 0.69m] -->
         <visual name="standing_counter_corner_vis">
           <pose>11.790 -6.545 0.525 0 0 0</pose>
           <geometry><box><size>0.69 0.69 1.05</size></box></geometry>
@@ -347,8 +347,8 @@
           <geometry><box><size>0.69 0.69 1.05</size></box></geometry>
         </collision>
 
-        <!-- [DÃY BÀN KHÁCH ĐỨNG - CẠNH NAM: 6.02m x 0.69m] -->
-        <!-- Tựa vào tường Nam (Y = -6.890m), dài 6.02m từ X = 11.445 sang Tây đến X = 5.425 -->
+        <!-- [STANDING COUNTER ROW - SOUTH SIDE: 6.02m x 0.69m] -->
+        <!-- Against the south wall (Y = -6.890m), length 6.02m from X = 11.445 westward to X = 5.425 -->
         <visual name="standing_counter_south_vis">
           <pose>8.435 -6.545 0.525 0 0 0</pose>
           <geometry><box><size>6.02 0.69 1.05</size></box></geometry>
@@ -362,8 +362,8 @@
           <geometry><box><size>6.02 0.69 1.05</size></box></geometry>
         </collision>
 
-        <!-- [ĐOẠN NỐI LIỀN MẠCH BÀN PHÍA NAM VỚI CHÂN QUẦY BAR 04: Dài 1.325m x Rộng 0.69m] -->
-        <!-- Nối từ mép bàn phía Nam X = 5.425m đến chân quầy nghiêng tại X = 4.10m, áp sát tường Nam -->
+        <!-- [CONTINUOUS CONNECTION FROM SOUTH COUNTER TO BAR 04 BASE: length 1.325m x width 0.69m] -->
+        <!-- Connects from the south counter edge X = 5.425m to the slanted counter base at X = 4.10m, flush against the south wall -->
         <visual name="counter_south_join_vis">
           <pose>4.762 -6.545 0.525 0 0 0</pose>
           <geometry><box><size>1.325 0.69 1.05</size></box></geometry>
@@ -377,8 +377,8 @@
           <geometry><box><size>1.325 0.69 1.05</size></box></geometry>
         </collision>
 
-        <!-- [DÃY BÀN QUẦY 04 - NGHIÊNG 105 ĐỘ PHÍA TÂY (QUẦY TRONG): Dày 0.44m x Dài 3.51m] -->
-        <!-- Nghiêng 105 độ, thụt sâu xuống đụng thẳng vào dãy bàn phía Nam và tường Nam -->
+        <!-- [BAR 04 COUNTER ROW - SLANTED 105 DEGREES TO WEST (INNER COUNTER): Thickness 0.44m x length 3.51m] -->
+        <!-- Slanted 105 degrees, recessed to meet the south counter row and south wall -->
         <visual name="bar_04_inner_slanted_vis">
           <pose>3.968 -5.520 0.525 0 0 0.2618</pose>
           <geometry><box><size>0.44 2.837 1.05</size></box></geometry>
@@ -392,8 +392,8 @@
           <geometry><box><size>0.44 2.837 1.05</size></box></geometry>
         </collision>
 
-        <!-- [DÃY BÀN KẾ BÊN QUẦY 04 - NGHIÊNG 105 ĐỘ (QUẦY NGOÀI): Dày 0.69m x Dài 3.51m] -->
-        <!-- Thiết kế đá granite sáng màu theo yêu cầu, áp khít mép Tây của quầy 0.44m, đụng thẳng vào tường Nam -->
+        <!-- [COUNTER BESIDE BAR 04 - SLANTED 105 DEGREES (OUTER COUNTER): Thickness 0.69m x length 3.51m] -->
+        <!-- Requested light granite design, flush against the west edge of the 0.44m counter and meeting the south wall -->
         <visual name="bar_04_outer_slanted_vis">
           <pose>3.422 -5.520 0.525 0 0 0.2618</pose>
           <geometry><box><size>0.69 2.837 1.05</size></box></geometry>
@@ -407,8 +407,8 @@
           <geometry><box><size>0.69 2.837 1.05</size></box></geometry>
         </collision>
 
-        <!-- [ĐẦU QUẦY BAR 04 PHÍA BẮC: Dài 2.11m x Dày 0.44m x Cao 1.05m] -->
-        <!-- Liền mạch trên đỉnh 2 quầy nghiêng, lối đi thông thoáng lên phòng 07 -->
+        <!-- [NORTH END OF BAR 04: length 2.11m x Thickness 0.44m x height 1.05m] -->
+        <!-- Continuous across the top of both slanted counters, leaving clear access to room 07 -->
         <visual name="bar_04_top_cap_vis">
           <pose>3.550 -3.930 0.525 0 0 0</pose>
           <geometry><box><size>2.11 0.44 1.05</size></box></geometry>
@@ -421,8 +421,8 @@
           <pose>3.550 -3.930 0.525 0 0 0</pose>
           <geometry><box><size>2.11 0.44 1.05</size></box></geometry>
         </collision>
-                        <!-- [4 GHẾ TRÒN QUẦY BAR 04 PHÍA TÂY: Đường kính 0.34m, Cao 0.75m, chân trụ giữa] -->
-        <!-- Ghế 1 (dưới cùng): X = 3.022m, Y = -6.733m -->
+                        <!-- [4 ROUND STOOLS WEST OF BAR 04: Diameter 0.34m, height 0.75m, central pedestal] -->
+        <!-- Chair 1 (bottom): X = 3.022m, Y = -6.733m -->
         <visual name="stool_1_cushion_vis">
           <pose>3.022 -6.733 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
@@ -451,7 +451,7 @@
           <geometry><cylinder><radius>0.14</radius><length>0.02</length></cylinder></geometry>
         </collision>
 
-        <!-- Ghế 2: X = 2.854m, Y = -6.105m -->
+        <!-- Chair 2: X = 2.854m, Y = -6.105m -->
         <visual name="stool_2_cushion_vis">
           <pose>2.854 -6.105 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
@@ -480,7 +480,7 @@
           <geometry><cylinder><radius>0.14</radius><length>0.02</length></cylinder></geometry>
         </collision>
 
-        <!-- Ghế 3: X = 2.686m, Y = -5.478m -->
+        <!-- Chair 3: X = 2.686m, Y = -5.478m -->
         <visual name="stool_3_cushion_vis">
           <pose>2.686 -5.478 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
@@ -509,7 +509,7 @@
           <geometry><cylinder><radius>0.14</radius><length>0.02</length></cylinder></geometry>
         </collision>
 
-        <!-- Ghế 4 (trên cùng): X = 2.518m, Y = -4.850m -->
+        <!-- Chair 4 (top): X = 2.518m, Y = -4.850m -->
         <visual name="stool_4_cushion_vis">
           <pose>2.518 -4.850 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.17</radius><length>0.08</length></cylinder></geometry>
@@ -540,22 +540,22 @@
 
       </link>
 
-      <!-- 5. GROUP 01 DINING SET (Cụm bàn ăn chuẩn Group 01: 1 bàn chữ nhật + 4 ghế ăn) -->
-      <!-- Chuẩn module hóa thiết kế để tái sử dụng và nhân bản khắp nhà hàng: -->
-      <!--   - Bàn chữ nhật chuẩn: Rộng 0.67m x Dài 1.38m x Cao 0.75m tại tâm (1.661, -6.187) -->
-      <!--   - 4 Ghế ăn chuẩn: Khổ 0.28m x 0.28m x Cao 0.75m (đã thu nhỏ từ 0.36m để tránh chạm Cột SE) -->
-      <!--     Khoảng cách hở chuẩn: 2.1cm so với mép bàn, 2.0cm so với Cột SE (X = 1.005m) -->
-      <!--     2 ghế phía Đông: X = 2.157m, Y = -5.850m và Y = -6.520m -->
-      <!--     2 ghế phía Tây:  X = 1.165m, Y = -5.850m và Y = -6.520m -->
-      <!--   - Tọa độ tương đối so với tâm bàn (X0 = 1.661, Y0 = -6.187): -->
-      <!--       Bàn:     (0, 0) -->
-      <!--       Ghế E1:  (+0.496, +0.337) -->
-      <!--       Ghế E2:  (+0.496, -0.333) -->
-      <!--       Ghế W1:  (-0.496, +0.337) -->
-      <!--       Ghế W2:  (-0.496, -0.333) -->
+      <!-- 5. GROUP 01 DINING SET (Standard Group 01 dining set: 1 rectangular table + 4 dining chairs) -->
+      <!-- Standard modular design for reuse throughout the restaurant: -->
+      <!--   - Standard rectangular table: width 0.67m x length 1.38m x height 0.75m at center (1.661, -6.187) -->
+      <!--   - 4 standard dining chairs: Dimensions 0.28m x 0.28m x height 0.75m (reduced from 0.36m to avoid contact with SE Pillar) -->
+      <!--     Standard clearance: 2.1cm from table edge, 2.0cm from SE Pillar (X = 1.005m) -->
+      <!--     2 Chair east: X = 2.157m, Y = -5.850m and Y = -6.520m -->
+      <!--     2 Chair west:  X = 1.165m, Y = -5.850m and Y = -6.520m -->
+      <!--   - Coordinates relative to table center (X0 = 1.661, Y0 = -6.187): -->
+      <!--       Table:     (0, 0) -->
+      <!--       Chair E1:  (+0.496, +0.337) -->
+      <!--       Chair E2:  (+0.496, -0.333) -->
+      <!--       Chair W1:  (-0.496, +0.337) -->
+      <!--       Chair W2:  (-0.496, -0.333) -->
       <link name="group01">
 
-        <!-- [BÀN ĂN HÌNH CHỮ NHẬT GROUP 01] -->
+        <!-- [GROUP 01 RECTANGULAR DINING TABLE] -->
         <visual name="group01_table_vis">
           <pose>1.661 -6.187 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -641,8 +641,8 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- [4 GHẾ ĂN GROUP 01: Khổ 0.28m x 0.28m x Cao 0.75m, hở mép cột 2.0cm] -->
-        <!-- Ghế Đông 1 (Đông Bắc) -->
+        <!-- [4 GROUP 01 DINING CHAIRS: Dimensions 0.28m x 0.28m x height 0.75m, 2.0cm clearance from pillar edge] -->
+        <!-- Chair East 1 (northeast) -->
         <visual name="group01_chair_e1_seat_vis">
           <pose>2.157 -5.850 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -698,7 +698,7 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- Ghế Đông 2 (Đông Nam) -->
+        <!-- Chair East 2 (southeast) -->
         <visual name="group01_chair_e2_seat_vis">
           <pose>2.157 -6.520 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -754,7 +754,7 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- Ghế Tây 1 (Tây Bắc) -->
+        <!-- Chair West 1 (northwest) -->
         <visual name="group01_chair_w1_seat_vis">
           <pose>1.165 -5.850 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -810,7 +810,7 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- Ghế Tây 2 (Tây Nam: Cách mép cột SE 2.0cm, hoàn toàn không chạm cột) -->
+        <!-- Chair West 2 (southwest: 2.0cm from SE pillar edge, no contact with pillar) -->
         <visual name="group01_chair_w2_seat_vis">
           <pose>1.165 -6.520 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -868,19 +868,19 @@
 
       </link>
 
-      <!-- 6. CIRCULAR DINING CLUSTER (Cụm 3 bộ Group 01 quanh hình tròn ảo - Phía Bắc Cột SE) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ và tối ưu hành lang di chuyển AMR: -->
-      <!--   - Tâm hình tròn ảo: X = -0.349m, Y = -3.176m (tịnh tiến về Tây Bắc để hành lang Đông Nam thông thoáng >= 1.21m) -->
-      <!--   - Bán kính hình tròn ảo R = 1.95m (mặt sàn ước lệ mỏng 2mm, không va chạm, không cản trở robot) -->
-      <!--   - Chứa 3 bộ Group 01 cách đều nhau 120 độ quanh tâm: -->
-      <!--     * Cạnh ngắn gần nhất của mỗi bàn cách tâm hình tròn ảo đúng 0.50m -->
-      <!--     * Tâm bàn cách tâm vòng tròn: 0.50m + 1.38m/2 = 1.19m -->
-      <!--     * Bộ Bắc (North Set): Hướng 90 độ (+Y), tâm (-0.349, -1.986, 0.375), yaw = 0 rad -->
-      <!--     * Bộ Tây Nam (South-West Set): Hướng 210 độ (-150 độ), tâm (-1.380, -3.771, 0.375), yaw = 2.0944 rad (120 độ) -->
-      <!--     * Bộ Đông Nam (South-East Set): Hướng 330 độ (-30 độ), tâm (0.682, -3.771, 0.375), yaw = -2.0944 rad (-120 độ) -->
+      <!-- 6. CIRCULAR DINING CLUSTER (Cluster of 3 Group 01 sets around a virtual circle - North of SE Pillar) -->
+      <!-- Dimensions based on drawing measurements and optimized for AMR corridors: -->
+      <!--   - Virtual circle center: X = -0.349m, Y = -3.176m (translated northwest to keep southeast corridor clear >= 1.21m) -->
+      <!--   - Virtual circle radius R = 1.95m (2mm visual floor marker, no collision or robot obstruction) -->
+      <!--   - Contains 3 Group 01 sets spaced 120 degrees around the center: -->
+      <!--     * Nearest short edge of each table is exactly this distance from virtual circle center: 0.50m -->
+      <!--     * table-center distance from circle center: 0.50m + 1.38m/2 = 1.19m -->
+      <!--     * North set (North Set): Direction 90 degrees (+Y), Center (-0.349, -1.986, 0.375), yaw = 0 rad -->
+      <!--     * Southwest set (South-West Set): Direction 210 degrees (-150 degrees), Center (-1.380, -3.771, 0.375), yaw = 2.0944 rad (120 degrees) -->
+      <!--     * Southeast set (South-East Set): Direction 330 degrees (-30 degrees), Center (0.682, -3.771, 0.375), yaw = -2.0944 rad (-120 degrees) -->
       <link name="dining_cluster_circle">
 
-        <!-- [HÌNH TRÒN ẢO - MẶT SÀN ƯỚC LỆ KHÔNG VA CHẠM: Bán kính R = 1.95m] -->
+        <!-- [VIRTUAL CIRCLE - NON-COLLIDING VISUAL FLOOR MARKER: Radius R = 1.95m] -->
         <visual name="virtual_circle_disc_vis">
           <pose>-0.349 -3.176 0.003 0 0 0</pose>
           <geometry><cylinder><radius>1.95</radius><length>0.002</length></cylinder></geometry>
@@ -890,8 +890,8 @@
           </material>
         </visual>
 
-        <!-- ==================== BỘ 1: HƯỚNG BẮC (NORTH SET - 90 ĐỘ) ==================== -->
-        <!-- Bàn ăn Group 01 Bắc: Tâm (-0.349, -1.986), cạnh Nam cách tâm vòng tròn đúng 0.50m -->
+        <!-- ==================== SET 1: NORTH (NORTH SET - 90 degrees) ==================== -->
+        <!-- North Group 01 dining table: Center (-0.349, -1.986), south edge distance from circle center: 0.50m -->
         <visual name="cluster_table_n_vis">
           <pose>-0.349 -1.986 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -977,7 +977,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế ăn bộ Bắc -->
+        <!-- 4 North-set dining chairs -->
         <visual name="cluster_chair_n_e1_seat_vis">
           <pose>0.147 -1.651 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -1198,8 +1198,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BỘ 2: HƯỚNG TÂY NAM (SOUTH-WEST SET - 210 ĐỘ) ==================== -->
-        <!-- Bàn ăn Group 01 Tây Nam: Tâm (-1.380, -3.771), cạnh Đông Bắc cách tâm vòng tròn đúng 0.50m, xoay 120 độ -->
+        <!-- ==================== SET 2: SOUTHWEST (SOUTH-WEST SET - 210 degrees) ==================== -->
+        <!-- Southwest Group 01 dining table: Center (-1.380, -3.771), northeast edge distance from circle center: 0.50m, rotated 120 degrees -->
         <visual name="cluster_table_sw_vis">
           <pose>-1.380 -3.771 0.725 0.0000 0.0000 2.0944</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -1285,7 +1285,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế ăn bộ Tây Nam (xoay 120 độ) -->
+        <!-- 4 Southwest-set dining chairs (rotated 120 degrees) -->
         <visual name="cluster_chair_sw_e1_seat_vis">
           <pose>-1.918 -3.509 0.430 0.0000 0.0000 2.0944</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -1506,8 +1506,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BỘ 3: HƯỚNG ĐÔNG NAM (SOUTH-EAST SET - 330 ĐỘ) ==================== -->
-        <!-- Bàn ăn Group 01 Đông Nam: Tâm (0.682, -3.771), cạnh Tây Bắc cách tâm vòng tròn đúng 0.50m, xoay -120 độ -->
+        <!-- ==================== SET 3: SOUTHEAST (SOUTH-EAST SET - 330 degrees) ==================== -->
+        <!-- Southeast Group 01 dining table: Center (0.682, -3.771), northwest edge distance from circle center: 0.50m, rotated -120 degrees -->
         <visual name="cluster_table_se_vis">
           <pose>0.682 -3.771 0.725 0.0000 0.0000 -2.0944</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -1593,7 +1593,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế ăn bộ Đông Nam (xoay -120 độ) -->
+        <!-- 4 Southeast-set dining chairs (rotated -120 degrees) -->
         <visual name="cluster_chair_se_e1_seat_vis">
           <pose>0.724 -4.368 0.430 0.0000 0.0000 -2.0944</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -1816,20 +1816,20 @@
 
       </link>
 
-      <!-- 7. CENTRAL GREENERY DINING ISLAND (GROUP_CENTER: Ô trung tâm chậu cây + 4 bàn ăn + 8 ghế) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Tâm vòng tròn ảo: X = -3.195m, Y = -0.140m (dời tịnh tiến lên phía Bắc 1.28m đồng bộ cùng Cụm Bắc) -->
-      <!--   - Bán kính vòng tròn ảo: R = 1.95m (mặt sàn ước lệ mỏng 2mm, không va chạm) -->
-      <!--   - Chậu cây vuông trung tâm: Cạnh 0.89m x 0.89m x Cao 0.50m tại tâm (-3.195, -0.140), có cây xanh cao 2.1m -->
-      <!--   - 4 Bàn ăn chuẩn Group 01 (0.67m x 1.38m x 0.75m), cách cạnh chậu cây đúng 0.30m: -->
-      <!--     * Bàn Bắc: Tâm (-3.195, 0.940, 0.375), dài 1.38m theo trục X, 2 ghế phía Bắc tại Y = 1.436m -->
-      <!--     * Bàn Nam: Tâm (-3.195, -1.220, 0.375), dài 1.38m theo trục X, 2 ghế phía Nam tại Y = -1.716m -->
-      <!--     * Bàn Đông: Tâm (-2.115, -0.140, 0.375), dài 1.38m theo trục Y, 2 ghế phía Đông tại X = -1.619m -->
-      <!--     * Bàn Tây: Tâm (-4.275, -0.140, 0.375), dài 1.38m theo trục Y, 2 ghế phía Tây tại X = -4.771m -->
-      <!--   - Mỗi bàn có 2 ghế ăn chuẩn Group 01 (0.28m x 0.28m x 0.75m) đặt ở phía ngoài đối xứng -->
+      <!-- 7. CENTRAL GREENERY DINING ISLAND (GROUP_CENTER: Central planter + 4 dining tables + 8 chairs) -->
+      <!-- Dimensions based on drawing measurements: -->
+      <!--   - Virtual circle center: X = -3.195m, Y = -0.140m (translated north 1.28m together with the north cluster) -->
+      <!--   - Virtual circle radius: R = 1.95m (2mm visual floor marker, no collision) -->
+      <!--   - CENTRAL SQUARE PLANTER: Side 0.89m x 0.89m x height 0.50m at center (-3.195, -0.140), with a tree of height 2.1m -->
+      <!--   - 4 standard Group 01 dining tables (0.67m x 1.38m x 0.75m), at this exact distance from planter edge: 0.30m: -->
+      <!--     * North table: Center (-3.195, 0.940, 0.375), length 1.38m along axis X, 2 Chair north at Y = 1.436m -->
+      <!--     * South table: Center (-3.195, -1.220, 0.375), length 1.38m along axis X, 2 Chair south at Y = -1.716m -->
+      <!--     * East table: Center (-2.115, -0.140, 0.375), length 1.38m along axis Y, 2 Chair east at X = -1.619m -->
+      <!--     * West table: Center (-4.275, -0.140, 0.375), length 1.38m along axis Y, 2 Chair west at X = -4.771m -->
+      <!--   - Each table has 2 standard Group 01 dining chairs (0.28m x 0.28m x 0.75m) placed symmetrically on the outside -->
       <link name="group_center">
 
-        <!-- [VÒNG TRÒN ẢO GROUP_CENTER - MẶT SÀN ƯỚC LỆ KHÔNG VA CHẠM: Bán kính R = 1.95m] -->
+        <!-- [GROUP_CENTER VIRTUAL CIRCLE - NON-COLLIDING VISUAL FLOOR MARKER: Radius R = 1.95m] -->
         <visual name="group_center_floor_disc_vis">
           <pose>-3.195 -0.140 0.003 0 0 0</pose>
           <geometry><cylinder><radius>1.95</radius><length>0.002</length></cylinder></geometry>
@@ -1839,7 +1839,7 @@
           </material>
         </visual>
 
-        <!-- [CHẬU CÂY VUÔNG TRUNG TÂM: Cạnh 0.89m x 0.89m x Cao 0.50m] -->
+        <!-- [CENTRAL SQUARE PLANTER: Side 0.89m x 0.89m x height 0.50m] -->
         <visual name="center_planter_vis">
           <pose>-3.195 -0.140 0.250 0 0 0</pose>
           <geometry><box><size>0.89 0.89 0.50</size></box></geometry>
@@ -1853,7 +1853,7 @@
           <geometry><box><size>0.89 0.89 0.50</size></box></geometry>
         </collision>
 
-        <!-- Đất chậu cây -->
+        <!-- Planter soil -->
         <visual name="center_planter_soil_vis">
           <pose>-3.195 -0.140 0.505 0 0 0</pose>
           <geometry><box><size>0.81 0.81 0.02</size></box></geometry>
@@ -1863,7 +1863,7 @@
           </material>
         </visual>
 
-        <!-- Thân cây cảnh -->
+        <!-- Tree trunk -->
         <visual name="center_tree_trunk_vis">
           <pose>-3.195 -0.140 1.200 0 0 0</pose>
           <geometry><cylinder><radius>0.10</radius><length>1.40</length></cylinder></geometry>
@@ -1877,7 +1877,7 @@
           <geometry><cylinder><radius>0.10</radius><length>1.40</length></cylinder></geometry>
         </collision>
 
-        <!-- Tán cây xanh mát -->
+        <!-- Green tree canopy -->
         <visual name="center_tree_foliage_vis">
           <pose>-3.195 -0.140 2.100 0 0 0</pose>
           <geometry><sphere><radius>0.85</radius></sphere></geometry>
@@ -1887,8 +1887,8 @@
           </material>
         </visual>
 
-        <!-- ==================== BÀN BẮC & 2 GHẾ (NORTH TABLE) ==================== -->
-        <!-- Bàn Bắc: Dài 1.38m theo X, Rộng 0.67m theo Y, cách mép chậu cây 0.30m -->
+        <!-- ==================== NORTH TABLE & 2 CHAIRS (NORTH TABLE) ==================== -->
+        <!-- North table: length 1.38m along X, width 0.67m along Y, distance from planter edge 0.30m -->
         <visual name="center_table_n_vis">
           <pose>-3.195 0.940 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>1.38 0.67 0.05</size></box></geometry>
@@ -1974,7 +1974,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn Bắc (phía ngoài, đối xứng qua tâm bàn) -->
+        <!-- 2 Chair North table (outside, symmetric about table center) -->
         <visual name="center_chair_n1_seat_vis">
           <pose>-3.530 1.436 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -2085,8 +2085,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN NAM & 2 GHẾ (SOUTH TABLE) ==================== -->
-        <!-- Bàn Nam: Dài 1.38m theo X, Rộng 0.67m theo Y, cách mép chậu cây 0.30m -->
+        <!-- ==================== SOUTH TABLE & 2 CHAIRS (SOUTH TABLE) ==================== -->
+        <!-- South table: length 1.38m along X, width 0.67m along Y, distance from planter edge 0.30m -->
         <visual name="center_table_s_vis">
           <pose>-3.195 -1.220 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>1.38 0.67 0.05</size></box></geometry>
@@ -2172,7 +2172,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn Nam (phía ngoài) -->
+        <!-- 2 Chair South table (outside) -->
         <visual name="center_chair_s1_seat_vis">
           <pose>-3.530 -1.716 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -2283,8 +2283,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN ĐÔNG & 2 GHẾ (EAST TABLE) ==================== -->
-        <!-- Bàn Đông: Dài 1.38m theo Y, Rộng 0.67m theo X, cách mép chậu cây 0.30m -->
+        <!-- ==================== EAST TABLE & 2 CHAIRS (EAST TABLE) ==================== -->
+        <!-- East table: length 1.38m along Y, width 0.67m along X, distance from planter edge 0.30m -->
         <visual name="center_table_e_vis">
           <pose>-2.115 -0.140 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -2370,7 +2370,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn Đông (phía ngoài) -->
+        <!-- 2 Chair East table (outside) -->
         <visual name="center_chair_e1_seat_vis">
           <pose>-1.619 0.195 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -2481,8 +2481,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN TÂY & 2 GHẾ (WEST TABLE) ==================== -->
-        <!-- Bàn Tây: Dài 1.38m theo Y, Rộng 0.67m theo X, cách mép chậu cây 0.30m -->
+        <!-- ==================== WEST TABLE & 2 CHAIRS (WEST TABLE) ==================== -->
+        <!-- West table: length 1.38m along Y, width 0.67m along X, distance from planter edge 0.30m -->
         <visual name="center_table_w_vis">
           <pose>-4.275 -0.140 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -2568,7 +2568,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn Tây (phía ngoài) -->
+        <!-- 2 Chair West table (outside) -->
         <visual name="center_chair_w1_seat_vis">
           <pose>-4.771 0.195 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -2681,18 +2681,18 @@
 
       </link>
 
-      <!-- 8. CIRCULAR DINING CLUSTER NORTH (Cụm 3 bộ Group 01 phía Bắc - Dời cách đều 2 trụ đen tường Bắc) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Tâm vòng tròn ảo: X = -3.898m, Y = 4.910m (nằm chính giữa cách đều 2 trụ đen tường Bắc: Pillar NW X=-8.445m & Pillar NE X=0.650m) -->
-      <!--   - Bán kính vòng tròn ảo: R = 1.95m (mặt sàn ước lệ mỏng 2mm, không va chạm) -->
-      <!--   - Bố trí 3 bộ Group 01 cách đều 120 độ quanh tâm (cạnh bàn cách tâm 0.50m, tâm bàn cách tâm vòng tròn 1.19m): -->
-      <!--     * Bàn Bắc: Tâm (-3.898, 6.100, 0.375), dài 1.38m theo Y, rộng 0.67m theo X (cạnh ngắn 0.67m đụng sát tường Bắc Y = 6.790m), yaw = 0 -->
-      <!--     * Bàn Tây Nam: Tâm (-4.929, 4.315, 0.375), xoay 120 độ (yaw = 2.0944 rad) -->
-      <!--     * Bàn Đông Nam: Tâm (-2.867, 4.315, 0.375), xoay -120 độ (yaw = -2.0944 rad) -->
-      <!--   - Mỗi bàn có 4 ghế ăn chuẩn Group 01 (0.28m x 0.28m x 0.75m) đối xứng 2 bên cạnh dài -->
+      <!-- 8. CIRCULAR DINING CLUSTER NORTH (North cluster of 3 Group 01 sets - Centered between the two black north-wall pillars) -->
+      <!-- Dimensions based on drawing measurements: -->
+      <!--   - Virtual circle center: X = -3.898m, Y = 4.910m (centered between the two black north-wall pillars: Pillar NW X=-8.445m & Pillar NE X=0.650m) -->
+      <!--   - Virtual circle radius: R = 1.95m (2mm visual floor marker, no collision) -->
+      <!--   - 3 Group 01 sets spaced 120 degrees around the center (table-edge distance from center 0.50m, table-center distance from circle center 1.19m): -->
+      <!--     * North table: Center (-3.898, 6.100, 0.375), length 1.38m along Y, width 0.67m along X (0.67m short edge flush against north wall Y = 6.790m), yaw = 0 -->
+      <!--     * Southwest table: Center (-4.929, 4.315, 0.375), rotated 120 degrees (yaw = 2.0944 rad) -->
+      <!--     * Southeast table: Center (-2.867, 4.315, 0.375), rotated -120 degrees (yaw = -2.0944 rad) -->
+      <!--   - Each table has 4 standard Group 01 dining chairs (0.28m x 0.28m x 0.75m) symmetrically on both long sides -->
       <link name="dining_cluster_north">
 
-        <!-- [VÒNG TRÒN ẢO PHÍA BẮC - MẶT SÀN ƯỚC LỆ KHÔNG VA CHẠM: Bán kính R = 1.95m] -->
+        <!-- [NORTH VIRTUAL CIRCLE - NON-COLLIDING VISUAL FLOOR MARKER: Radius R = 1.95m] -->
         <visual name="north_cluster_floor_disc_vis">
           <pose>-3.898 4.910 0.003 0 0 0</pose>
           <geometry><cylinder><radius>1.95</radius><length>0.002</length></cylinder></geometry>
@@ -2702,8 +2702,8 @@
           </material>
         </visual>
 
-        <!-- ==================== BỘ 1: HƯỚNG BẮC (NORTH SET - 90 ĐỘ) ==================== -->
-        <!-- Bàn ăn Group 01 Bắc: Cạnh ngắn (0.67m) đụng sát tường Bắc, tâm (-3.898, 6.100) -->
+        <!-- ==================== SET 1: NORTH (NORTH SET - 90 degrees) ==================== -->
+        <!-- North Group 01 dining table: short edge (0.67m) flush against north wall, Center (-3.898, 6.100) -->
         <visual name="n_cluster_table_n_vis">
           <pose>-3.898 6.100 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -2789,7 +2789,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế ăn bộ Bắc -->
+        <!-- 4 North-set dining chairs -->
         <visual name="n_cluster_chair_n_e1_seat_vis">
           <pose>-3.402 6.435 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -3010,8 +3010,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BỘ 2: HƯỚNG TÂY NAM (SOUTH-WEST SET - 210 ĐỘ) ==================== -->
-        <!-- Bàn ăn Group 01 Tây Nam: Tâm (-4.929, 4.315), xoay 120 độ -->
+        <!-- ==================== SET 2: SOUTHWEST (SOUTH-WEST SET - 210 degrees) ==================== -->
+        <!-- Southwest Group 01 dining table: Center (-4.929, 4.315), rotated 120 degrees -->
         <visual name="n_cluster_table_sw_vis">
           <pose>-4.929 4.315 0.725 0.0000 0.0000 2.0944</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -3097,7 +3097,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế ăn bộ Tây Nam (xoay 120 độ) -->
+        <!-- 4 Southwest-set dining chairs (rotated 120 degrees) -->
         <visual name="n_cluster_chair_sw_e1_seat_vis">
           <pose>-5.467 4.577 0.430 0.0000 0.0000 2.0944</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -3318,8 +3318,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BỘ 3: HƯỚNG ĐÔNG NAM (SOUTH-EAST SET - 330 ĐỘ) ==================== -->
-        <!-- Bàn ăn Group 01 Đông Nam: Tâm (-2.867, 4.315), xoay -120 độ -->
+        <!-- ==================== SET 3: SOUTHEAST (SOUTH-EAST SET - 330 degrees) ==================== -->
+        <!-- Southeast Group 01 dining table: Center (-2.867, 4.315), rotated -120 degrees -->
         <visual name="n_cluster_table_se_vis">
           <pose>-2.867 4.315 0.725 0.0000 0.0000 -2.0944</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -3405,7 +3405,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế ăn bộ Đông Nam (xoay -120 độ) -->
+        <!-- 4 Southeast-set dining chairs (rotated -120 degrees) -->
         <visual name="n_cluster_chair_se_e1_seat_vis">
           <pose>-2.825 3.718 0.430 0.0000 0.0000 -2.0944</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -3628,16 +3628,16 @@
 
       </link>
 
-      <!-- 9. BAR 05 COUNTER (Quầy Bar/Buffet 05 phía Bắc Phòng 06 - Gồm 2 lớp) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Vị trí: Cách tường bếp 1.49m về phía Tây, cách đỉnh phòng bán nguyệt 06 đúng 0.76m về phía Bắc -->
-      <!--   - Chiều dài: 5.29m (chạy dọc từ Y = 0.430m đến Y = 5.720m, tâm Y = 3.075m) -->
-      <!--   - Lớp bên trái (Quầy ngoài / Khách ngồi): Rộng 0.56m, từ X = 3.700m đến X = 4.260m (tâm X = 3.980m), cao 1.05m -->
-      <!--   - Lớp bên phải (Quầy trong / Thao tác): Rộng 0.78m, từ X = 4.260m đến X = 5.040m (tâm X = 4.650m), cao 1.05m -->
-      <!--   - Tổng bề rộng quầy: 1.34m, hành lang phía Đông vào bếp rộng 1.49m -->
+      <!-- 9. BAR 05 COUNTER (Bar/Buffet 05 north of Room 06 - Two layers) -->
+      <!-- Dimensions based on drawing measurements: -->
+      <!--   - Position: 1.49m west of kitchen wall, exactly 0.76m north of semicircular room 06 -->
+      <!--   - Length: 5.29m (extends along from Y = 0.430m to Y = 5.720m, Center Y = 3.075m) -->
+      <!--   - Left layer (outer counter / guest seating): width 0.56m, from X = 3.700m to X = 4.260m (Center X = 3.980m), height 1.05m -->
+      <!--   - Right layer (inner counter / work area): width 0.78m, from X = 4.260m to X = 5.040m (Center X = 4.650m), height 1.05m -->
+      <!--   - Total counter width: 1.34m, east kitchen access corridor width 1.49m -->
       <link name="bar_05_counter">
 
-        <!-- [LỚP BÊN PHẢI: Quầy trong / Thao tác - Rộng 0.78m x Dài 5.29m x Cao 1.05m] -->
+        <!-- [RIGHT LAYER: Inner counter / work area - width 0.78m x length 5.29m x height 1.05m] -->
         <visual name="bar_05_right_layer_vis">
           <pose>4.650 3.075 0.525 0 0 0</pose>
           <geometry><box><size>0.78 5.29 1.05</size></box></geometry>
@@ -3651,7 +3651,7 @@
           <geometry><box><size>0.78 5.29 1.05</size></box></geometry>
         </collision>
 
-        <!-- [LỚP BÊN TRÁI: Quầy ngoài / Khách ngồi - Rộng 0.56m x Dài 5.29m x Cao 1.05m] -->
+        <!-- [LEFT LAYER: Outer counter / guest seating - width 0.56m x length 5.29m x height 1.05m] -->
         <visual name="bar_05_left_layer_vis">
           <pose>3.980 3.075 0.525 0 0 0</pose>
           <geometry><box><size>0.56 5.29 1.05</size></box></geometry>
@@ -3665,7 +3665,7 @@
           <geometry><box><size>0.56 5.29 1.05</size></box></geometry>
         </collision>
 
-        <!-- [DÃY TỦ TREO TƯỜNG BẾP PHÍA ĐÔNG BAR 05: Rộng 0.45m x Dài 5.29m x Cao 0.70m, treo cao Z = 1.40m -> 2.10m] -->
+        <!-- [KITCHEN WALL CABINETS EAST OF BAR 05: width 0.45m x length 5.29m x height 0.70m, mounted at height Z = 1.40m -> 2.10m] -->
         <visual name="bar_05_wall_cabinet_vis">
           <pose>6.305 3.075 1.750 0 0 0</pose>
           <geometry><box><size>0.45 5.29 0.70</size></box></geometry>
@@ -3681,7 +3681,7 @@
         </collision>
 
       
-        <!-- [GHẾ TRÒN QUẦY BAR 05 #1: D=0.36m, Cao 0.75m, 1 chân trụ ở tâm] -->
+        <!-- [BAR 05 ROUND STOOL #1: D=0.36m, height 0.75m, 1 central pedestal] -->
         <visual name="bar_05_stool_1_cushion_vis">
           <pose>3.420 0.610 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.18</radius><length>0.08</length></cylinder></geometry>
@@ -3710,7 +3710,7 @@
           <geometry><cylinder><radius>0.15</radius><length>0.02</length></cylinder></geometry>
         </collision>
 
-        <!-- [GHẾ TRÒN QUẦY BAR 05 #2: D=0.36m, Cao 0.75m, 1 chân trụ ở tâm] -->
+        <!-- [BAR 05 ROUND STOOL #2: D=0.36m, height 0.75m, 1 central pedestal] -->
         <visual name="bar_05_stool_2_cushion_vis">
           <pose>3.420 1.330 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.18</radius><length>0.08</length></cylinder></geometry>
@@ -3739,7 +3739,7 @@
           <geometry><cylinder><radius>0.15</radius><length>0.02</length></cylinder></geometry>
         </collision>
 
-        <!-- [GHẾ TRÒN QUẦY BAR 05 #3: D=0.36m, Cao 0.75m, 1 chân trụ ở tâm] -->
+        <!-- [BAR 05 ROUND STOOL #3: D=0.36m, height 0.75m, 1 central pedestal] -->
         <visual name="bar_05_stool_3_cushion_vis">
           <pose>3.420 2.050 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.18</radius><length>0.08</length></cylinder></geometry>
@@ -3768,7 +3768,7 @@
           <geometry><cylinder><radius>0.15</radius><length>0.02</length></cylinder></geometry>
         </collision>
 
-        <!-- [GHẾ TRÒN QUẦY BAR 05 #4: D=0.36m, Cao 0.75m, 1 chân trụ ở tâm] -->
+        <!-- [BAR 05 ROUND STOOL #4: D=0.36m, height 0.75m, 1 central pedestal] -->
         <visual name="bar_05_stool_4_cushion_vis">
           <pose>3.420 2.770 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.18</radius><length>0.08</length></cylinder></geometry>
@@ -3797,7 +3797,7 @@
           <geometry><cylinder><radius>0.15</radius><length>0.02</length></cylinder></geometry>
         </collision>
 
-        <!-- [GHẾ TRÒN QUẦY BAR 05 #5: D=0.36m, Cao 0.75m, 1 chân trụ ở tâm] -->
+        <!-- [BAR 05 ROUND STOOL #5: D=0.36m, height 0.75m, 1 central pedestal] -->
         <visual name="bar_05_stool_5_cushion_vis">
           <pose>3.420 3.490 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.18</radius><length>0.08</length></cylinder></geometry>
@@ -3826,7 +3826,7 @@
           <geometry><cylinder><radius>0.15</radius><length>0.02</length></cylinder></geometry>
         </collision>
 
-        <!-- [GHẾ TRÒN QUẦY BAR 05 #6: D=0.36m, Cao 0.75m, 1 chân trụ ở tâm] -->
+        <!-- [BAR 05 ROUND STOOL #6: D=0.36m, height 0.75m, 1 central pedestal] -->
         <visual name="bar_05_stool_6_cushion_vis">
           <pose>3.420 4.210 0.710 0 0 0</pose>
           <geometry><cylinder><radius>0.18</radius><length>0.08</length></cylinder></geometry>
@@ -3857,15 +3857,15 @@
 
       </link>
 
-      <!-- 10. NORTH WALL PILLAR DINING (Bàn đơn dưới 2 cột đen & bàn tiêu chuẩn 4 ghế cạnh cột) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Bàn đơn dưới Cột Tây Bắc (-8.445m): Kích thước 0.67m x 0.69m x 0.75m tại (-8.445, 4.985, 0.375), 2 ghế tại X = -8.941m và -7.949m -->
-      <!--   - Bàn đơn dưới Cột Đông Bắc (0.225m): Kích thước 0.67m x 0.69m x 0.75m tại (0.225, 4.985, 0.375), 2 ghế tại X = -0.271m và 0.721m -->
-      <!--   - Bàn tiêu chuẩn 4 ghế phía Đông Cột Tây Bắc: Cách cột 0.73m, tâm (-6.600, 6.100, 0.375), đụng sát tường Bắc -->
-      <!--   - Bàn tiêu chuẩn 4 ghế phía Tây Cột Đông Bắc: Cách cột 0.73m, tâm (-1.620, 6.100, 0.375), đụng sát tường Bắc -->
+      <!-- 10. NORTH WALL PILLAR DINING (Single tables below the two black pillars and standard four-chair tables beside pillars) -->
+      <!-- Dimensions based on drawing measurements: -->
+      <!--   - SINGLE TABLE BELOW NW PILLAR (-8.445m): Dimensions 0.67m x 0.69m x 0.75m at (-8.445, 4.985, 0.375), 2 Chair at X = -8.941m and -7.949m -->
+      <!--   - SINGLE TABLE BELOW NE PILLAR (0.225m): Dimensions 0.67m x 0.69m x 0.75m at (0.225, 4.985, 0.375), 2 Chair at X = -0.271m and 0.721m -->
+      <!--   - Standard four-chair table east of NW Pillar: Distance from pillar: 0.73m, Center (-6.600, 6.100, 0.375), flush against north wall -->
+      <!--   - Standard four-chair table west of NE Pillar: Distance from pillar: 0.73m, Center (-1.620, 6.100, 0.375), flush against north wall -->
       <link name="north_wall_dining">
 
-        <!-- ==================== BÀN ĐƠN DƯỚI CỘT TÂY BẮC (PILLAR NW SINGLE TABLE) ==================== -->
+        <!-- ==================== SINGLE TABLE BELOW NW PILLAR (PILLAR NW SINGLE TABLE) ==================== -->
         <visual name="single_table_nw_vis">
           <pose>-8.445 4.985 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 0.69 0.05</size></box></geometry>
@@ -3915,7 +3915,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn đơn Tây Bắc (phía Tây và Đông) -->
+        <!-- 2 NW single-table chairs (west and east) -->
         <visual name="single_chair_nw_w_seat_vis">
           <pose>-8.941 4.985 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -4026,8 +4026,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN TIÊU CHUẨN PHÍA ĐÔNG CỘT TÂY BẮC (TABLE EAST OF NW PILLAR) ==================== -->
-        <!-- Cách mặt Đông cột 0.73m, đụng sát tường Bắc Y = 6.790m -->
+        <!-- ==================== STANDARD TABLE EAST OF NW PILLAR (TABLE EAST OF NW PILLAR) ==================== -->
+        <!-- Distance from east face of pillar: 0.73m, flush against north wall Y = 6.790m -->
         <visual name="table_nw_east_vis">
           <pose>-6.600 6.100 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -4113,7 +4113,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế bàn phía Đông Cột Tây Bắc -->
+        <!-- 4 chairs at table east of NW Pillar -->
         <visual name="chair_nw_east_w1_seat_vis">
           <pose>-7.096 6.435 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -4334,8 +4334,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN TIÊU CHUẨN PHÍA TÂY CỘT ĐÔNG BẮC (TABLE WEST OF NE PILLAR) ==================== -->
-        <!-- Cách mặt Tây cột đúng 0.73m (theo thước đo hình vẽ), đụng sát tường Bắc Y = 6.790m -->
+        <!-- ==================== STANDARD TABLE WEST OF NE PILLAR (TABLE WEST OF NE PILLAR) ==================== -->
+        <!-- Exact distance from west face of pillar: 0.73m (according to drawing measurements), flush against north wall Y = 6.790m -->
         <visual name="table_ne_west_vis">
           <pose>-1.195 6.100 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -4421,7 +4421,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế bàn phía Tây Cột Đông Bắc -->
+        <!-- 4 chairs at table west of NE Pillar -->
         <visual name="chair_ne_west_w1_seat_vis">
           <pose>-1.691 6.435 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -4642,7 +4642,7 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN ĐƠN DƯỚI CỘT ĐÔNG BẮC (PILLAR NE SINGLE TABLE) ==================== -->
+        <!-- ==================== SINGLE TABLE BELOW NE PILLAR (PILLAR NE SINGLE TABLE) ==================== -->
         <visual name="single_table_ne_vis">
           <pose>0.650 4.985 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 0.69 0.05</size></box></geometry>
@@ -4692,7 +4692,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn đơn Đông Bắc (phía Tây và Đông) -->
+        <!-- 2 NE single-table chairs (west and east) -->
         <visual name="single_chair_ne_w_seat_vis">
           <pose>0.154 4.985 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -4805,16 +4805,16 @@
 
       </link>
 
-      <!-- 11. WEST PILLAR DINING ROW (Dãy bàn phía Nam Cột Tây Bắc - Cách cột 2.11m) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Vị trí: Cách mép Nam Cột Tây Bắc (Y = 5.330m) đúng 2.11m về phía Nam -> Mép Bắc dãy bàn tại Y = 3.220m -->
-      <!--   - Cấu trúc: 2 bàn dài chuẩn Group 01 (0.67m x 1.38m x 0.75m) ghép dọc lại (tổng chiều dài 2.76m, từ Y = 0.460m đến Y = 3.220m) -->
-      <!--   - Tâm điểm nối 2 bàn: (-8.445, 1.840, 0.0), thẳng hàng dọc theo trục Cột Tây Bắc (X = -8.445m) -->
-      <!--   - Mỗi bàn có 4 ghế ăn tiêu chuẩn Group 01 (0.28m x 0.28m x 0.75m), tổng cộng 8 ghế -->
-      <!--   - Đĩa sàn ảo ước lệ: Bán kính R = 1.95m tại (-8.445, 1.840, 0.003) -->
+      <!-- 11. WEST PILLAR DINING ROW (Dining row south of NW Pillar - 2.11m from pillar) -->
+      <!-- Dimensions based on drawing measurements: -->
+      <!--   - Position: Distance from south edge of NW Pillar (Y = 5.330m) exactly 2.11m southward -> North edge of table row at Y = 3.220m -->
+      <!--   - Structure: 2 standard Group 01 long tables (0.67m x 1.38m x 0.75m) joined lengthwise (total length 2.76m, from Y = 0.460m to Y = 3.220m) -->
+      <!--   - Center of table joint: (-8.445, 1.840, 0.0), aligned with NW Pillar axis (X = -8.445m) -->
+      <!--   - Each table has 4 standard Group 01 dining chairs (0.28m x 0.28m x 0.75m), 8 chairs total -->
+      <!--   - Virtual floor disc marker: Radius R = 1.95m at (-8.445, 1.840, 0.003) -->
       <link name="west_pillar_dining_row">
 
-        <!-- [VÒNG TRÒN ẢO PHÍA TÂY - MẶT SÀN ƯỚC LỆ KHÔNG VA CHẠM: Bán kính R = 1.95m] -->
+        <!-- [WEST VIRTUAL CIRCLE - NON-COLLIDING VISUAL FLOOR MARKER: Radius R = 1.95m] -->
         <visual name="west_pillar_floor_disc_vis">
           <pose>-7.200 1.840 0.003 0 0 0</pose>
           <geometry><cylinder><radius>1.95</radius><length>0.002</length></cylinder></geometry>
@@ -4824,8 +4824,8 @@
           </material>
         </visual>
 
-        <!-- ==================== BÀN 1: PHÍA BẮC (NORTH TABLE) ==================== -->
-        <!-- Tâm: (-7.200, 2.530, 0.375) -->
+        <!-- ==================== TABLE 1: NORTH (NORTH TABLE) ==================== -->
+        <!-- Center: (-7.200, 2.530, 0.375) -->
         <visual name="west_row_table_n_vis">
           <pose>-7.200 2.530 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -4911,7 +4911,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế Bàn 1 (Bắc) -->
+        <!-- 4 Chair Table 1 (North) -->
         <visual name="west_row_chair_n_w1_seat_vis">
           <pose>-7.696 2.865 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -5132,8 +5132,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN 2: PHÍA NAM (SOUTH TABLE) ==================== -->
-        <!-- Tâm: (-7.200, 1.150, 0.375) -->
+        <!-- ==================== TABLE 2: SOUTH (SOUTH TABLE) ==================== -->
+        <!-- Center: (-7.200, 1.150, 0.375) -->
         <visual name="west_row_table_s_vis">
           <pose>-7.200 1.150 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -5219,7 +5219,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế Bàn 2 (Nam) -->
+        <!-- 4 Chair Table 2 (South) -->
         <visual name="west_row_chair_s_w1_seat_vis">
           <pose>-7.696 1.485 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -5442,19 +5442,19 @@
 
       </link>
 
-      <!-- 12. GROUP 02 (Cụm 3 bàn đơn phía Nam Cột Đông Bắc - Cách cột 3.36m) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Tâm vòng tròn ảo: X = 0.650m (thẳng hàng Cột Đông Bắc), Y = 5.330 - 3.36 = 1.970m -->
-      <!--   - Bán kính vòng tròn ảo: R = 1.95m (mặt sàn ước lệ mỏng 2mm, không va chạm) -->
-      <!--   - 3 bàn đơn (0.67m x 0.69m x 0.75m) bố trí góc 120 độ quanh tâm: -->
-      <!--     * Cạnh trong của bàn cách tâm vòng tròn: 0.58m -> Tâm bàn cách tâm vòng tròn: 0.925m -->
-      <!--     * Mỗi bàn đơn kèm 2 ghế ăn chuẩn Group 01 (0.28m x 0.28m x 0.75m) đặt 2 bên cạnh bàn -->
-      <!--     * Bàn Bắc: Tâm (0.650, 2.895, 0.375), yaw = 0 -->
-      <!--     * Bàn Tây Nam: Tâm (-0.151, 1.507, 0.375), xoay 120 độ (yaw = 2.0944 rad) -->
-      <!--     * Bàn Đông Nam: Tâm (1.451, 1.507, 0.375), xoay -120 độ (yaw = -2.0944 rad) -->
+      <!-- 12. GROUP 02 (Three single tables south of NE Pillar - 3.36m from pillar) -->
+      <!-- Dimensions based on drawing measurements: -->
+      <!--   - Virtual circle center: X = 0.650m (aligned with NE Pillar), Y = 5.330 - 3.36 = 1.970m -->
+      <!--   - Virtual circle radius: R = 1.95m (2mm visual floor marker, no collision) -->
+      <!--   - 3 single tables (0.67m x 0.69m x 0.75m) arranged 120 degrees apart around center: -->
+      <!--     * Inner table-edge distance from circle center: 0.58m -> table-center distance from circle center: 0.925m -->
+      <!--     * Each single table has 2 standard Group 01 dining chairs (0.28m x 0.28m x 0.75m) placed on both sides of the table -->
+      <!--     * North table: Center (0.650, 2.895, 0.375), yaw = 0 -->
+      <!--     * Southwest table: Center (-0.151, 1.507, 0.375), rotated 120 degrees (yaw = 2.0944 rad) -->
+      <!--     * Southeast table: Center (1.451, 1.507, 0.375), rotated -120 degrees (yaw = -2.0944 rad) -->
       <link name="group02">
 
-        <!-- [VÒNG TRÒN ẢO PHÍA ĐÔNG - MẶT SÀN ƯỚC LỆ KHÔNG VA CHẠM: Bán kính R = 1.95m] -->
+        <!-- [EAST VIRTUAL CIRCLE - NON-COLLIDING VISUAL FLOOR MARKER: Radius R = 1.95m] -->
         <visual name="east_pillar_floor_disc_vis">
           <pose>0.650 1.970 0.003 0 0 0</pose>
           <geometry><cylinder><radius>1.95</radius><length>0.002</length></cylinder></geometry>
@@ -5464,8 +5464,8 @@
           </material>
         </visual>
 
-        <!-- ==================== BỘ 1: HƯỚNG BẮC (NORTH SET - 90 ĐỘ) ==================== -->
-        <!-- Bàn đơn Bắc: Cạnh trong cách tâm 0.58m, tâm (0.650, 2.895) -->
+        <!-- ==================== SET 1: NORTH (NORTH SET - 90 degrees) ==================== -->
+        <!-- North single table: Inner-edge distance from center 0.58m, Center (0.650, 2.895) -->
         <visual name="e_cluster_table_n_vis">
           <pose>0.650 2.895 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 0.69 0.05</size></box></geometry>
@@ -5515,7 +5515,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn đơn Bắc (phía Đông và Tây) -->
+        <!-- 2 Chair North single table (east and west) -->
         <visual name="e_cluster_chair_n_e_seat_vis">
           <pose>1.146 2.895 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -5626,8 +5626,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BỘ 2: HƯỚNG TÂY NAM (SOUTH-WEST SET - 210 ĐỘ) ==================== -->
-        <!-- Bàn đơn Tây Nam: Tâm (-0.151, 1.507), xoay 120 độ -->
+        <!-- ==================== SET 2: SOUTHWEST (SOUTH-WEST SET - 210 degrees) ==================== -->
+        <!-- Southwest single table: Center (-0.151, 1.507), rotated 120 degrees -->
         <visual name="e_cluster_table_sw_vis">
           <pose>-0.151 1.507 0.725 0.0000 0.0000 2.0944</pose>
           <geometry><box><size>0.67 0.69 0.05</size></box></geometry>
@@ -5677,7 +5677,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn đơn Tây Nam (xoay 120 độ) -->
+        <!-- 2 Chair Southwest single table (rotated 120 degrees) -->
         <visual name="e_cluster_chair_sw_1_seat_vis">
           <pose>-0.399 1.937 0.430 0.0000 0.0000 2.0944</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -5788,8 +5788,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BỘ 3: HƯỚNG ĐÔNG NAM (SOUTH-EAST SET - 330 ĐỘ) ==================== -->
-        <!-- Bàn đơn Đông Nam: Tâm (1.451, 1.507), xoay -120 độ -->
+        <!-- ==================== SET 3: SOUTHEAST (SOUTH-EAST SET - 330 degrees) ==================== -->
+        <!-- Southeast single table: Center (1.451, 1.507), rotated -120 degrees -->
         <visual name="e_cluster_table_se_vis">
           <pose>1.451 1.507 0.725 0.0000 0.0000 -2.0944</pose>
           <geometry><box><size>0.67 0.69 0.05</size></box></geometry>
@@ -5839,7 +5839,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn đơn Đông Nam (xoay -120 độ) -->
+        <!-- 2 Chair Southeast single table (rotated -120 degrees) -->
         <visual name="e_cluster_chair_se_1_seat_vis">
           <pose>1.203 1.078 0.430 0.0000 0.0000 -2.0944</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -5952,19 +5952,19 @@
 
       </link>
 
-      <!-- 13. GROUP 02 PILLAR SW (Cụm Group 02 phía Bắc Cột Tây Nam - Cách cột 2.29m) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Vị trí: Cách mép Bắc Cột Tây Nam (Y = -5.245m) đúng 2.29m về phía Bắc -> Tâm tại (-7.878m, -2.955m) -->
-      <!--   - Bán kính vòng tròn ảo: R = 1.95m (mặt sàn ước lệ mỏng 2mm, không va chạm) -->
-      <!--   - 3 bàn đơn (0.67m x 0.69m x 0.75m) bố trí góc 120 độ quanh tâm: -->
-      <!--     * Cạnh trong của bàn cách tâm: 0.58m -> Tâm bàn cách tâm vòng tròn: 0.925m -->
-      <!--     * Mỗi bàn đơn kèm 2 ghế ăn chuẩn Group 01 (0.28m x 0.28m x 0.75m) đặt 2 bên cạnh bàn -->
-      <!--     * Bàn Bắc: Tâm (-7.878, -2.030, 0.375), yaw = 0 -->
-      <!--     * Bàn Tây Nam: Tâm (-8.679, -3.418, 0.375), xoay 120 độ (yaw = 2.0944 rad) -->
-      <!--     * Bàn Đông Nam: Tâm (-7.077, -3.418, 0.375), xoay -120 độ (yaw = -2.0944 rad) -->
+      <!-- 13. GROUP 02 PILLAR SW (Group 02 cluster north of SW Pillar - 2.29m from pillar) -->
+      <!-- Dimensions based on drawing measurements: -->
+      <!--   - Position: Distance from north edge of SW Pillar (Y = -5.245m) exactly 2.29m northward -> Center at (-7.878m, -2.955m) -->
+      <!--   - Virtual circle radius: R = 1.95m (2mm visual floor marker, no collision) -->
+      <!--   - 3 single tables (0.67m x 0.69m x 0.75m) arranged 120 degrees apart around center: -->
+      <!--     * Inner table-edge distance from center: 0.58m -> table-center distance from circle center: 0.925m -->
+      <!--     * Each single table has 2 standard Group 01 dining chairs (0.28m x 0.28m x 0.75m) placed on both sides of the table -->
+      <!--     * North table: Center (-7.878, -2.030, 0.375), yaw = 0 -->
+      <!--     * Southwest table: Center (-8.679, -3.418, 0.375), rotated 120 degrees (yaw = 2.0944 rad) -->
+      <!--     * Southeast table: Center (-7.077, -3.418, 0.375), rotated -120 degrees (yaw = -2.0944 rad) -->
       <link name="group02_pillar_sw">
 
-        <!-- [VÒNG TRÒN ẢO PHÍA TÂY NAM - MẶT SÀN ƯỚC LỆ KHÔNG VA CHẠM: Bán kính R = 1.95m] -->
+        <!-- [SOUTHWEST VIRTUAL CIRCLE - NON-COLLIDING VISUAL FLOOR MARKER: Radius R = 1.95m] -->
         <visual name="sw_cluster_floor_disc_vis">
           <pose>-7.878 -2.955 0.003 0 0 0</pose>
           <geometry><cylinder><radius>1.95</radius><length>0.002</length></cylinder></geometry>
@@ -5974,8 +5974,8 @@
           </material>
         </visual>
 
-        <!-- ==================== BỘ 1: HƯỚNG BẮC (NORTH SET - 90 ĐỘ) ==================== -->
-        <!-- Bàn đơn Bắc: Cạnh trong cách tâm 0.58m, tâm (-7.878, -2.030) -->
+        <!-- ==================== SET 1: NORTH (NORTH SET - 90 degrees) ==================== -->
+        <!-- North single table: Inner-edge distance from center 0.58m, Center (-7.878, -2.030) -->
         <visual name="sw_cluster_table_n_vis">
           <pose>-7.878 -2.030 0.725 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.67 0.69 0.05</size></box></geometry>
@@ -6025,7 +6025,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn đơn Bắc (phía Đông và Tây) -->
+        <!-- 2 Chair North single table (east and west) -->
         <visual name="sw_cluster_chair_n_e_seat_vis">
           <pose>-7.382 -2.030 0.430 0.0000 0.0000 0.0000</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -6136,8 +6136,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BỘ 2: HƯỚNG TÂY NAM (SOUTH-WEST SET - 210 ĐỘ) ==================== -->
-        <!-- Bàn đơn Tây Nam: Tâm (-8.679, -3.418), xoay 120 độ -->
+        <!-- ==================== SET 2: SOUTHWEST (SOUTH-WEST SET - 210 degrees) ==================== -->
+        <!-- Southwest single table: Center (-8.679, -3.418), rotated 120 degrees -->
         <visual name="sw_cluster_table_sw_vis">
           <pose>-8.679 -3.418 0.725 0.0000 0.0000 2.0944</pose>
           <geometry><box><size>0.67 0.69 0.05</size></box></geometry>
@@ -6187,7 +6187,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn đơn Tây Nam (xoay 120 độ) -->
+        <!-- 2 Chair Southwest single table (rotated 120 degrees) -->
         <visual name="sw_cluster_chair_sw_1_seat_vis">
           <pose>-8.927 -2.988 0.430 0.0000 0.0000 2.0944</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -6298,8 +6298,8 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BỘ 3: HƯỚNG ĐÔNG NAM (SOUTH-EAST SET - 330 ĐỘ) ==================== -->
-        <!-- Bàn đơn Đông Nam: Tâm (-7.077, -3.418), xoay -120 độ -->
+        <!-- ==================== SET 3: SOUTHEAST (SOUTH-EAST SET - 330 degrees) ==================== -->
+        <!-- Southeast single table: Center (-7.077, -3.418), rotated -120 degrees -->
         <visual name="sw_cluster_table_se_vis">
           <pose>-7.077 -3.418 0.725 0.0000 0.0000 -2.0944</pose>
           <geometry><box><size>0.67 0.69 0.05</size></box></geometry>
@@ -6349,7 +6349,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 2 Ghế Bàn đơn Đông Nam (xoay -120 độ) -->
+        <!-- 2 Chair Southeast single table (rotated -120 degrees) -->
         <visual name="sw_cluster_chair_se_1_seat_vis">
           <pose>-7.325 -3.847 0.430 0.0000 0.0000 -2.0944</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -6462,15 +6462,15 @@
 
       </link>
 
-      <!-- 14. WEST SLANTED WALL DINING (Dãy 4 bàn kép tiêu chuẩn dựa sát tường nghiêng phía Tây) -->
-      <!-- Kích thước căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Vị trí: Dựa sát mặt trong tường nghiêng Tây (yaw = -1.3422 rad / -76.904 độ) -->
-      <!--   - Bàn kép tiêu chuẩn: Kích thước 0.67m x 1.38m x 0.75m (cạnh ngắn 0.67m áp sát tường, chiều dài 1.38m vươn vào phòng) -->
-      <!--   - Khoảng cách giữa 2 bàn dọc theo tường: Đúng 1.39m (bước pitch tâm-đến-tâm: 2.06m) -->
-      <!--   - Mỗi bàn có 4 ghế ăn chuẩn Group 01 (0.28m x 0.28m x 0.75m): 2 ghế Bắc, 2 ghế Nam -->
+      <!-- 14. WEST SLANTED WALL DINING (Row of 4 standard double tables against slanted west wall) -->
+      <!-- Dimensions based on drawing measurements: -->
+      <!--   - Position: Against inner face of slanted west wall (yaw = -1.3422 rad / -76.904 degrees) -->
+      <!--   - Standard double table: Dimensions 0.67m x 1.38m x 0.75m (0.67m short edge against wall, 1.38m length extending into room) -->
+      <!--   - Spacing between tables along wall: exactly 1.39m (center-to-center pitch: 2.06m) -->
+      <!--   - Each table has 4 standard Group 01 dining chairs (0.28m x 0.28m x 0.75m): 2 Chair North, 2 Chair South -->
       <link name="west_slanted_wall_dining">
 
-        <!-- ==================== BÀN 1: GẦN TƯỜNG BẮC NHẤT ==================== -->
+        <!-- ==================== TABLE 1: CLOSEST TO NORTH WALL ==================== -->
         <visual name="slant_table_1_vis">
           <pose>-11.116 5.995 0.725 0.0000 0.0000 -1.3422</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -6556,7 +6556,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế Bàn 1 -->
+        <!-- 4 Chair Table 1 -->
         <visual name="slant_chair_1_n1_seat_vis">
           <pose>-11.555 6.402 0.430 0.0000 0.0000 -1.3422</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -6777,7 +6777,7 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN 2: CÁCH BÀN 1 ĐÚNG 1.39M ==================== -->
+        <!-- ==================== TABLE 2: EXACTLY 1.39M FROM TABLE 1 ==================== -->
         <visual name="slant_table_2_vis">
           <pose>-10.649 3.989 0.725 0.0000 0.0000 -1.3422</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -6863,7 +6863,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế Bàn 2 -->
+        <!-- 4 Chair Table 2 -->
         <visual name="slant_chair_2_n1_seat_vis">
           <pose>-11.088 4.396 0.430 0.0000 0.0000 -1.3422</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -7084,7 +7084,7 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN 3: CÁCH BÀN 2 ĐÚNG 1.39M ==================== -->
+        <!-- ==================== TABLE 3: EXACTLY 1.39M FROM TABLE 2 ==================== -->
         <visual name="slant_table_3_vis">
           <pose>-10.182 1.983 0.725 0.0000 0.0000 -1.3422</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -7170,7 +7170,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế Bàn 3 -->
+        <!-- 4 Chair Table 3 -->
         <visual name="slant_chair_3_n1_seat_vis">
           <pose>-10.621 2.390 0.430 0.0000 0.0000 -1.3422</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -7391,7 +7391,7 @@
           <geometry><box><size>0.025 0.025 0.41</size></box></geometry>
         </collision>
 
-        <!-- ==================== BÀN 4: CÁCH BÀN 3 ĐÚNG 1.39M ==================== -->
+        <!-- ==================== TABLE 4: EXACTLY 1.39M FROM TABLE 3 ==================== -->
         <visual name="slant_table_4_vis">
           <pose>-9.715 -0.023 0.725 0.0000 0.0000 -1.3422</pose>
           <geometry><box><size>0.67 1.38 0.05</size></box></geometry>
@@ -7477,7 +7477,7 @@
           <geometry><box><size>0.04 0.04 0.70</size></box></geometry>
         </collision>
 
-        <!-- 4 Ghế Bàn 4 -->
+        <!-- 4 Chair Table 4 -->
         <visual name="slant_chair_4_n1_seat_vis">
           <pose>-10.154 0.384 0.430 0.0000 0.0000 -1.3422</pose>
           <geometry><box><size>0.28 0.28 0.04</size></box></geometry>
@@ -7700,16 +7700,16 @@
 
       </link>
 
-      <!-- 15. ROOMS 06 & 07 (Phòng 06 & 07 - Che kín hoàn toàn phía Tây sau lưng trạm Robot) -->
-      <!-- Kích thước đo đạc chuẩn xác: -->
-      <!--   - Phòng 07 (Hình hộp chữ nhật/vuông): Rộng 2.27m x Dài 2.18m x Cao 2.80m -->
-      <!--     Dựa lưng vào tường xanh lá dock robot (X = 6.605m) và đường chuẩn (Y = -2.510m) -->
-      <!--   - Phòng 06 (Hình bán nguyệt): Bán kính R = 1.09m (đường kính 2.18m khớp hoàn toàn với phòng 07) -->
-      <!--   - Khoảng cách đến đầu dãy bàn quầy Bar phía Tây đúng 1.00m để có lối đi cho Robot -->
+      <!-- 15. ROOMS 06 & 07 (Rooms 06 & 07 - Fully enclosed west side behind robot station) -->
+      <!-- Measured dimensions: -->
+      <!--   - Room 07 (rectangular/square box): width 2.27m x length 2.18m x height 2.80m -->
+      <!--     Backed against green robot-dock wall (X = 6.605m) and reference line (Y = -2.510m) -->
+      <!--   - Room 06 (semicircular): Radius R = 1.09m (2.18m diameter matches room 07) -->
+      <!--   - Exactly 1.00m from the head of the western bar-counter row for robot access -->
       <link name="rooms_06_07">
 
-        <!-- [PHÒNG 07 - KHỐI HỘP VUÔNG KÍN HOÀN TOÀN: 2.27m x 2.18m x 2.80m] -->
-        <!-- Từ X = 4.335 đến X = 6.605, từ Y = -2.510 đến Y = -0.330 -->
+        <!-- [ROOM 07 - FULLY ENCLOSED BOX: 2.27m x 2.18m x 2.80m] -->
+        <!-- from X = 4.335 to X = 6.605, from Y = -2.510 to Y = -0.330 -->
         <visual name="room_07_block_vis">
           <pose>5.470 -1.420 1.40 0 0 0</pose>
           <geometry><box><size>2.27 2.18 2.80</size></box></geometry>
@@ -7723,8 +7723,8 @@
           <geometry><box><size>2.27 2.18 2.80</size></box></geometry>
         </collision>
 
-        <!-- [PHÒNG 06 - KHỐI BÁN NGUYỆT KÍN HOÀN TOÀN: Bán kính R = 1.09m, Cao 2.80m] -->
-        <!-- Trụ tròn tiếp giáp mép Tây Phòng 07 tại X = 4.335m, Y = -1.420m (nhô nửa bán nguyệt sang Tây) -->
+        <!-- [ROOM 06 - FULLY ENCLOSED SEMICIRCLE: Radius R = 1.09m, height 2.80m] -->
+        <!-- Cylinder touching west edge of Room 07 at X = 4.335m, Y = -1.420m (semicircle protrudes west) -->
         <visual name="room_06_cylinder_vis">
           <pose>4.335 -1.420 1.40 0 0 0</pose>
           <geometry><cylinder><radius>1.09</radius><length>2.80</length></cylinder></geometry>
@@ -7740,14 +7740,14 @@
 
       </link>
 
-      <!-- 16. 4 MAIN STRUCTURAL PILLARS (4 Cột trụ kết cấu chịu lực - 1.56m x 1.56m) -->
-      <!-- Vị trí căn chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Cách tường trái 2.91m, nhịp giữa 2 cột là 7.11m -->
-      <!--   - Khổ cột: Rộng 1.56m x Dài 1.56m x Cao 2.80m -->
-      <!--   - Cột Đông Nam nhô vào phòng 0.44m so với tường Nam -->
+      <!-- 16. 4 MAIN STRUCTURAL PILLARS (4 load-bearing structural pillars - 1.56m x 1.56m) -->
+      <!-- Positions based on drawing measurements: -->
+      <!--   - Distance from left wall: 2.91m, span between pillars is 7.11m -->
+      <!--   - Pillar dimensions: width 1.56m x length 1.56m x height 2.80m -->
+      <!--   - SE Pillar protrudes 0.44m into room from south wall -->
       <link name="structural_pillars">
 
-        <!-- Cột Tây Bắc (Pillar NW) - Cách tường trái 2.91m -->
+        <!-- NW Pillar (Pillar NW) - Distance from left wall: 2.91m -->
         <visual name="pillar_nw_vis">
           <pose>-8.445 6.110 1.40 0 0 0</pose>
           <geometry><box><size>1.56 1.56 2.80</size></box></geometry>
@@ -7758,7 +7758,7 @@
           <geometry><box><size>1.56 1.56 2.80</size></box></geometry>
         </collision>
 
-        <!-- Cột Đông Bắc (Pillar NE) - Nhịp thông thủy 7.535m so với Cột Tây Bắc, cách quầy Bar 05 đúng 2.27m -->
+        <!-- NE Pillar (Pillar NE) - Clear span 7.535m from NW Pillar, exactly 2.27m from Bar 05 -->
         <visual name="pillar_ne_vis">
           <pose>0.650 6.110 1.40 0 0 0</pose>
           <geometry><box><size>1.56 1.56 2.80</size></box></geometry>
@@ -7769,7 +7769,7 @@
           <geometry><box><size>1.56 1.56 2.80</size></box></geometry>
         </collision>
 
-        <!-- Cột Tây Nam sảnh vào (Pillar SW) - Nhô vào trong 0.78m, cách đuôi tường Tây 0.47m -->
+        <!-- SW Pillar entrance hall (Pillar SW) - Protrudes inward 0.78m, 0.47m from west-wall end -->
         <visual name="pillar_sw_vis">
           <pose>-7.878 -6.025 1.40 0 0 0</pose>
           <geometry><box><size>1.56 1.56 2.80</size></box></geometry>
@@ -7780,7 +7780,7 @@
           <geometry><box><size>1.56 1.56 2.80</size></box></geometry>
         </collision>
 
-        <!-- Cột Đông Nam sảnh vào (Pillar SE) - Thẳng hàng dọc với Cột Đông Bắc, nhô 0.44m vào trong -->
+        <!-- SE Pillar entrance hall (Pillar SE) - Aligned with NE Pillar, protrudes inward 0.44m -->
         <visual name="pillar_se_vis">
           <pose>0.225 -7.230 1.40 0 0 0</pose>
           <geometry><box><size>1.56 1.56 2.80</size></box></geometry>
@@ -7794,14 +7794,14 @@
       </link>
 
       <!-- 17. MAIN ENTRANCE - WAITING BENCH (Item 02) & RECEPTION DESK (Item 01) -->
-      <!-- Bố trí chuẩn xác theo số đo thực tế từ bản vẽ: -->
-      <!--   - Ghế chờ cong: Dài 2.92m, rộng 0.60m, song song với tường vát kế Cột SE (Wall 4, yaw = 0.7854 rad) -->
-      <!--   - Bàn lễ tân (Item 01): Cách đuôi ghế chờ 1.83m về phía Tây, nhô vào trong 1.81m so với tường sảnh chính (Wall 5) -->
-      <!--   - Quầy chính: Dài 1.80m, rộng 0.60m, cao 1.05m, song song với Wall 5 (yaw = 2.7489 rad) kèm quầy hồi chữ L và ghế xoay lễ tân -->
+      <!-- Layout based on drawing measurements: -->
+      <!--   - Curved waiting bench: length 2.92m, width 0.60m, parallel to slanted wall beside SE Pillar (Wall 4, yaw = 0.7854 rad) -->
+      <!--   - Reception desk (Item 01): 1.83m west of bench end, protrudes 1.81m inward from main entrance wall (Wall 5) -->
+      <!--   - Main counter: length 1.80m, width 0.60m, height 1.05m, parallel to Wall 5 (yaw = 2.7489 rad) with L-shaped return counter and receptionist swivel chair -->
       <link name="main_entrance_furniture">
 
-        <!-- [MỤC 02] DÃY GHẾ CHỜ KHÁCH (WAITING BENCH - Dài 2.10m, áp sát tường Wall 4, không đâm xuyên Cột SE) -->
-        <!-- Đệm ngồi chính (Seat Cushion) -->
+        <!-- [ITEM 02] GUEST WAITING BENCH (WAITING BENCH - length 2.10m, flush against Wall 4, does not intersect SE Pillar) -->
+        <!-- Main seat cushion (Seat Cushion) -->
         <visual name="waiting_bench_seat_vis">
           <pose>-1.550 -7.201 0.225 0 0 0.7854</pose>
           <geometry><box><size>2.10 0.60 0.45</size></box></geometry>
@@ -7812,7 +7812,7 @@
           <geometry><box><size>2.10 0.60 0.45</size></box></geometry>
         </collision>
 
-        <!-- Tựa lưng ghế chờ (Backrest) -->
+        <!-- Waiting bench backrest (Backrest) -->
         <visual name="waiting_bench_backrest_vis">
           <pose>-1.391 -7.360 0.550 0 0 0.7854</pose>
           <geometry><box><size>2.10 0.15 0.35</size></box></geometry>
@@ -7823,15 +7823,15 @@
           <geometry><box><size>2.10 0.15 0.35</size></box></geometry>
         </collision>
 
-        <!-- [MỤC 01] BÀN LỄ TÂN (RECEPTION DESK) & KHU VỰC SẢNH -->
-        <!-- Đĩa sàn ước lệ khu vực lễ tân (Floor Disc - Circle 01, R = 1.80m) -->
+        <!-- [ITEM 01] RECEPTION DESK (RECEPTION DESK) & HALL AREA -->
+        <!-- Reception-area visual floor disc (Floor Disc - Circle 01, R = 1.80m) -->
         <visual name="reception_floor_disc_vis">
           <pose>-4.051 -5.750 0.003 0 0 0</pose>
           <geometry><cylinder><radius>1.80</radius><length>0.004</length></cylinder></geometry>
           <material><ambient>0.82 0.82 0.85 1</ambient><diffuse>0.82 0.82 0.85 1</diffuse></material>
         </visual>
 
-        <!-- Mặt quầy chính (Main Counter - Dài 1.80m, song song tường sảnh chính Wall 5) -->
+        <!-- Main counter surface (Main Counter - length 1.80m, parallel to main entrance wall Wall 5) -->
         <visual name="reception_counter_body_vis">
           <pose>-4.051 -5.297 0.510 0 0 2.7489</pose>
           <geometry><box><size>1.80 0.60 1.02</size></box></geometry>
@@ -7847,7 +7847,7 @@
           <geometry><box><size>1.80 0.60 1.05</size></box></geometry>
         </collision>
 
-        <!-- Đoạn quầy hồi chữ L (Return Counter - Dài 0.85m, vuông góc quầy chính) -->
+        <!-- L-shaped return counter (Return Counter - length 0.85m, perpendicular to main counter) -->
         <visual name="reception_return_body_vis">
           <pose>-3.382 -6.034 0.510 0 0 1.1781</pose>
           <geometry><box><size>0.85 0.60 1.02</size></box></geometry>
@@ -7863,7 +7863,7 @@
           <geometry><box><size>0.85 0.60 1.05</size></box></geometry>
         </collision>
 
-        <!-- Ghế nhân viên lễ tân (Receptionist Swivel Chair) -->
+        <!-- Receptionist chair (Receptionist Swivel Chair) -->
         <visual name="reception_chair_base_vis">
           <pose>-4.300 -5.898 0.200 0 0 1.1781</pose>
           <geometry><cylinder><radius>0.04</radius><length>0.40</length></cylinder></geometry>

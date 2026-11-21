@@ -99,27 +99,27 @@ All target coordinates are referenced in the map frame and configured in `restau
 
 | ID | Table Code | Name & Description | Cluster Group | Target Pose $(X, Y, \text{Yaw})$ | Fallback IDs |
 | :---: | :--- | :--- | :--- | :---: | :---: |
-| **0** | `HOME_DOCK` | Trạm Đỗ Sạc & Nhận Món (Home Dock - Area 08) | Trạm Đỗ Sạc & Xuất Phát | `(0.00, 0.00, 0.0°)` | *None* |
-| **1** | `CIRC_SE_NORTH` | Cụm Tròn ĐN - Bàn Bắc (North Set) | Cụm Bàn Tròn Đông Nam | `(8.96, -3.37, +30.5°)` | `[2, 3]` |
-| **2** | `CIRC_SE_SW` | Cụm Tròn ĐN - Bàn Tây Nam (SW Set) | Cụm Bàn Tròn Đông Nam | `(11.75, +0.64, 180.0°)` | `[1, 3]` |
-| **3** | `CIRC_SE_SE` | Cụm Tròn ĐN - Bàn Đông Nam (SE Set) | Cụm Bàn Tròn Đông Nam | `(8.75, +1.53, -160.1°)` | `[1, 2]` |
-| **4** | `CENTER_NORTH` | Đảo Trung Tâm - Bàn Bắc (North Table) | Đảo Cây Xanh Trung Tâm | `(11.92, -6.28, +59.5°)` | `[5, 6, 7]` |
-| **5** | `CENTER_SOUTH` | Đảo Trung Tâm - Bàn Nam (South Table) | Đảo Cây Xanh Trung Tâm | `(12.30, -1.06, -149.5°)` | `[4, 6, 7]` |
-| **6** | `CENTER_EAST` | Đảo Trung Tâm - Bàn Đông (East Table) | Đảo Cây Xanh Trung Tâm | `(9.50, -3.43, -59.5°)` | `[4, 5, 7]` |
-| **7** | `CENTER_WEST` | Đảo Trung Tâm - Bàn Tây (West Table) | Đảo Cây Xanh Trung Tâm | `(14.75, -3.66, 180.0°)` | `[4, 5, 6]` |
-| **8** | `CIRC_N_SW` | Cụm Tròn Bắc - Bàn Tây Nam (SW Set) | Cụm Bàn Tròn Phía Bắc | `(15.46, -7.94, +119.7°)` | `[9, 10]` |
-| **9** | `CIRC_N_SE` | Cụm Tròn Bắc - Bàn Đông Nam (SE Set) | Cụm Bàn Tròn Phía Bắc | `(10.49, -7.16, -69.8°)` | `[8, 10]` |
-| **10** | `CIRC_N_SOUTH` | Cụm Tròn Bắc - Điểm Cận Nam (South Approach)| Cụm Bàn Tròn Phía Bắc | `(12.83, -6.86, -98.5°)` | `[8, 9]` |
-| **11** | `G02_NE_NORTH` | Group 02 ĐB - Bàn Bắc (North Table) | Group 02 (Nam Cột ĐB) | `(7.35, -7.74, +8.5°)` | `[12, 13]` |
-| **12** | `G02_NE_SW` | Group 02 ĐB - Bàn Tây Nam (SW Table) | Group 02 (Nam Cột ĐB) | `(9.35, -4.05, -135.0°)` | `[11, 13]` |
-| **13** | `G02_NE_SE` | Group 02 ĐB - Bàn Đông Nam (SE Table) | Group 02 (Nam Cột ĐB) | `(6.44, -4.56, -69.8°)` | `[11, 12]` |
-| **14** | `G02_SW_NORTH` | Group 02 TN - Bàn Bắc (North Table) | Group 02 (Bắc Cột TN) | `(16.47, -2.98, +30.5°)` | `[15, 16]` |
-| **15** | `G02_SW_SW` | Group 02 TN - Bàn Tây Nam (SW Table) | Group 02 (Bắc Cột TN) | `(14.80, +0.40, -149.9°)` | `[14, 16]` |
-| **16** | `G02_SW_SE` | Group 02 TN - Bàn Đông Nam (SE Table) | Group 02 (Bắc Cột TN) | `(14.99, +0.45, -69.8°)` | `[14, 15]` |
-| **17** | `WEST_ROW_NORTH`| Dãy Cột Tây - Bàn Bắc (North Table) | Dãy Bàn Dọc Cột Tây Bắc | `(14.58, -6.13, -49.1°)` | `[18]` |
-| **18** | `WEST_ROW_SOUTH`| Dãy Cột Tây - Bàn Nam (South Table) | Dãy Bàn Dọc Cột Tây Bắc | `(14.58, -4.75, -49.1°)` | `[17]` |
-| **19** | `GROUP_01_SE` | Bàn Tiêu Chuẩn Group 01 (Cạnh Cột SE) | Bàn Tiêu Chuẩn Group 01 | `(8.66, +1.50, -159.9°)` | `[3]` |
-| **20** | `AREA_08_BAR` | Quầy Bar 04 / Bàn Đứng Khu 08 | Khu 08 Quầy Bar & Bàn Đứng| `(-1.55, +0.50, 180.0°)` | *None* |
+| **0** | `HOME_DOCK` | Charging and Pickup Station (Home Dock - Area 08) | Charging and Departure Station | `(0.00, 0.00, 0.0°)` | *None* |
+| **1** | `CIRC_SE_NORTH` | Southeast Circular Cluster - North Table (North Set) | Southeast Circular Dining Cluster | `(8.96, -3.37, +30.5°)` | `[2, 3]` |
+| **2** | `CIRC_SE_SW` | Southeast Circular Cluster - Southwest Table (SW Set) | Southeast Circular Dining Cluster | `(11.75, +0.64, 180.0°)` | `[1, 3]` |
+| **3** | `CIRC_SE_SE` | Southeast Circular Cluster - Southeast Table (SE Set) | Southeast Circular Dining Cluster | `(8.75, +1.53, -160.1°)` | `[1, 2]` |
+| **4** | `CENTER_NORTH` | Central Island - North Table | Central Greenery Island | `(11.92, -6.28, +59.5°)` | `[5, 6, 7]` |
+| **5** | `CENTER_SOUTH` | Central Island - South Table | Central Greenery Island | `(12.30, -1.06, -149.5°)` | `[4, 6, 7]` |
+| **6** | `CENTER_EAST` | Central Island - East Table | Central Greenery Island | `(9.50, -3.43, -59.5°)` | `[4, 5, 7]` |
+| **7** | `CENTER_WEST` | Central Island - West Table | Central Greenery Island | `(14.75, -3.66, 180.0°)` | `[4, 5, 6]` |
+| **8** | `CIRC_N_SW` | North Circular Cluster - Southwest Table (SW Set) | North Circular Dining Cluster | `(15.46, -7.94, +119.7°)` | `[9, 10]` |
+| **9** | `CIRC_N_SE` | North Circular Cluster - Southeast Table (SE Set) | North Circular Dining Cluster | `(10.49, -7.16, -69.8°)` | `[8, 10]` |
+| **10** | `CIRC_N_SOUTH` | North Circular Cluster - South Approach| North Circular Dining Cluster | `(12.83, -6.86, -98.5°)` | `[8, 9]` |
+| **11** | `G02_NE_NORTH` | Group 02 NE - North Table | Group 02 (South of NE Pillar) | `(7.35, -7.74, +8.5°)` | `[12, 13]` |
+| **12** | `G02_NE_SW` | Group 02 NE - Southwest Table (SW Table) | Group 02 (South of NE Pillar) | `(9.35, -4.05, -135.0°)` | `[11, 13]` |
+| **13** | `G02_NE_SE` | Group 02 NE - Southeast Table (SE Table) | Group 02 (South of NE Pillar) | `(6.44, -4.56, -69.8°)` | `[11, 12]` |
+| **14** | `G02_SW_NORTH` | Group 02 SW - North Table | Group 02 (North of SW Pillar) | `(16.47, -2.98, +30.5°)` | `[15, 16]` |
+| **15** | `G02_SW_SW` | Group 02 SW - Southwest Table (SW Table) | Group 02 (North of SW Pillar) | `(14.80, +0.40, -149.9°)` | `[14, 16]` |
+| **16** | `G02_SW_SE` | Group 02 SW - Southeast Table (SE Table) | Group 02 (North of SW Pillar) | `(14.99, +0.45, -69.8°)` | `[14, 15]` |
+| **17** | `WEST_ROW_NORTH`| West Pillar Row - North Table | Dining Row Along the Northwest Pillar | `(14.58, -6.13, -49.1°)` | `[18]` |
+| **18** | `WEST_ROW_SOUTH`| West Pillar Row - South Table | Dining Row Along the Northwest Pillar | `(14.58, -4.75, -49.1°)` | `[17]` |
+| **19** | `GROUP_01_SE` | Standard Group 01 Table (Beside SE Pillar) | Standard Group 01 Table | `(8.66, +1.50, -159.9°)` | `[3]` |
+| **20** | `AREA_08_BAR` | Bar 04 / Area 08 Standing Table | Area 08 Bar and Standing Tables| `(-1.55, +0.50, 180.0°)` | *None* |
 
 ### 3.4. Mission Execution Flow & Architecture
 1. **Nav2 Lifecycle Validation:** Checks `bt_navigator` action server readiness before issuing goals.

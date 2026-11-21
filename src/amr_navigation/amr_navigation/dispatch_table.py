@@ -58,9 +58,9 @@ def load_tables_config(custom_path=None):
 def print_tables_catalog(tables_dict):
     """Print a formatted ASCII table of all available tables and clusters."""
     print("\n" + "=" * 90)
-    print(" DANH MỤC CÁC ĐIỂM ĐẾN & BÀN ĂN TRONG NHÀ HÀNG (RESTAURANT TABLE CATALOG)")
+    print(" RESTAURANT DESTINATION AND TABLE CATALOG")
     print("=" * 90)
-    print(f"{'ID':<4} | {'Mã Code':<14} | {'Tên Bàn':<32} | {'Tọa độ (X, Y, Yaw)':<24} | {'Dự phòng'}")
+    print(f"{'ID':<4} | {'Code':<14} | {'Table Name':<32} | {'Pose (X, Y, Yaw)':<24} | {'Fallback'}")
     print("-" * 90)
     for tid in sorted(tables_dict.keys(), key=lambda x: int(x)):
         t = tables_dict[tid]
@@ -72,10 +72,10 @@ def print_tables_catalog(tables_dict):
         fallbacks = str(t.get('fallback_table_ids', []))
         print(f"{tid:<4} | {t.get('code', ''):<14} | {t.get('name', ''):<32} | {pose_str:<24} | {fallbacks}")
     print("=" * 90)
-    print("💡 Hướng dẫn sử dụng:")
-    print("   ros2 run amr_navigation dispatch_table <ID>       (Ví dụ: dispatch_table 12)")
-    print("   ros2 run amr_navigation dispatch_table 0          (Quay về trạm Bếp / Home)")
-    print("   ros2 run amr_navigation dispatch_table --list     (Hiển thị bảng này)\n")
+    print("💡 Usage:")
+    print("   ros2 run amr_navigation dispatch_table <ID>       (Example: dispatch_table 12)")
+    print("   ros2 run amr_navigation dispatch_table 0          (Return to Kitchen / Home)")
+    print("   ros2 run amr_navigation dispatch_table --list     (Show this table)\n")
 
 
 def create_pose_stamped(navigator, x, y, yaw, frame_id='map'):
@@ -105,15 +105,15 @@ def navigate_to_single_pose(navigator, target_id, target_info, is_fallback=False
     x = pose_dict['x']
     y = pose_dict['y']
     yaw = pose_dict['yaw']
-    name = target_info.get('name', f'Bàn {target_id}')
-    group_name = target_info.get('group_name', 'Cụm')
+    name = target_info.get('name', f'Table {target_id}')
+    group_name = target_info.get('group_name', 'Cluster')
 
     if not is_fallback:
-        print(f"\n🚀 [ĐIỀU PHỐI CHÍNH] Xuất phát tới Bàn {target_id}: '{name}'")
-        print(f"   📍 Vị trí đỗ: X = {x:+.2f}m, Y = {y:+.2f}m, Yaw = {math.degrees(yaw):+.1f}° | Thuộc: {group_name}")
+        print(f"\n🚀 [PRIMARY DISPATCH] Departing for Table {target_id}: '{name}'")
+        print(f"   📍 Docking pose: X = {x:+.2f}m, Y = {y:+.2f}m, Yaw = {math.degrees(yaw):+.1f}° | Group: {group_name}")
     else:
-        print(f"\n🔄 [KÍCH HOẠT DỰ PHÒNG] Bàn {primary_id} bị cản trở! Thử vị trí thay thế cùng cụm -> Bàn {target_id}: '{name}'")
-        print(f"   📍 Vị trí đỗ dự phòng: X = {x:+.2f}m, Y = {y:+.2f}m, Yaw = {math.degrees(yaw):+.1f}°")
+        print(f"\n🔄 [FALLBACK ACTIVATED] Table {primary_id} is blocked! Trying an alternative in the same cluster -> Table {target_id}: '{name}'")
+        print(f"   📍 Fallback docking pose: X = {x:+.2f}m, Y = {y:+.2f}m, Yaw = {math.degrees(yaw):+.1f}°")
 
     goal_pose = create_pose_stamped(navigator, x, y, yaw)
     navigator.goToPose(goal_pose)
@@ -127,7 +127,7 @@ def navigate_to_single_pose(navigator, target_id, target_info, is_fallback=False
         if feedback and (current_time - last_feedback_time >= feedback_interval):
             dist = feedback.distance_remaining
             elapsed = feedback.navigation_time.sec if hasattr(feedback, 'navigation_time') else 0
-            print(f"   ⏳ Đang di chuyển... Còn cách đích: {dist:.2f}m | Thời gian hành trình: {elapsed}s")
+            print(f"   ⏳ Moving... Distance remaining: {dist:.2f}m | Travel time: {elapsed}s")
             last_feedback_time = current_time
         time.sleep(0.2)
 
@@ -143,29 +143,29 @@ def main(args=None):
         type=int,
         nargs='?',
         default=None,
-        help="ID bàn ăn cần điều phối robot tới (0..n)"
+        help="Destination table ID (0..n)"
     )
     parser.add_argument(
         '-l', '--list',
         action='store_true',
-        help="Liệt kê danh mục tất cả các bàn ăn và điểm đến"
+        help="List all tables and destinations"
     )
     parser.add_argument(
         '--home',
         action='store_true',
-        help="Lệnh nhanh đưa robot quay về Trạm Bếp (ID: 0)"
+        help="Return the robot to the Kitchen Station (ID: 0)"
     )
     parser.add_argument(
         '-w', '--wait',
         type=float,
         default=None,
-        help="Ghi đè thời gian chờ đỗ tại bàn (giây)"
+        help="Override the waiting time at the table (seconds)"
     )
     parser.add_argument(
         '-c', '--config',
         type=str,
         default=None,
-        help="Đường dẫn tùy chỉnh tới tệp restaurant_tables.yaml"
+        help="Custom path to restaurant_tables.yaml"
     )
 
     parsed_args = parser.parse_args(args)
@@ -176,13 +176,13 @@ def main(args=None):
         tables = config_data.get('tables', {})
         settings = config_data.get('settings', {})
     except Exception as e:
-        print(f"❌ [LỖI CẤU HÌNH] {e}", file=sys.stderr)
+        print(f"❌ [CONFIGURATION ERROR] {e}", file=sys.stderr)
         sys.exit(1)
 
     # 2. Handle --list flag
     if parsed_args.list:
         print_tables_catalog(tables)
-        print(f"📁 Tệp cấu hình đang sử dụng: {config_filepath}\n")
+        print(f"📁 Configuration file in use: {config_filepath}\n")
         return 0
 
     # 3. Determine target table ID
@@ -192,30 +192,30 @@ def main(args=None):
     elif parsed_args.table_id is not None:
         target_id = parsed_args.table_id
     else:
-        print("❌ [LỖI THAM SỐ] Bạn chưa cung cấp ID bàn cần đến!")
+        print("❌ [ARGUMENT ERROR] No destination table ID was provided!")
         print_tables_catalog(tables)
         sys.exit(1)
 
     if target_id not in tables:
-        print(f"❌ [LỖI] ID Bàn '{target_id}' không tồn tại trong danh mục!")
-        print(f"   Các ID hợp lệ hiện có: {sorted(list(tables.keys()))}")
+        print(f"❌ [ERROR] Table ID '{target_id}' does not exist in the catalog!")
+        print(f"   Available valid IDs: {sorted(list(tables.keys()))}")
         sys.exit(1)
 
     # 4. Initialize ROS 2 and Nav2 BasicNavigator
     print("=" * 80)
     print("🤖 AMR FOOD DELIVERY MISSION DISPATCHER")
-    print(f"📁 Nạp cấu hình: {config_filepath}")
+    print(f"📁 Loading configuration: {config_filepath}")
     print("=" * 80)
 
     rclpy.init()
     navigator = BasicNavigator()
 
     try:
-        print("🔍 Đang kiểm tra trạng thái của Nav2 Stack (chờ navigator sẵn sàng)...")
+        print("🔍 Checking Nav2 stack status (waiting for navigator readiness)...")
         # Ensure BasicNavigator respects current localization and NEVER forces a (0,0) initial pose
         navigator.initial_pose_received = True
         navigator.waitUntilNav2Active(navigator='bt_navigator', localizer='robot_localization')
-        print(" Nav2 Stack đã sẵn sàng và đang hoạt động tốt!\n")
+        print(" Nav2 stack is ready and active!\n")
 
         primary_table = tables[target_id]
         fallback_ids = primary_table.get('fallback_table_ids', [])
@@ -243,13 +243,13 @@ def main(args=None):
                 final_table_id = cid
                 break
             elif result == TaskResult.CANCELED:
-                print("\n⛔ [ĐÃ HỦY] Nhiệm vụ điều hướng đã bị hủy bởi người dùng.")
+                print("\n⛔ [CANCELED] The navigation task was canceled by the user.")
                 return 1
             else:
                 # FAILED
-                print(f"❌ [THẤT BẠI] Robot không thể tiếp cận Bàn {cid} (Đường đi bị vật cản chặn kín).")
+                print(f"❌ [FAILED] Robot could not reach Table {cid} (The path is blocked by obstacles).")
                 if is_fallback:
-                    print(f"   -> Tiếp tục tìm kiếm vị trí thay thế khác trong cụm...")
+                    print(f"   -> Searching for another fallback position in the cluster...")
 
         # 5. Mission Outcome Handling
         if mission_succeeded:
@@ -259,38 +259,38 @@ def main(args=None):
 
             print("\n" + "*" * 80)
             if final_table_id == target_id:
-                print(f"🎉 [GIAO HÀNG THÀNH CÔNG] Robot đã cập đỗ chính xác tại Bàn {final_table_id}: '{tname}'!")
+                print(f"🎉 [DELIVERY SUCCEEDED] Robot docked successfully at Table {final_table_id}: '{tname}'!")
             else:
-                print(f"🎉 [GIAO HÀNG DỰ PHÒNG THÀNH CÔNG] Đã cập đỗ an toàn tại Bàn {final_table_id}: '{tname}' ({gname})!")
-                print(f"   📢 Thông báo: Bàn mục tiêu ban đầu ({target_id}) bị cản trở. Quý khách tại bàn {target_id}")
-                print(f"      có thể nhận đồ ăn tại vị trí lân cận (~1.0m - 1.5m).")
+                print(f"🎉 [FALLBACK DELIVERY SUCCEEDED] Docked safely at Table {final_table_id}: '{tname}' ({gname})!")
+                print(f"   📢 Notice: The original destination table ({target_id}) is blocked. Guests at table {target_id}")
+                print(f"      can collect their food at a nearby position (~1.0m - 1.5m).")
             print("*" * 80)
 
             # Wait / Standby countdown at table
             wait_time = parsed_args.wait if parsed_args.wait is not None else delivered_table.get('wait_time_sec', 10.0)
             if wait_time > 0 and final_table_id != 0:
-                print(f"\n🍽️ [TRẠNG THÁI PHỤC VỤ] Robot đang đỗ chờ quý khách nhận món ăn trong {wait_time:.0f} giây...")
+                print(f"\n🍽️ [SERVICE STATUS] Robot is waiting for food collection for {wait_time:.0f} seconds...")
                 remaining_wait = int(wait_time)
                 while remaining_wait > 0:
-                    print(f"   ⏱️ Đếm ngược: {remaining_wait}s còn lại...", end='\r')
+                    print(f"   ⏱️ Countdown: {remaining_wait}s remaining...", end='\r')
                     time.sleep(1.0)
                     remaining_wait -= 1
-                print("\n Hoàn tất thời gian phục vụ tại bàn!\n")
+                print("\n Table service waiting time completed!\n")
             elif final_table_id == 0:
-                print("🏠 [VỀ TRẠNG THÁI TRẠM GỐC] Robot đã đỗ an toàn tại Khu Bếp / Trạm Sạc.")
+                print("🏠 [HOME STATION STATUS] Robot is safely docked at the Kitchen / Charging Station.")
 
             return 0
 
         else:
             # All candidates in cluster failed
-            primary_group_name = primary_table.get('group_name', 'Cụm')
+            primary_group_name = primary_table.get('group_name', 'Cluster')
             print("\n" + "!" * 80)
-            print(f"❌ [BÁO ĐỘNG] Toàn bộ các bàn trong '{primary_group_name}' đều bị phong tỏa!")
-            print(f"   Không có vị trí đỗ nào khả thi để tiếp cận cụm bàn này an toàn.")
+            print(f"❌ [ALERT] All tables in '{primary_group_name}' are blocked!")
+            print(f"   No feasible docking position allows safe access to this table cluster.")
             print("!" * 80)
 
             if settings.get('auto_return_home_on_all_failed', True) and target_id != 0:
-                print("\n🔄 [CƠ CHẾ BẢO VỆ] Tự động điều phối robot quay về Trạm Bếp (Home Station) để giải phóng hành lang...")
+                print("\n🔄 [PROTECTIVE ACTION] Automatically returning the robot to the Kitchen (Home Station) to clear the aisle...")
                 home_id = settings.get('home_table_id', 0)
                 if home_id in tables:
                     home_info = tables[home_id]
@@ -298,7 +298,7 @@ def main(args=None):
             return 2
 
     except KeyboardInterrupt:
-        print("\n\n⚠️ [NGẮT KHẨN CẤP] Nhận tín hiệu KeyboardInterrupt! Đang hủy lệnh điều hướng...")
+        print("\n\n⚠️ [EMERGENCY INTERRUPT] KeyboardInterrupt received! Canceling navigation...")
         navigator.cancelTask()
         return 130
     finally:

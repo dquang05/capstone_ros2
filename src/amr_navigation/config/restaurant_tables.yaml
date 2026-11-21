@@ -20,10 +20,10 @@ tables:
   # 0. KITCHEN / HOME SERVICE DOCK
   # ----------------------------------------------------------------------------
   0:
-    name: "Trạm Đỗ Sạc & Nhận Món (Home Dock - Area 08)"
+    name: "Charging and Pickup Station (Home Dock - Area 08)"
     code: "HOME_DOCK"
     group_id: "HOME"
-    group_name: "Trạm Đỗ Sạc & Xuất Phát"
+    group_name: "Charging and Departure Station"
     pose: {x: 0.00, y: 0.00, yaw: 0.0000}
     wait_time_sec: 0.0
     fallback_table_ids: []
@@ -32,28 +32,28 @@ tables:
   # 1-3. CIRCULAR DINING CLUSTER SE (Southeast Circular Dining Cluster - Section 6)
   # ----------------------------------------------------------------------------
   1:
-    name: "Cụm Tròn ĐN - Bàn Bắc (North Set)"
+    name: "Southeast Circular Cluster - North Table (North Set)"
     code: "CIRC_SE_NORTH"
     group_id: "CIRCULAR_SE"
-    group_name: "Cụm Bàn Tròn Đông Nam"
+    group_name: "Southeast Circular Dining Cluster"
     pose: {x: 8.96, y: -3.37, yaw: 0.5320}
     wait_time_sec: 10.0
     fallback_table_ids: [2, 3]
 
   2:
-    name: "Cụm Tròn ĐN - Bàn Tây Nam (SW Set)"
+    name: "Southeast Circular Cluster - Southwest Table (SW Set)"
     code: "CIRC_SE_SW"
     group_id: "CIRCULAR_SE"
-    group_name: "Cụm Bàn Tròn Đông Nam"
+    group_name: "Southeast Circular Dining Cluster"
     pose: {x: 11.75, y: 0.64, yaw: 3.1420}
     wait_time_sec: 10.0
     fallback_table_ids: [1, 3]
 
   3:
-    name: "Cụm Tròn ĐN - Bàn Đông Nam (SE Set)"
+    name: "Southeast Circular Cluster - Southeast Table (SE Set)"
     code: "CIRC_SE_SE"
     group_id: "CIRCULAR_SE"
-    group_name: "Cụm Bàn Tròn Đông Nam"
+    group_name: "Southeast Circular Dining Cluster"
     pose: {x: 8.75, y: 1.53, yaw: -2.7940}
     wait_time_sec: 10.0
     fallback_table_ids: [1, 2]
@@ -62,37 +62,37 @@ tables:
   # 4-7. CENTRAL GREENERY DINING ISLAND (Central Greenery Dining Island - Section 7)
   # ----------------------------------------------------------------------------
   4:
-    name: "Đảo Trung Tâm - Bàn Bắc (North Table)"
+    name: "Central Island - North Table"
     code: "CENTER_NORTH"
     group_id: "GREENERY_CENTER"
-    group_name: "Đảo Ẩm Thực Cây Xanh Trung Tâm"
+    group_name: "Central Greenery Dining Island"
     pose: {x: 11.92, y: -6.28, yaw: 1.0390}
     wait_time_sec: 10.0
     fallback_table_ids: [5, 6, 7]
 
   5:
-    name: "Đảo Trung Tâm - Bàn Nam (South Table)"
+    name: "Central Island - South Table"
     code: "CENTER_SOUTH"
     group_id: "GREENERY_CENTER"
-    group_name: "Đảo Ẩm Thực Cây Xanh Trung Tâm"
+    group_name: "Central Greenery Dining Island"
     pose: {x: 12.30, y: -1.06, yaw: -2.6100}
     wait_time_sec: 10.0
     fallback_table_ids: [4, 6, 7]
 
   6:
-    name: "Đảo Trung Tâm - Bàn Đông (East Table)"
+    name: "Central Island - East Table"
     code: "CENTER_EAST"
     group_id: "GREENERY_CENTER"
-    group_name: "Đảo Ẩm Thực Cây Xanh Trung Tâm"
+    group_name: "Central Greenery Dining Island"
     pose: {x: 9.50, y: -3.43, yaw: -1.0390}
     wait_time_sec: 10.0
     fallback_table_ids: [4, 5, 7]
 
   7:
-    name: "Đảo Trung Tâm - Bàn Tây (West Table)"
+    name: "Central Island - West Table"
     code: "CENTER_WEST"
     group_id: "GREENERY_CENTER"
-    group_name: "Đảo Ẩm Thực Cây Xanh Trung Tâm"
+    group_name: "Central Greenery Dining Island"
     pose: {x: 14.75, y: -3.66, yaw: 3.1420}
     wait_time_sec: 10.0
     fallback_table_ids: [4, 5, 6]
@@ -101,28 +101,28 @@ tables:
   # 8-10. CIRCULAR DINING CLUSTER NORTH (North Circular Dining Cluster - Section 8)
   # ----------------------------------------------------------------------------
   8:
-    name: "Cụm Tròn Bắc - Bàn Tây Nam (SW Set)"
+    name: "North Circular Cluster - Southwest Table (SW Set)"
     code: "CIRC_N_SW"
     group_id: "CIRCULAR_NORTH"
-    group_name: "Cụm Bàn Tròn Phía Bắc"
+    group_name: "North Circular Dining Cluster"
     pose: {x: 15.46, y: -7.94, yaw: 2.0900}
     wait_time_sec: 10.0
     fallback_table_ids: [9, 10]
 
   9:
-    name: "Cụm Tròn Bắc - Bàn Đông Nam (SE Set)"
+    name: "North Circular Cluster - Southeast Table (SE Set)"
     code: "CIRC_N_SE"
     group_id: "CIRCULAR_NORTH"
-    group_name: "Cụm Bàn Tròn Phía Bắc"
+    group_name: "North Circular Dining Cluster"
     pose: {x: 10.49, y: -7.16, yaw: -1.2180}
     wait_time_sec: 10.0
     fallback_table_ids: [8, 10]
 
   10:
-    name: "Cụm Tròn Bắc - Điểm Cận Nam (South Approach)"
+    name: "North Circular Cluster - South Approach"
     code: "CIRC_N_SOUTH"
     group_id: "CIRCULAR_NORTH"
-    group_name: "Cụm Bàn Tròn Phía Bắc"
+    group_name: "North Circular Dining Cluster"
     pose: {x: 12.83, y: -6.86, yaw: -1.7200}
     wait_time_sec: 10.0
     fallback_table_ids: [8, 9]
@@ -131,28 +131,28 @@ tables:
   # 11-13. GROUP 02 (3 Single Tables South of Northeast Pillar - Section 12)
   # ----------------------------------------------------------------------------
   11:
-    name: "Group 02 ĐB - Bàn Bắc (North Table)"
+    name: "Group 02 NE - North Table"
     code: "G02_NE_NORTH"
     group_id: "GROUP_02_NE"
-    group_name: "Group 02 (Cụm 3 bàn Nam Cột Đông Bắc)"
+    group_name: "Group 02 (Three-Table Cluster South of the Northeast Pillar)"
     pose: {x: 7.35, y: -7.74, yaw: 0.1490}
     wait_time_sec: 10.0
     fallback_table_ids: [12, 13]
 
   12:
-    name: "Group 02 ĐB - Bàn Tây Nam (SW Table)"
+    name: "Group 02 NE - Southwest Table (SW Table)"
     code: "G02_NE_SW"
     group_id: "GROUP_02_NE"
-    group_name: "Group 02 (Cụm 3 bàn Nam Cột Đông Bắc)"
+    group_name: "Group 02 (Three-Table Cluster South of the Northeast Pillar)"
     pose: {x: 9.35, y: -4.05, yaw: -2.3560}
     wait_time_sec: 10.0
     fallback_table_ids: [11, 13]
 
   13:
-    name: "Group 02 ĐB - Bàn Đông Nam (SE Table)"
+    name: "Group 02 NE - Southeast Table (SE Table)"
     code: "G02_NE_SE"
     group_id: "GROUP_02_NE"
-    group_name: "Group 02 (Cụm 3 bàn Nam Cột Đông Bắc)"
+    group_name: "Group 02 (Three-Table Cluster South of the Northeast Pillar)"
     pose: {x: 6.44, y: -4.56, yaw: -1.2180}
     wait_time_sec: 10.0
     fallback_table_ids: [11, 12]
@@ -161,28 +161,28 @@ tables:
   # 14-16. GROUP 02 PILLAR SW (3 Tables North of Southwest Pillar - Section 13)
   # ----------------------------------------------------------------------------
   14:
-    name: "Group 02 TN - Bàn Bắc (North Table)"
+    name: "Group 02 SW - North Table"
     code: "G02_SW_NORTH"
     group_id: "GROUP_02_SW"
-    group_name: "Group 02 (Cụm 3 bàn Bắc Cột Tây Nam)"
+    group_name: "Group 02 (Three-Table Cluster North of the Southwest Pillar)"
     pose: {x: 16.47, y: -2.98, yaw: 0.5320}
     wait_time_sec: 10.0
     fallback_table_ids: [15, 16]
 
   15:
-    name: "Group 02 TN - Bàn Tây Nam (SW Table)"
+    name: "Group 02 SW - Southwest Table (SW Table)"
     code: "G02_SW_SW"
     group_id: "GROUP_02_SW"
-    group_name: "Group 02 (Cụm 3 bàn Bắc Cột Tây Nam)"
+    group_name: "Group 02 (Three-Table Cluster North of the Southwest Pillar)"
     pose: {x: 14.80, y: 0.40, yaw: -2.6180}
     wait_time_sec: 10.0
     fallback_table_ids: [14, 16]
 
   16:
-    name: "Group 02 TN - Bàn Đông Nam (SE Table)"
+    name: "Group 02 SW - Southeast Table (SE Table)"
     code: "G02_SW_SE"
     group_id: "GROUP_02_SW"
-    group_name: "Group 02 (Cụm 3 bàn Bắc Cột Tây Nam)"
+    group_name: "Group 02 (Three-Table Cluster North of the Southwest Pillar)"
     pose: {x: 14.99, y: 0.45, yaw: -1.2180}
     wait_time_sec: 10.0
     fallback_table_ids: [14, 15]
@@ -191,19 +191,19 @@ tables:
   # 17-18. WEST PILLAR DINING ROW (Dining Row along Northwest Pillar - Section 11)
   # ----------------------------------------------------------------------------
   17:
-    name: "Dãy Cột Tây - Bàn Bắc (North Table)"
+    name: "West Pillar Row - North Table"
     code: "WEST_ROW_NORTH"
     group_id: "WEST_ROW"
-    group_name: "Dãy Bàn Dọc Cột Tây Bắc"
+    group_name: "Dining Row Along the Northwest Pillar"
     pose: {x: 14.58, y: -6.13, yaw: -0.8570}
     wait_time_sec: 10.0
     fallback_table_ids: [18]
 
   18:
-    name: "Dãy Cột Tây - Bàn Nam (South Table)"
+    name: "West Pillar Row - South Table"
     code: "WEST_ROW_SOUTH"
     group_id: "WEST_ROW"
-    group_name: "Dãy Bàn Dọc Cột Tây Bắc"
+    group_name: "Dining Row Along the Northwest Pillar"
     pose: {x: 14.58, y: -4.75, yaw: -0.8570}
     wait_time_sec: 10.0
     fallback_table_ids: [17]
@@ -212,10 +212,10 @@ tables:
   # 19. GROUP 01 DINING SET (Standard 4-Chair Dining Table - Section 5)
   # ----------------------------------------------------------------------------
   19:
-    name: "Bàn Tiêu Chuẩn Group 01 (Cạnh Cột SE)"
+    name: "Standard Group 01 Table (Beside SE Pillar)"
     code: "GROUP_01_SE"
     group_id: "GROUP_01_SE"
-    group_name: "Bàn Tiêu Chuẩn Group 01 ĐN"
+    group_name: "Southeast Standard Group 01 Table"
     pose: {x: 8.66, y: 1.50, yaw: -2.7900}
     wait_time_sec: 10.0
     fallback_table_ids: [3]
@@ -224,10 +224,10 @@ tables:
   # 20. AREA 08 STANDING COUNTERS & BAR 04 (Area 08 Standing Counters & Bar 04 - Section 4)
   # ----------------------------------------------------------------------------
   20:
-    name: "Quầy Bar 04 / Bàn Đứng Khu 08"
+    name: "Bar 04 / Area 08 Standing Table"
     code: "AREA_08_BAR"
     group_id: "AREA_08"
-    group_name: "Khu 08 Quầy Bar & Bàn Đứng"
+    group_name: "Area 08 Bar and Standing Tables"
     pose: {x: -1.55, y: 0.50, yaw: 3.1420}
     wait_time_sec: 10.0
     fallback_table_ids: []

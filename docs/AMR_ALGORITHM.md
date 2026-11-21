@@ -1,278 +1,278 @@
-## 5.4. Các giải thuật điều hướng
+## 5.4. Navigation algorithms
 
-Để robot tự hành có thể vận hành an toàn và ổn định trong không gian nhà hàng ẩm thực (mô phỏng theo mặt bằng Pizza 4P's Landmark 72), hệ thống điều hướng cấp cao trên nền tảng ROS 2 (Nav2) được xây dựng dựa trên 4 khối giải thuật then chốt:
-1. **Ước lượng trạng thái & Hợp nhất cảm biến:** Bộ lọc Kalman mở rộng ([EKF - robot_localization](file:///home/quangtran/Projects/capstone_ros2/src/amr_localization/config/ekf.yaml)).
-2. **Lập bản đồ & Định vị toàn cục:** [SLAM Toolbox](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/slam_toolbox.yaml) (chế độ lập bản đồ) và [Nav2 AMCL](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L6-L51) (chế độ tự hành phục vụ).
-3. **Hoạch định đường đi toàn cục:** [Smac Planner 2D](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L225-L247) kết hợp bộ làm mượt đường đi dựa trên hạ độ dốc (Gradient Descent Path Smoother).
-4. **Điều hướng bám quỹ đạo cục bộ & Tránh vật cản động:** [DWB Controller](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L98-L155) với các ràng buộc chống tràn sóng sánh thức ăn (Anti-Spill Dynamics) và chế độ tiến thuần túy (Forward-Only Trajectory Rollout).
+For safe, stable operation in the restaurant environment modeled after Pizza 4P's Landmark 72, the ROS 2 Nav2 navigation system consists of four main algorithm blocks:
+1. **State estimation and sensor fusion:** Extended Kalman filter ([EKF - robot_localization](file:///home/quangtran/Projects/capstone_ros2/src/amr_localization/config/ekf.yaml)).
+2. **Mapping and global localization:** [SLAM Toolbox](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/slam_toolbox.yaml) (mapping mode) and [Nav2 AMCL](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L6-L51) (autonomous service mode).
+3. **Global path planning:** [Smac Planner 2D](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L225-L247) combined with a gradient-descent path smoother (Gradient Descent Path Smoother).
+4. **Local trajectory tracking and dynamic obstacle avoidance:** [DWB Controller](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L98-L155) with anti-spill constraints (Anti-Spill Dynamics) and forward-only mode (Forward-Only Trajectory Rollout).
 
 ---
 
-### 5.4.1. Thuật toán EKF (Extended Kalman Filter)
+### 5.4.1. EKF algorithm (Extended Kalman Filter)
 
-Trong quá trình hoạt động thực tế, robot không thể liên tục xác định vị trí của mình chỉ bằng cảm biến khoảng cách LiDAR do tần số quét của LiDAR bị giới hạn ($10\text{ Hz}$). Giữa các chu kỳ quét đó, hệ thống cần thông tin Odometry liên tục từ Encoder bánh xe và con quay hồi chuyển/gia tốc kế từ cảm biến IMU 9-DOF. Dữ liệu từ hai cảm biến này được hợp nhất qua thuật toán EKF trước khi cung cấp cho tầng điều hướng.
+LiDAR alone cannot continuously determine robot position because its scan frequency is limited to 10 Hz. Between scans, continuous odometry from wheel encoders and the gyroscope/accelerometer of the 9-DOF IMU is needed. EKF fuses these two sources before supplying the navigation layer.
 
 ```mermaid
 graph LR
-    subgraph PredictStage ["1. Chu kỳ Dự đoán (Prediction) - 50 Hz"]
-        Kinematics["Mô hình Động học Vi sai<br/>u_k = [v_x, omega_z]^T"] --> StatePred["Dự đoán Trạng thái:<br/>x̂_k^- = f(x̂_{k-1}, u_k)"]
-        StatePred --> CovPred["Dự đoán Hiệp phương sai:<br/>P_k^- = F_k P_{k-1} F_k^T + Q_k"]
+    subgraph PredictStage ["1. Prediction cycle - 50 Hz"]
+        Kinematics["Differential-drive kinematics<br/>u_k = [v_x, omega_z]^T"] --> StatePred["State prediction:<br/>x̂_k^- = f(x̂_{k-1}, u_k)"]
+        StatePred --> CovPred["Covariance prediction:<br/>P_k^- = F_k P_{k-1} F_k^T + Q_k"]
     end
 
-    subgraph UpdateStage ["2. Chu kỳ Cập nhật (Update / Correction)"]
-        Sensors["Phép đo Cảm biến z_k:<br/>- Wheel Odom (/wheel/odom: v_x, omega_z)<br/>- 9-DOF IMU (/imu/data: yaw, omega_z, a_x)"] --> Gain["Tính Độ lợi Kalman:<br/>K_k = P_k^- H_k^T (H_k P_k^- H_k^T + R_k)^-1"]
-        Gain --> StateUp["Hiệu chỉnh Trạng thái:<br/>x̂_k = x̂_k^- + K_k [z_k - h(x̂_k^-)]"]
-        StateUp --> CovUp["Cập nhật Hiệp phương sai:<br/>P_k = (I - K_k H_k) P_k^-"]
+    subgraph UpdateStage ["2. Update / correction cycle"]
+        Sensors["Sensor measurements z_k:<br/>- Wheel Odom (/wheel/odom: v_x, omega_z)<br/>- 9-DOF IMU (/imu/data: yaw, omega_z, a_x)"] --> Gain["Calculate Kalman gain:<br/>K_k = P_k^- H_k^T (H_k P_k^- H_k^T + R_k)^-1"]
+        Gain --> StateUp["State correction:<br/>x̂_k = x̂_k^- + K_k [z_k - h(x̂_k^-)]"]
+        StateUp --> CovUp["Covariance update:<br/>P_k = (I - K_k H_k) P_k^-"]
     end
 
     CovPred --> Gain
-    CovUp -->|Vòng lặp kế tiếp k+1| StatePred
-    StateUp --> OutputTF["Xuất TF: odom -> base_footprint<br/>Topic: /odometry/filtered (50 Hz)"]
+    CovUp -->|Next iteration k+1| StatePred
+    StateUp --> OutputTF["Publish TF: odom -> base_footprint<br/>Topic: /odometry/filtered (50 Hz)"]
 ```
 
-Thuật toán EKF hoạt động lặp tuần tự qua hai bước chính:
+EKF repeatedly performs two main steps:
 
-*   **Dự đoán (Predict):** Sau mỗi bước di chuyển thời gian $\Delta t$, dựa trên tín hiệu vận tốc điều khiển và mô hình động học vi sai, EKF ngoại suy vị trí kế tiếp của xe. Tuy nhiên, do các yếu tố cơ khí và trượt bánh vi mô, ma trận độ không chắc chắn $P$ sẽ phình to ra theo ma trận nhiễu quá trình $Q$:
+*   **Prediction:** After each time step $\Delta t$, EKF extrapolates the next pose using velocity commands and differential-drive kinematics. Mechanical effects and micro-slippage increase uncertainty $P$ according to process noise $Q$:
     $$P_k^- = F_k P_{k-1} F_k^T + Q_k$$
-*   **Cập nhật (Update):** Khi nhận được dữ liệu đo lường mới $z_k$ từ Encoder và IMU, EKF so sánh giá trị đo thực tế với giá trị dự đoán thông qua ma trận đo $H_k$. Độ lợi Kalman $K$ đóng vai trò là một hệ số niềm tin:
+*   **Update:** When new encoder and IMU measurements $z_k$ arrive, EKF compares measurements with predictions through measurement matrix $H_k$. Kalman gain $K$ acts as a confidence factor:
     $$K_k = P_k^- H_k^T (H_k P_k^- H_k^T + R_k)^{-1}$$
-    *   **Trường hợp 1:** Khi bánh xe bị trượt trên sàn gạch trơn, sai số mô hình $P$ tăng vọt ($K \to 1$), EKF sẽ tin tưởng dữ liệu đo từ cảm biến ngoài (đặc biệt là con quay hồi chuyển IMU).
-    *   **Trường hợp 2:** Khi cảm biến ngoài bị nhiễu rung lắc gờ sàn đột ngột dẫn đến ma trận nhiễu đo $R$ lớn ($K \to 0$), EKF sẽ ưu tiên tin vào mô hình động học suy diễn từ bánh xe.
+    *   **Case 1:** When wheels slip on smooth tiles, model uncertainty $P$ rises ($K \to 1$), increasing trust in external measurements, especially the IMU gyroscope.
+    *   **Case 2:** Sudden vibrations at floor joints increase measurement noise $R$ ($K \to 0$), increasing trust in the kinematic prediction from the wheels.
 
-#### a) Tần số lấy mẫu các cảm biến đầu vào và Cơ chế hợp nhất đa tần số (Multi-rate Fusion)
+#### a) Input sensor sampling rates and multi-rate fusion
 
-Trong kiến trúc của AMR, các cảm biến hoạt động ở các tần số lấy mẫu vật lý hoàn toàn khác nhau để tối ưu giữa độ nhạy động học và băng thông xử lý. Bảng dưới đây thể hiện chi tiết tần số hoạt động riêng của từng cảm biến trong hệ thống:
+AMR sensors operate at different physical sampling rates to balance dynamic sensitivity and processing bandwidth. The following table lists their individual operating rates:
 
-| Cảm biến / Module | Tần số thiết lập | Chu kỳ lấy mẫu ($\Delta t$) | Căn cứ thiết lập & File cấu hình | Lý do thiết kế kỹ thuật |
+| Sensor / Module | Configured frequency | Sampling period ($\Delta t$) | Basis and configuration file | Engineering rationale |
 | :--- | :--- | :--- | :--- | :--- |
-| **9-DOF IMU (Bosch BNO055)** | **100.0 Hz** | $10\text{ ms}$ | `update_rate: 100`<br>([imu.xacro](file:///home/quangtran/Projects/capstone_ros2/src/amr_description/urdf/imu.xacro#L44)) | Con quay hồi chuyển (Gyroscope) cần tần số lấy mẫu cao ($100\text{ Hz}$) để phát hiện tức thì các biến thiên vận tốc góc đột ngột khi bánh xe bắt đầu trượt (slip onset) hoặc khi robot bắt đầu quay đổi hướng, giúp bù trôi góc Yaw cực kỳ nhạy và loại bỏ trễ pha. |
-| **Wheel Encoder (Động cơ BLDC)** | **50.0 Hz** | $20\text{ ms}$ | `odom_publish_frequency: 50`<br>([gazebo.xacro](file:///home/quangtran/Projects/capstone_ros2/src/amr_description/urdf/gazebo.xacro#L30)) | Chu kỳ $20\text{ ms}$ là tốc độ lấy mẫu chuẩn mực cho cơ cấu phản hồi bánh xe; vừa đủ mịn để tính toán vi phân vận tốc $(\dot{x}, \dot{\psi})$, vừa không gây quá tải hàng đợi ngắt trên vi điều khiển STM32 hoặc tràn bus giao tiếp UART/CAN sang máy tính nhúng ROS 2. |
-| **Bộ lọc EKF (`ekf_filter_node`)** | **50.0 Hz** | $20\text{ ms}$ | `frequency: 50.0`<br>([ekf.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_localization/config/ekf.yaml#L7)) | Tần số thực thi chu kỳ chính của EKF được chọn đồng bộ với tần số xuất của Wheel Odometry ($50\text{ Hz}$), đảm bảo xuất dữ liệu `/odometry/filtered` và TF `odom -> base_footprint` liên tục, không bị trễ nhịp cung cấp cho bộ điều khiển bám quỹ đạo DWB ($10\text{ Hz}$). |
-| **2D LiDAR (RPLIDAR A2M8)** | **10.0 Hz** | $100\text{ ms}$ | `update_rate: 10`<br>([lidar.xacro](file:///home/quangtran/Projects/capstone_ros2/src/amr_description/urdf/lidar.xacro#L63)) | Tốc độ quay quang học của đầu quét RPLIDAR A2 được cố định ở $10\text{ vòng/giây}$ ($600\text{ RPM}$). Khoảng cách $100\text{ ms}$ giữa 2 lần quét laser chính là lý do bắt buộc phải có EKF (chạy ở $50 - 100\text{ Hz}$) để "nội suy lấp đầy" vị trí của robot giữa 2 lần LiDAR nhận dữ liệu mới. |
+| **9-DOF IMU (Bosch BNO055)** | **100.0 Hz** | $10\text{ ms}$ | `update_rate: 100`<br>([imu.xacro](file:///home/quangtran/Projects/capstone_ros2/src/amr_description/urdf/imu.xacro#L44)) | The 100 Hz gyroscope detects sudden angular-velocity changes at slip onset or when starting turns, improving yaw drift compensation and removing phase delay. |
+| **Wheel Encoder (BLDC motor)** | **50.0 Hz** | $20\text{ ms}$ | `odom_publish_frequency: 50`<br>([gazebo.xacro](file:///home/quangtran/Projects/capstone_ros2/src/amr_description/urdf/gazebo.xacro#L30)) | The 20 ms wheel-feedback period provides sufficient velocity differentiation resolution without overloading STM32 interrupt queues or UART/CAN traffic to the ROS 2 computer. |
+| **EKF filter (`ekf_filter_node`)** | **50.0 Hz** | $20\text{ ms}$ | `frequency: 50.0`<br>([ekf.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_localization/config/ekf.yaml#L7)) | The EKF cycle matches 50 Hz wheel odometry, continuously supplying /odometry/filtered and odom -> base_footprint TF to the 10 Hz DWB controller. |
+| **2D LiDAR (RPLIDAR A2M8)** | **10.0 Hz** | $100\text{ ms}$ | `update_rate: 10`<br>([lidar.xacro](file:///home/quangtran/Projects/capstone_ros2/src/amr_description/urdf/lidar.xacro#L63)) | The RPLIDAR A2 head rotates at 10 revolutions/s (600 RPM). Its 100 ms scan gap motivates EKF at 50–100 Hz to interpolate robot pose between scans. |
 
-**Cơ chế hợp nhất đa tần số bất đồng bộ (Asynchronous Multi-rate Fusion):**  
-Node `ekf_node` (`robot_localization`) vận hành theo cơ chế bất đồng bộ dựa trên nhãn thời gian chuẩn (ROS 2 Header Timestamps):
-* Cứ mỗi **$10\text{ ms}$**, gói tin IMU ($100\text{ Hz}$) đưa vào sẽ kích hoạt ngay một chu kỳ hiệu chỉnh góc xoay $\psi$ và gia tốc $a_x$.
-* Cứ mỗi **$20\text{ ms}$**, gói tin Wheel Odom ($50\text{ Hz}$) đưa vào sẽ kích hoạt bước dự đoán động học và hiệu chỉnh vận tốc dài $v_x$.
-* Giữa 2 khung quét của LiDAR cách nhau $100\text{ ms}$, bộ lọc EKF đã thực thi **5 lần cập nhật từ Encoder** và **10 lần cập nhật từ IMU**, giúp trạng thái tư thế của robot luôn mượt mà và triệt tiêu hoàn toàn độ giật khi robot vào cua ở tốc độ cao.
+**Asynchronous multi-rate fusion:**
+The `ekf_node` (`robot_localization`) operates asynchronously using ROS 2 header timestamps:
+* Every **10 ms**, an incoming IMU packet (100 Hz) triggers correction of heading $\psi$ and acceleration $a_x$.
+* Every **20 ms**, an incoming wheel-odometry packet (50 Hz) triggers kinematic prediction and correction of linear velocity $v_x$.
+* Between LiDAR frames 100 ms apart, EKF performs **5 encoder updates** and **10 IMU updates**, smoothing pose and eliminating jerks during high-speed turns.
 
-#### b) Thiết lập thông số ROS 2 cho node `ekf_filter_node` ([ekf.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_localization/config/ekf.yaml))
+#### b) ROS 2 parameters for node `ekf_filter_node` ([ekf.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_localization/config/ekf.yaml))
 
-| Thông số cấu hình | Giá trị thiết lập | Lý do thiết kế & Căn cứ kỹ thuật |
+| Configuration parameter | Configured value | Design rationale and technical basis |
 | :--- | :--- | :--- |
-| `frequency` | `50.0` Hz | Tần số xuất dữ liệu tư thế lọc `/odometry/filtered` và phát TF liên tục ($20\text{ ms}$/lần), đồng bộ nhịp với Wheel Odometry và gấp 5 lần tần số của bộ điều khiển DWB ($10\text{ Hz}$). |
-| `two_d_mode` | `true` | Robot chỉ vận hành trên mặt bằng phẳng của sàn nhà hàng 2D ($z = 0$). Ép các bậc tự do ngoài mặt phẳng ($z, \text{roll}, \text{pitch}$) về 0 giúp triệt tiêu hoàn toàn sai số trôi trục thẳng đứng do rung xóc khi đi qua gờ ron gạch. |
-| `sensor_timeout` | `0.1` s | Nếu một cảm biến bị đứt kết nối hoặc trễ quá $100\text{ ms}$ (tương đương 5 chu kỳ lấy mẫu của encoder hoặc 10 chu kỳ của IMU), EKF sẽ tạm ngắt phép đo đó để tránh làm sai lệch ước lượng. |
-| `publish_tf` | `true` | Công bố phép biến đổi hệ tọa độ liên tục chuẩn REP-105: `odom -> base_footprint`. |
-| `odom0` (`/wheel/odom`) | `odom0_config`:<br>`[vx: true, vyaw: true]`<br>*(tất cả các trường khác `false`)* | **Chỉ lấy vận tốc vi sai:** Vận tốc dài tịnh tiến dọc trục $\dot{x} = v_x$ và vận tốc góc quay $\dot{\psi} = \omega_z$.<br>**Lý do cốt lõi:** Tuyệt đối **không** chọn tích phân vị trí tuyệt đối $(x, y)$ từ bánh xe; vì nếu bánh xe bị trượt quay tại chỗ khi va quệt, việc đọc tọa độ $(x, y)$ từ encoder sẽ làm sai số tích lũy vĩnh viễn không thể hồi phục. |
-| `imu0` (`/imu/data`) | `imu0_config`:<br>`[yaw: true, vyaw: true, ax: true]`<br>`imu0_relative: true`<br>`imu0_remove_gravitational_acceleration: true` | **Lấy góc hướng, tốc độ góc và gia tốc dài:**<br>1. Góc hướng $\psi$ và tốc độ góc $\dot{\psi} = \omega_z$ từ con quay hồi chuyển BNO055 ($100\text{ Hz}$) hoàn toàn độc lập với hiện tượng trượt bánh xe, khử triệt để hiện tượng xoay lệch hướng.<br>2. Gia tốc $a_x$ hỗ trợ phản ứng tức thời khi xe phanh khẩn cấp.<br>3. `imu0_relative: true` giúp đặt mốc hướng ban đầu về 0, và tự động khử gia tốc trọng trường $9.81\text{ m/s}^2$. |
-| `process_noise_covariance` ($Q$) | Đường chéo $15 \times 15$:<br>• $x, y, z: 0.01$<br>• $\text{roll}, \text{pitch}: 0.01$<br>• $\text{yaw}: 0.02$<br>• $v_x, v_y: 0.02$, $v_z: 0.01$<br>• $\dot{\psi} (\text{vyaw}): 0.02$<br>• $a_x, a_y, a_z: 0.01$ | Gán phương sai nhiễu quá trình của vận tốc dài $v_x$ và vận tốc góc quay $\dot{\psi}$ ở mức $0.02$ (lớn hơn vị trí $0.01$) nhằm phản ánh và bù trừ hiện tượng trượt vi mô (micro-slippage khoảng $1.5\% - 2.0\%$) của bánh PU trên mặt sàn gạch nhẵn bóng của nhà hàng. |
-| `initial_estimate_covariance` | $10^{-9}$ trên đường chéo | Tại thời điểm khởi động ban đầu ($t = 0$), robot đứng yên tuyệt đối tại trạm sạc/bếp ăn, độ bất định ban đầu được xem như xấp xỉ bằng 0. |
-| **Độ phân giải Encoder (PPR) & Tỉ số truyền** | **Chưa có trên phần cứng thực tế** | *Trong môi trường mô phỏng Gazebo Harmonic:* Vận tốc bánh xe được đọc trực tiếp từ khớp xoay vật lý thông qua plugin `gz-sim-diff-drive-system`.<br>*Kế hoạch phần cứng thực tế:* Khi tích hợp vi điều khiển STM32 và động cơ BLDC thật, thông số số xung trên vòng (PPR) và tỉ số truyền hộp giảm tốc sẽ được xác định bằng thực nghiệm đo đếm xung để cấu hình chính xác vào bộ đếm ngắt timer của STM32. |
+| `frequency` | `50.0` Hz | Publishes filtered pose /odometry/filtered and TF every 20 ms, matching wheel odometry and running five times faster than DWB (10 Hz). |
+| `two_d_mode` | `true` | Constrains the robot to a flat 2D floor ($z=0$). Forcing $z$, roll, and pitch to zero removes vertical drift from vibrations at tile joints. |
+| `sensor_timeout` | `0.1` s | If a sensor disconnects or is delayed beyond 100 ms (five encoder or ten IMU periods), EKF temporarily stops using that measurement to avoid corrupting the estimate. |
+| `publish_tf` | `true` | Publishes the continuous REP-105 transform: `odom -> base_footprint`. |
+| `odom0` (`/wheel/odom`) | `odom0_config`:<br>`[vx: true, vyaw: true]`<br>*(all other fields `false`)* | **Differential velocities only:** Forward velocity $\dot{x}=v_x$ and yaw rate $\dot{\psi}=\omega_z$. Do not fuse absolute wheel-integrated $(x,y)$: slipping during contact could introduce permanent accumulated position error. |
+| `imu0` (`/imu/data`) | `imu0_config`:<br>`[yaw: true, vyaw: true, ax: true]`<br>`imu0_relative: true`<br>`imu0_remove_gravitational_acceleration: true` | **Heading, yaw rate, and forward acceleration:** BNO055 heading $\psi$ and yaw rate $\dot{\psi}=\omega_z$ (100 Hz) are independent of wheel slip and eliminate heading errors. Acceleration $a_x$ supports emergency braking. `imu0_relative: true` sets initial heading to zero and automatically removes gravitational acceleration of 9.81 m/s². |
+| `process_noise_covariance` ($Q$) | Diagonal $15 \times 15$:<br>• $x, y, z: 0.01$<br>• $\text{roll}, \text{pitch}: 0.01$<br>• $\text{yaw}: 0.02$<br>• $v_x, v_y: 0.02$, $v_z: 0.01$<br>• $\dot{\psi} (\text{vyaw}): 0.02$<br>• $a_x, a_y, a_z: 0.01$ | Velocity and yaw-rate process variances are 0.02, above position variance 0.01, to account for PU-wheel micro-slippage of approximately 1.5%–2.0% on smooth restaurant tiles. |
+| `initial_estimate_covariance` | $10^{-9}$ on the diagonal | At startup (t=0), the robot is stationary at the charging/kitchen station and initial uncertainty is treated as approximately zero. |
+| **Encoder resolution (PPR) and gear ratio** | **Not yet available on physical hardware** | *Gazebo Harmonic:* Wheel velocity is read directly from physical joints by `gz-sim-diff-drive-system`.<br>*Hardware plan:* Measure encoder pulses per revolution and gearbox ratio on the STM32/BLDC hardware to configure timer interrupt counters. |
 
 ---
 
-### 5.4.2. Lập bản đồ và Định vị
+### 5.4.2. Mapping and localization
 
-Quá trình điều hướng được chia thành 2 giai đoạn riêng biệt:
-*   **Giai đoạn 1 (Thiết lập):** Quét lập bản đồ tĩnh của nhà hàng bằng thuật toán đồ thị **SLAM Toolbox**.
-*   **Giai đoạn 2 (Vận hành):** Định vị robot trên bản đồ đã lưu bằng thuật toán lọc hạt thích nghi **Nav2 AMCL**.
+Navigation is divided into two separate phases:
+*   **Phase 1 (Setup):** Build the static restaurant map using graph-based **SLAM Toolbox**.
+*   **Phase 2 (Operation):** Localize the robot on the saved map using the adaptive particle filter **Nav2 AMCL**.
 
 ```mermaid
 graph TD
-    subgraph MappingPhase ["Giai đoạn 1: Quét bản đồ (SLAM Toolbox)"]
+    subgraph MappingPhase ["Phase 1: Mapping (SLAM Toolbox)"]
         Scan1["LiDAR 2D (/scan)"] --> CorrScan["Local Scan Matching<br/>(Ceres Solver Dogleg)"]
         Odom1["EKF (/odometry/filtered)"] --> CorrScan
-        CorrScan --> GraphOpt["Pose-Graph Optimization & Loop Closure<br/>(Khoảng cách tìm kiếm: 4.0m)"]
-        GraphOpt --> SaveMap[("Lưu bản đồ tĩnh Occupancy Grid<br/>restaurant.yaml / restaurant.pgm (0.05m/pixel)")]
+        CorrScan --> GraphOpt["Pose-Graph Optimization & Loop Closure<br/>(Search distance: 4.0m)"]
+        GraphOpt --> SaveMap[("Save static map Occupancy Grid<br/>restaurant.yaml / restaurant.pgm (0.05m/pixel)")]
     end
 
-    subgraph NavigationPhase ["Giai đoạn 2: Định vị tự hành (AMCL)"]
+    subgraph NavigationPhase ["Phase 2: Autonomous localization (AMCL)"]
         SaveMap --> MapServer["Nav2 Map Server"]
-        MapServer --> ParticleFilter["Bộ lọc hạt AMCL (KLD Sampling: 500 - 2000 hạt)"]
-        Scan2["LiDAR 2D (/scan)"] --> LikelihoodField["Likelihood Field Model (120 tia)"]
+        MapServer --> ParticleFilter["AMCL particle filter (KLD Sampling: 500 - 2000 particles)"]
+        Scan2["LiDAR 2D (/scan)"] --> LikelihoodField["Likelihood Field Model (120 beams)"]
         Odom2["EKF (/odometry/filtered)"] --> DiffMotion["Differential Motion Model (alpha: 0.2)"]
         DiffMotion --> ParticleFilter
         LikelihoodField --> ParticleFilter
-        ParticleFilter --> RobotPose["Tư thế Robot chính xác trên bản đồ<br/>Sai số vị trí < ±10mm tại bàn ăn"]
+        ParticleFilter --> RobotPose["Accurate robot pose on the map<br/>Position error < ±10mm at dining tables"]
     end
 ```
 
 #### a) SLAM (SLAM Toolbox)
 
-Mục tiêu của thuật toán SLAM là giải bài toán tối ưu hóa phân phối xác suất đồng thời có điều kiện giữa quỹ đạo trạng thái $q_{1:t}$ và cấu trúc bản đồ môi trường $m$:
+SLAM seeks the joint conditional probability of the state trajectory $q_{1:t}$ and environment map $m$:
 $$p(q_{1:t}, m \mid z_{1:t}, u_{1:t}) = p(q_{1:t} \mid z_{1:t}, u_{1:t}) \cdot p(m \mid q_{1:t}, z_{1:t})$$
 
-Bản đồ Occupancy Grid chia không gian thành các ô lưới xác suất:
-*   **Vùng trống (0 - màu trắng):** Lối đi an toàn giữa các dãy bàn.
-*   **Vùng chiếm chỗ (100 - màu đen):** Vách tường, chân bàn ăn, chân ghế tĩnh.
-*   **Vùng chưa xác định (-1 - màu xám):** Không gian bị che khuất hoặc vượt quá tầm đo LiDAR.
+The occupancy grid divides space into probabilistic cells:
+*   **Free (0, white):** Safe passages between dining rows.
+*   **Occupied (100, black):** Walls, table legs, and stationary chair legs.
+*   **Unknown (-1, gray):** Occluded space or regions beyond LiDAR range.
 
-##### Thiết lập thông số ROS 2 cho `slam_toolbox` ([slam_toolbox.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/slam_toolbox.yaml))
+##### ROS 2 parameters for `slam_toolbox` ([slam_toolbox.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/slam_toolbox.yaml))
 
-| Thông số cấu hình | Giá trị thiết lập | Lý do thiết kế & Căn cứ kỹ thuật |
+| Configuration parameter | Configured value | Design rationale and technical basis |
 | :--- | :--- | :--- |
-| `resolution` | `0.05` m ($5\text{ cm}$) | Cân bằng tối ưu giữa độ chi tiết hình học của vật cản nhỏ trong nhà hàng (chân bàn, chân ghế ăn đường kính $30 - 50\text{ mm}$) và dung lượng bộ nhớ Occupancy Grid cho diện tích $330 - 400\text{ m}^2$ (kích thước lưới khoảng $500 \times 400$ ô, tối ưu tài nguyên CPU). |
-| `solver_plugin` | `solver_plugins::CeresSolver` | Sử dụng thư viện tối ưu hóa phi tuyến Ceres Solver của Google để giải bài toán khớp đồ thị Pose-Graph. |
-| `ceres_linear_solver` | `SPARSE_NORMAL_CHOLESKY` | Khai thác tính chất ma trận thưa chuẩn Cholesky của đồ thị Pose-Graph, giúp thời gian tối ưu hóa mỗi chu kỳ kết thúc trong dưới $50\text{ ms}$. |
-| `ceres_preconditioner` | `SCHUR_JACOBI` | Tăng tốc độ hội tụ của thuật toán lặp khi xử lý các chuỗi vòng lặp quét cục bộ phức tạp. |
-| `ceres_trust_strategy` | `LEVENBERG_MARQUARDT` | Chiến lược vùng tin cậy phi tuyến kinh điển, giữ độ ổn định cao, chống hiện tượng nhảy nghiệm làm méo bản đồ khi robot xoay chuyển hướng. |
-| `min_laser_range` / `max_laser_range` | `0.15` m / `12.0` m | Khớp đúng dải đo phần cứng của RPLIDAR A2M8. Cắt bỏ vùng mù $< 0.15\text{ m}$ để triệt tiêu tia phản xạ vỏ xe và bao quát tầm nhìn sảnh tiệc $12\text{ m}$. |
-| `minimum_travel_distance` / `heading` | `0.10` m / `0.10` rad (~$5.7^\circ$) | Chỉ chèn node tư thế mới vào Pose-Graph khi robot tịnh tiến tối thiểu $10\text{ cm}$ hoặc xoay góc tối thiểu $5.7^\circ$, ngăn chặn hiện tượng phình to đồ thị khi robot đứng yên. |
-| `correlation_search_space_dimension` | `0.5` m | Không gian tìm kiếm tương quan quét cục bộ $\pm 0.5\text{ m}$ (độ phân giải `0.01` m), vừa đủ để bù sai số Odometry bánh xe trượt khi va chạm mà không làm tràn bộ nhớ đệm CPU. |
-| `do_loop_closing` | `true` | Bắt buộc bật tính năng đóng vòng lặp cho môi trường hành lang khép kín bao quanh các cụm bàn ăn. |
-| `loop_search_maximum_distance` | `4.0` m | Bao trọn độ rộng tối đa của các hành lang chính ($2.4\text{ m}$) và khoảng hở giữa các cụm bàn đảo, đảm bảo phát hiện khớp vòng lặp khi robot quay về trạm bếp. |
-| `loop_match_minimum_response_fine` | `0.45` | Ngưỡng tương quan kiểm tra vòng lặp khắt khe, ngăn ngừa hiện tượng đóng vòng lặp sai (false loop closure) do nhiều cụm bàn ghế trong nhà hàng có kết cấu hình học đồng dạng. |
+| `resolution` | `0.05` m ($5\text{ cm}$) | Balances 30–50 mm table/chair-leg detail with occupancy-grid memory for 330–400 m² (approximately 500 × 400 cells), optimizing CPU use. |
+| `solver_plugin` | `solver_plugins::CeresSolver` | Uses Google's Ceres nonlinear optimization library for pose-graph fitting. |
+| `ceres_linear_solver` | `SPARSE_NORMAL_CHOLESKY` | Exploits sparse Cholesky structure in the pose graph to complete each optimization cycle in under 50 ms. |
+| `ceres_preconditioner` | `SCHUR_JACOBI` | Accelerates iterative convergence for complex local scan-loop sequences. |
+| `ceres_trust_strategy` | `LEVENBERG_MARQUARDT` | A conventional nonlinear trust-region strategy for stability and preventing solution jumps that distort the map during turns. |
+| `min_laser_range` / `max_laser_range` | `0.15` m / `12.0` m | Matches the RPLIDAR A2M8 hardware range. Removes returns below 0.15 m from the body and covers the dining hall to 12 m. |
+| `minimum_travel_distance` / `heading` | `0.10` m / `0.10` rad (~$5.7^\circ$) | Adds pose-graph nodes only after 10 cm translation or approximately 5.7° rotation, preventing graph growth while stationary. |
+| `correlation_search_space_dimension` | `0.5` m | A local scan-correlation search region of ±0.5 m at 0.01 m resolution compensates collision-related odometry slip without excessive memory use. |
+| `do_loop_closing` | `true` | Enables loop closure for closed corridors around dining clusters. |
+| `loop_search_maximum_distance` | `4.0` m | Covers main corridors up to 2.4 m wide and gaps between islands to recognize loop closure when returning to the kitchen. |
+| `loop_match_minimum_response_fine` | `0.45` | A strict fine-correlation threshold prevents false loop closures between geometrically similar dining clusters. |
 
 #### b) AMCL (Adaptive Monte Carlo Localization)
 
-Sau khi bản đồ hoàn chỉnh được nạp vào hệ thống qua Nav2 Map Server, thuật toán AMCL ước lượng tọa độ toàn cục $(x, y, \psi)$ của robot:
-1.  **Khởi tạo hạt (Particle Initialization):** Phát tán đám mây hạt xác suất đại diện cho các giả thuyết vị trí khả dĩ.
-2.  **Cập nhật chuyển động (Motion Update):** Lan truyền vị trí từng hạt dựa trên vận tốc Odometry lọc từ EKF thông qua mô hình động học vi sai `nav2_amcl::DifferentialMotionModel`.
-3.  **Cập nhật đo lường (Measurement Update):** Đối chiếu chùm tia LiDAR thực tế với chùm tia mô phỏng từ vị trí từng hạt trên bản đồ tĩnh thông qua mô hình trường hợp lý Likelihood Field.
-4.  **Tái lấy mẫu thích nghi (Resampling via KLD-Sampling):** Thu hẹp số lượng hạt và tập trung quanh tọa độ thực tế, duy trì sai số định vị $<\pm 10\text{ mm}$ khi cập bàn ăn.
+After Nav2 Map Server loads the completed map, AMCL estimates the global robot pose $(x,y,\psi)$:
+1. **Particle initialization:** Distribute a particle cloud representing possible position hypotheses.
+2. **Motion update:** Propagate each particle using EKF-filtered odometry through `nav2_amcl::DifferentialMotionModel`.
+3. **Measurement update:** Compare actual LiDAR beams with predictions from each particle on the static map using the likelihood-field model.
+4. **Adaptive resampling (KLD sampling):** Reduce particle count and concentrate particles around the actual pose, maintaining localization error below $\pm 10\text{ mm}$ when docking at tables.
 
-##### Thiết lập thông số ROS 2 cho `nav2_amcl` ([nav2_params.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L6-L51))
+##### ROS 2 parameters for `nav2_amcl` ([nav2_params.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L6-L51))
 
-| Thông số cấu hình | Giá trị thiết lập | Lý do thiết kế & Căn cứ kỹ thuật |
+| Configuration parameter | Configured value | Design rationale and technical basis |
 | :--- | :--- | :--- |
-| `min_particles` / `max_particles` | `500` / `2000` | **Hiệu chỉnh từ thực nghiệm:** Trong môi trường nhà hàng đông đúc, khoảng $50 - 100$ hạt là quá ít, dễ làm mất dấu vị trí khi có khách đi lướt qua che khuất tầm nhìn. Ngưỡng cực đại $2000$ hạt đảm bảo khả năng tái định vị toàn cục (khi bị nhấc xe/bắt cóc), và KLD-sampling tự động giảm về $500$ hạt khi đã hội tụ để tiết kiệm tài nguyên CPU. |
-| `update_min_d` / `update_min_a` | `0.15` m / `0.10` rad (~$5.7^\circ$) | Robot chỉ kích hoạt chu kỳ cập nhật trọng số và tái lấy mẫu khi xe tịnh tiến $\ge 15\text{ cm}$ hoặc xoay góc $\ge 0.1\text{ rad}$, tránh làm suy thoái mây hạt (particle degeneracy) khi xe dừng đỗ trả đồ ăn tại bàn. |
-| `laser_model_type` | `"likelihood_field"` | Mô hình trường hợp lý Likelihood Field tính khoảng cách trực tiếp tới biên vật cản tĩnh mà không cần dò tia (ray-tracing), tính toán cực nhanh và êm ái hơn mô hình Beam Model. |
-| `max_beams` | `120` | Giảm số tia đánh giá từ $720$ tia xuống $120$ tia đều đặn (bước nhảy $3^\circ$/tia). Giảm $83\%$ tải xử lý tính toán mà vẫn đảm bảo độ tin cậy định vị hình học trong các góc phòng ăn. |
-| `robot_model_type` | `nav2_amcl::DifferentialMotionModel` | Mô hình động học vi sai chuyên biệt, đi kèm 5 hệ số nhiễu động học `alpha1 = alpha2 = alpha3 = alpha4 = alpha5 = 0.2` phản ánh độ trượt cơ học và độ đảo hướng của 4 bánh xe caster tự lựa. |
-| `z_hit` / `z_rand` / `sigma_hit` | `0.5` / `0.5` / `0.2` | Tỷ trọng mô hình đo lường dung hòa giữa xác suất trúng tia vật cản tĩnh ($0.5$) và nhiễu ngẫu nhiên từ khách hàng di chuyển ($0.5$), với độ lệch chuẩn $\sigma = 0.2\text{ m}$. |
+| `min_particles` / `max_particles` | `500` / `2000` | **Experimentally tuned:** 50–100 particles are insufficient in a busy restaurant with guests occluding the sensor. A maximum of 2000 supports global relocalization after kidnapping; KLD sampling reduces the count to 500 after convergence to save CPU. |
+| `update_min_d` / `update_min_a` | `0.15` m / `0.10` rad (~$5.7^\circ$) | Updates weights and resamples only after translation ≥15 cm or rotation ≥0.1 rad, avoiding particle degeneracy while parked for delivery. |
+| `laser_model_type` | `"likelihood_field"` | The likelihood field measures distance to static obstacle boundaries without ray tracing, providing faster, smoother computation than the beam model. |
+| `max_beams` | `120` | Reduces 720 beams to 120 evenly spaced beams (3° steps), reducing computation by 83% while retaining geometric localization reliability in dining-room corners. |
+| `robot_model_type` | `nav2_amcl::DifferentialMotionModel` | Differential-drive kinematics with five noise coefficients alpha1 = alpha2 = alpha3 = alpha4 = alpha5 = 0.2, representing mechanical slip and directional changes of four swivel casters. |
+| `z_hit` / `z_rand` / `sigma_hit` | `0.5` / `0.5` / `0.2` | Balances static-obstacle hits (0.5) with random noise from moving guests (0.5), using standard deviation sigma = 0.2 m. |
 
 ---
 
-### 5.4.3. Hoạch định đường đi toàn cục (Smac Planner 2D)
+### 5.4.3. Global path planning (Smac Planner 2D)
 
-Bản đồ tĩnh 2D thu được từ SLAM được chuyển đổi thành **Costmap** thông qua cơ chế lạm phát đa lớp (Static Layer, Obstacle Layer, Inflation Layer) để Smac Planner tìm kiếm lộ trình an toàn mà mép thân xe không va quệt vào bàn ghế.
+The static 2D SLAM map becomes a **costmap** through Static, Obstacle, and Inflation layers. Smac Planner searches for safe paths that prevent the body from striking tables and chairs.
 
 ```mermaid
 graph TD
-    StaticMapGrid["Bản đồ Tĩnh Lưới Ô Vuông (0.05m)"] --> InflationLayer["Lớp Lạm phát Inflation Layer<br/>r_inscribed = 0.30m | inflation_radius = 0.45m<br/>cost(d) = 253 * exp(-3.5 * (d - r_in))"]
+    StaticMapGrid["Static square-grid map (0.05m)"] --> InflationLayer["Inflation layer Inflation Layer<br/>r_inscribed = 0.30m | inflation_radius = 0.45m<br/>cost(d) = 253 * exp(-3.5 * (d - r_in))"]
     InflationLayer --> GlobalCostmap["Global Costmap (Cost: 0 -> 254)"]
-    
-    subgraph SmacSearch ["Giải thuật Smac Planner 2D (Cost-Aware A*)"]
-        StartGoal["Điểm Bắt đầu & Điểm Đích (Bàn ăn)"] --> MooreNeighborhood["Mở rộng lân cận 8 hướng (Moore Neighborhood)<br/>4 hướng thẳng (chi phí 1.0) & 4 hướng chéo (chi phí 1.414)"]
-        MooreNeighborhood --> HeuristicEval["Đánh giá hàm mục tiêu: f(n) = g(n) + h(n)<br/>Δg = Cost_move + 2.0 * CostMap(n_v)<br/>h(n) = Khoảng cách Euclidean"]
-        HeuristicEval --> OptimalPath["Quỹ đạo rời rạc tối ưu qua ô lưới"]
+
+    subgraph SmacSearch ["Smac Planner 2D algorithm (Cost-Aware A*)"]
+        StartGoal["Start and goal (dining table)"] --> MooreNeighborhood["Expand eight-connected neighbors (Moore Neighborhood)<br/>4 cardinal directions (cost 1.0) and 4 diagonals (cost 1.414)"]
+        MooreNeighborhood --> HeuristicEval["Evaluate objective: f(n) = g(n) + h(n)<br/>Δg = Cost_move + 2.0 * CostMap(n_v)<br/>h(n) = Euclidean distance"]
+        HeuristicEval --> OptimalPath["Optimal discrete grid path"]
     end
-    
+
     GlobalCostmap --> SmacSearch
-    OptimalPath --> GradientSmoother["Gradient Descent Path Smoother<br/>w_smooth = 0.3 | w_data = 0.2 | 1000 vòng lặp<br/>Khử góc gấp khúc 45/90 độ thành đường lượn mượt mà"]
-    GradientSmoother --> Nav2Path["Lộ trình Toàn cục Toàn diện gửi đến DWB Controller"]
+    OptimalPath --> GradientSmoother["Gradient Descent Path Smoother<br/>w_smooth = 0.3 | w_data = 0.2 | 1000 iterations<br/>Smooth sharp 45/90 degree corners into curves"]
+    GradientSmoother --> Nav2Path["Global path sent to DWB Controller"]
 ```
 
-#### a) Mô hình hình học thân xe và Cơ chế Lạm phát Costmap
+#### a) Body geometry and costmap inflation
 
-*   **Kích thước bao thân xe (URDF):** Chiều dài $L = 600\text{ mm} = 0.60\text{ m}$, Chiều rộng $W = 600\text{ mm} = 0.60\text{ m}$ (Khung vuông đối xứng).
-*   **Đa giác Footprint đối xứng qua tâm trục bánh chủ động (`base_link`):**
+*   **Body envelope (URDF):** Length $L = 600\text{ mm} = 0.60\text{ m}$, width $W = 600\text{ mm} = 0.60\text{ m}$ (symmetric square frame).
+*   **Footprint polygon symmetric about the drive axle center (`base_link`):**
     $$\text{footprint} = [[0.30, 0.30], [0.30, -0.30], [-0.30, -0.30], [-0.30, 0.30]]$$
-*   **Bán kính nội tiếp ($r_{\text{inscribed}}$):** Khoảng cách từ tâm đến mép hẹp nhất:
+*   **Inscribed radius ($r_{\text{inscribed}}$):** Distance from the center to the nearest body edge:
     $$r_{\text{inscribed}} = \frac{W}{2} = 0.30\text{ m}$$
-*   **Bán kính ngoại tiếp ($r_{\text{circumscribed}}$) & Vòng quay quét ($D_{\text{sweep}}$):**
-    *   Theo mô hình CAD Mesh thực tế (có bo tròn 4 góc $R_{\text{fillet}} = 50\text{ mm}$): $r_{\text{circumscribed}} = 0.4036\text{ m}$, đường kính quét vòng quay thực tế $D_{\text{sweep}} = 807.1\text{ mm} < 810\text{ mm}$ (giảm $161\text{ mm}$ so với xe chữ nhật cũ $968\text{ mm}$).
-    *   Theo đa giác 4 đỉnh vuông cấu hình trên Nav2: $r_{\text{circumscribed}} = \sqrt{0.30^2 + 0.30^2} \approx 0.4243\text{ m}$ ($D_{\text{sweep}} \approx 848.5\text{ mm}$). Việc dùng 4 đỉnh vuông tạo một lớp đệm an toàn dự phòng $+2.0\text{ cm}$ tại 4 góc nhọn khi robot xoay chuyển hướng.
-*   **Hàm suy giảm chi phí lạm phát số mũ:**
+*   **Circumscribed radius ($r_{\text{circumscribed}}$) and turning sweep ($D_{\text{sweep}}$):**
+    *   CAD mesh with four rounded corners ($R_{\text{fillet}} = 50\text{ mm}$): $r_{\text{circumscribed}} = 0.4036\text{ m}$ and $D_{\text{sweep}} = 807.1\text{ mm} < 810\text{ mm}$, a reduction of 161 mm from the previous rectangular robot (968 mm).
+    *   Nav2 square polygon: $r_{\text{circumscribed}} = \sqrt{0.30^2 + 0.30^2} \approx 0.4243\text{ m}$ ($D_{\text{sweep}} \approx 848.5\text{ mm}$). The square vertices provide an additional 2.0 cm margin at the corners during rotation.
+*   **Exponential inflation cost decay:**
     $$\text{cost}(d) = 253 \cdot e^{-\alpha (d - r_{\text{inscribed}})}$$
-    Trong đó $d$ là khoảng cách từ ô lưới đến vật thể gần nhất, $\alpha$ là hệ số suy giảm chi phí (`cost_scaling_factor`).
+    Here $d$ is distance from a cell to the nearest obstacle and $\alpha$ is the decay coefficient (`cost_scaling_factor`).
 
-#### b) Thuật toán tìm kiếm Smac Planner 2D (Cost-Aware A*)
+#### b) Smac Planner 2D search algorithm (Cost-Aware A*)
 
-Thuật toán duyệt trên không gian lưới tọa độ 2D sử dụng mô hình lân cận Moore (Moore neighborhood - 8 hướng kết nối: 4 hướng thẳng và 4 hướng chéo). Tại mỗi bước duyệt đồ thị, thuật toán chọn trạng thái kế tiếp có tổng hàm đánh giá nhỏ nhất:
+The search operates on a 2D grid with a Moore neighborhood: four cardinal and four diagonal connections. Each step selects the next state with the smallest total evaluation:
 $$f(n) = g(n) + h(n)$$
 
-Trong đó:
-*   $g(n)$ **(Chi phí tích lũy thực tế):** Khi di chuyển từ ô $n_u$ sang ô lân cận $n_v$:
+Where:
+*   $g(n)$ **(Accumulated cost):** Moving from cell $n_u$ to neighboring cell $n_v$:
     $$\Delta g(n_u, n_v) = Cost_{\text{move}}(n_u, n_v) + \omega_c \cdot CostMap(n_v)$$
-    *   $Cost_{\text{move}}$: Chi phí hình học cơ bản ($1.0$ cho hướng thẳng, $\sqrt{2} \approx 1.414$ cho hướng chéo).
-    *   $\omega_c$: Trọng số phạt rủi ro (`cost_travel_multiplier = 5.0`).
-    *   $CostMap(n_v)$: Giá trị chi phí của ô lưới trên bản đồ lạm phát, đóng vai trò tạo lực đẩy ép quỹ đạo ra xa chân bàn ghế và bám theo tim đường hành lang.
-*   $h(n)$ **(Hàm Heuristic Euclidean):** Ước lượng khoảng cách đường chim bay đến vị trí đích:
+    *   $Cost_{\text{move}}$: Base geometric cost (1.0 for cardinal moves, $\sqrt{2} \approx 1.414$ for diagonal moves).
+    *   $\omega_c$: Risk penalty weight (`cost_travel_multiplier = 5.0`).
+    *   $CostMap(n_v)$: Inflated cell cost pushes paths away from table/chair legs and toward corridor centers.
+*   $h(n)$ **(Euclidean heuristic):** Straight-line distance estimate to the goal:
     $$h(n) = \sqrt{(x_{\text{goal}} - x_n)^2 + (y_{\text{goal}} - y_n)^2}$$
-*   **Bộ làm mượt hạ độ dốc (Gradient Descent Path Smoother):** Tối ưu hóa đa mục tiêu giữa độ trơn cung lượn ($w_{\text{smooth}}$) và độ bám sát nút lưới $A^*$ ban đầu ($w_{\text{data}}$):
+*   **Gradient Descent Path Smoother:** Balances curve smoothness ($w_{\text{smooth}}$) against adherence to the original A* grid points ($w_{\text{data}}$):
     $$J = w_{\text{data}} \sum \|x_i - x_i^0\|^2 + w_{\text{smooth}} \sum \|x_{i+1} - 2x_i + x_{i-1}\|^2$$
 
-##### Thiết lập thông số ROS 2 cho Costmap và Smac Planner 2D ([nav2_params.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L188-L247))
+##### ROS 2 parameters for Costmap and Smac Planner 2D ([nav2_params.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L188-L247))
 
-| Thông số cấu hình | Giá trị thiết lập | Lý do thiết kế & Căn cứ kỹ thuật |
+| Configuration parameter | Configured value | Design rationale and technical basis |
 | :--- | :--- | :--- |
-| `global_costmap -> inflation_radius` | `0.45` m | **Hiệu chỉnh theo hình học xe vuông:** $0.45\text{ m} > r_{\text{circumscribed}} \approx 0.4243\text{ m}$ (đa giác 4 đỉnh) và $> 0.4036\text{ m}$ (CAD mesh $807\text{ mm}$), đảm bảo phủ trọn vẹn bán kính quay của thân xe, tránh cảnh báo thiếu bán kính lạm phát và đẩy đường đi toàn cục ra giữa hành lang. |
-| `global_costmap -> cost_scaling_factor` ($\alpha$) | `3.5` $\text{m}^{-1}$ | Độ dốc suy giảm chi phí $e^{-3.5(d - 0.30)}$. Đảm bảo chi phí giảm hợp lý khi ra xa mép bàn, không gây nghẽn đường (choke-point) khi robot phải lách qua các cửa phòng hẹp $1.0 - 1.1\text{ m}$. |
-| `local_costmap -> inflation_radius` | `0.36` m | Bán kính lạm phát cục bộ được đặt bằng $r_{\text{inscribed}} + 0.06\text{ m} = 0.36\text{ m}$ để bộ điều khiển DWB có thể tự do tìm kiếm các quỹ đạo bám sát không gian thực tế mà không bị hiệu ứng "tường vô hình" ngăn cản việc len lỏi vào các khe bàn ăn chật hẹp ($1.0\text{ m}$). |
-| `local_costmap -> cost_scaling_factor` | `5.0` $\text{m}^{-1}$ | Độ dốc chi phí cục bộ cao hơn nhằm kích hoạt phản ứng phanh né tránh dứt khoát khi có thực khách bất ngờ bước tới gần thân xe. |
-| `planner_server -> plugin` | `"nav2_smac_planner::SmacPlanner2D"` | Lựa chọn tối ưu sau khi kiểm chứng thực tế: Loại bỏ hiện tượng bo góc cắt tường của `NavfnPlanner` và triệt tiêu các vòng cua chữ U (U-turn loop) không cần thiết của `SmacPlannerLattice`, cho phép robot vi sai tận dụng lợi thế quay tại chỗ ($R = 0$) để chuyển hướng. |
-| `cost_travel_multiplier` ($\omega_c$) | `5.0` | Tăng trọng số chi phí vật cản ô lưới, ưu tiên chọn lộ trình thoáng đãng ở giữa sảnh thay vì chọn đường ngắn nhất nhưng bám sát mép bàn ghế. |
-| `tolerance` | `0.5` m | Dung sai chấp nhận vị trí đích. Cho phép robot lập kế hoạch dừng phục vụ ngay cạnh bàn ăn kể cả khi vị trí mục tiêu lý thuyết bị ghế hoặc chân khách lấn chiếm nhẹ. |
-| `allow_unknown` | `true` | Cho phép hoạch định xuyên qua vùng xám chưa quan sát (ví dụ góc khuất sau vách ngăn khi mới khởi động), tránh việc robot từ chối lập đường đi (`failed to compute path`). |
-| `smoother -> w_smooth` / `w_data` | `0.3` / `0.2` | Tỉ lệ trọng số làm mượt: Nắn các góc cua gấp $45^\circ / 90^\circ$ của lưới ô vuông thành các đường lượn tiếp tuyến trơn tru, giúp bộ điều khiển DWB bám quỹ đạo mà không bị giật khựng. |
+| `global_costmap -> inflation_radius` | `0.45` m | **Square-body geometry:** 0.45 m exceeds the square polygon radius (approximately 0.4243 m) and CAD radius (0.4036 m, 807 mm sweep), covering the turning body, avoiding insufficient-inflation warnings, and moving global paths toward corridor centers. |
+| `global_costmap -> cost_scaling_factor` ($\alpha$) | `3.5` $\text{m}^{-1}$ | Exponential decay e^(-3.5(d - 0.30)) reduces cost away from table edges without choking narrow 1.0–1.1 m doorways. |
+| `local_costmap -> inflation_radius` | `0.36` m | Sets local inflation to r_inscribed + 0.06 m = 0.36 m so DWB can search trajectories through real 1.0 m table gaps without an invisible-wall effect. |
+| `local_costmap -> cost_scaling_factor` | `5.0` $\text{m}^{-1}$ | A steeper local cost slope triggers decisive braking/avoidance when a guest suddenly approaches the body. |
+| `planner_server -> plugin` | `"nav2_smac_planner::SmacPlanner2D"` | Selected after practical validation: eliminates NavfnPlanner corner cutting and unnecessary SmacPlannerLattice U-turns, allowing differential-drive in-place turns (R=0). |
+| `cost_travel_multiplier` ($\omega_c$) | `5.0` | Increases grid obstacle-cost weight to favor open routes through the hall rather than shortest paths close to table/chair edges. |
+| `tolerance` | `0.5` m | Accepted goal-position tolerance allows planning a serving stop beside a table even if chairs or guests slightly obstruct the nominal target. |
+| `allow_unknown` | `true` | Allows planning through unknown gray regions, such as occluded partition corners at startup, avoiding failed-to-compute-path errors. |
+| `smoother -> w_smooth` / `w_data` | `0.3` / `0.2` | Smooths sharp 45°/90° grid corners into tangent curves, allowing DWB to track without abrupt motion. |
 
 ---
 
-### 5.4.4. Điều hướng cục bộ (Local Trajectory Planning - DWB Controller)
+### 5.4.4. Local navigation (Local Trajectory Planning - DWB Controller)
 
-Tại mỗi chu kỳ điều khiển $\Delta t = 0.1\text{ s}$ ($10\text{ Hz}$), thuật toán DWB thu hẹp không gian tìm kiếm thành một cửa sổ động Dynamic Window:
+At each control cycle $\Delta t = 0.1\text{ s}$ (10 Hz), DWB narrows the search to a dynamic window:
 $$V = V_m \cap V_d \cap V_a$$
 
 ```mermaid
 graph TD
-    CurrentState["Trạng thái Vận tốc Hiện tại (v_c, omega_c)"] --> DynamicWindow["Xác định Cửa sổ Động Dynamic Window V = V_m ∩ V_d ∩ V_a<br/>• Cơ khí: v ∈ [0.0, 0.6] m/s, omega ∈ [-0.8, 0.8] rad/s (Tiến thuần túy)<br/>• Gia tốc Anti-Spill: |a_x| ≤ 0.4 m/s², |alpha_z| ≤ 0.6 rad/s²"]
-    DynamicWindow --> Discretization["Rời rạc hóa Cặp vận tốc Ứng viên (v_i, omega_j)<br/>20 mẫu v_x × 1 mẫu v_y × 25 mẫu omega_z = 500 quỹ đạo"]
-    Discretization --> Rollout["Mô phỏng Quỹ đạo Rollout (T_sim = 1.5s)"]
-    Rollout --> CriticsEvaluation["Đánh giá Chấm điểm Critics:<br/>- PathAlign (32.0): Xoay tại chỗ bám tiếp tuyến<br/>- RotateToGoal (32.0): Xoay đúng hướng bàn ăn<br/>- PathDist (12.0) & GoalDist (8.0)<br/>- BaseObstacle / Footprint (0.01): Loại bỏ va chạm<br/>- Oscillation (0.2): Chống rung lắc"]
-    CriticsEvaluation --> OptimalCmd["Chọn Cặp Vận tốc Tối ưu (v*, omega*)"]
-    OptimalCmd --> InverseKinematics["Động học Nghịch Khớp Bánh xe (r = 0.075m, b = 0.500m)<br/>omega_R* = (v* + 0.25 omega*) / 0.075<br/>omega_L* = (v* - 0.25 omega*) / 0.075"]
-    InverseKinematics --> ActuatorOutput["Gửi lệnh vận tốc tới STM32 / Gazebo Diff-Drive"]
+    CurrentState["Current velocity state (v_c, omega_c)"] --> DynamicWindow["Determine dynamic window V = V_m ∩ V_d ∩ V_a<br/>• Mechanical limits: v ∈ [0.0, 0.6] m/s, omega ∈ [-0.8, 0.8] rad/s (Forward only)<br/>• Anti-spill acceleration: |a_x| ≤ 0.4 m/s², |alpha_z| ≤ 0.6 rad/s²"]
+    DynamicWindow --> Discretization["Discretize candidate velocity pairs (v_i, omega_j)<br/>20 samples v_x × 1 samples v_y × 25 samples omega_z = 500 trajectories"]
+    Discretization --> Rollout["Trajectory rollout simulation (T_sim = 1.5s)"]
+    Rollout --> CriticsEvaluation["Critic scoring:<br/>- PathAlign (32.0): In-place tangent alignment<br/>- RotateToGoal (32.0): Align heading with dining table<br/>- PathDist (12.0) & GoalDist (8.0)<br/>- BaseObstacle / Footprint (0.01): Reject collisions<br/>- Oscillation (0.2): Suppress oscillation"]
+    CriticsEvaluation --> OptimalCmd["Select optimal velocity pair (v*, omega*)"]
+    OptimalCmd --> InverseKinematics["Wheel-joint inverse kinematics (r = 0.075m, b = 0.500m)<br/>omega_R* = (v* + 0.25 omega*) / 0.075<br/>omega_L* = (v* - 0.25 omega*) / 0.075"]
+    InverseKinematics --> ActuatorOutput["Send velocity command to STM32 / Gazebo Diff-Drive"]
 ```
 
-#### a) Các ràng buộc không gian Dynamic Window
+#### a) Dynamic-window constraints
 
-1.  **Ràng buộc cơ khí & An toàn cảm biến ($V_m$):**
+1.  **Mechanical and sensor safety constraints ($V_m$):**
     $$V_m = \{(v, \omega) \mid v_{\min} \le v \le v_{\max}, \; \omega_{\min} \le \omega \le \omega_{\max}\}$$
-    *   $v_{\min} = 0.0\text{ m/s}$ (**Strictly Forward-Only**): Cảm biến LiDAR 2D được bố trí ở đầu xe ($x = +0.327\text{ m}$), phía sau xe bị che khuất hoàn toàn bởi 3 tầng khay thức ăn (điểm mù hoàn toàn). Do đó, chế độ tự hành **tuyệt đối cấm lùi xe** để phòng ngừa va chạm vào khách hàng hoặc tường phía sau.
-    *   $v_{\max} = 0.60\text{ m/s}$ ($2.16\text{ km/h}$): Tốc độ di chuyển an toàn trong nhà hàng, giữ cự ly phanh dừng khẩn cấp $< 0.45\text{ m}$.
-    *   $\omega_{\max} = 0.80\text{ rad/s}$ (~$45.8^\circ/\text{s}$): Khống chế gia tốc hướng tâm $a_{\text{lat}} = v \cdot \omega \le 0.40\text{ m/s}^2$ để chống sóng sánh trào đổ nước uống trên khay.
-2.  **Ràng buộc gia tốc chống đổ thức ăn ($V_d$ - Anti-Spill Limits):**
+    *   $v_{\min} = 0.0\text{ m/s}$ (**Strictly Forward-Only**): The front-mounted 2D LiDAR ($x = +0.327\text{ m}$) cannot see behind the three food trays. Autonomous reversing is prohibited to prevent collisions with guests or rear walls.
+    *   $v_{\max} = 0.60\text{ m/s}$ (2.16 km/h): Safe restaurant travel speed, keeping emergency stopping distance below 0.45 m.
+    *   $\omega_{\max} = 0.80\text{ rad/s}$ (approximately 45.8°/s): Limits lateral acceleration $a_{\text{lat}} = v \cdot \omega \le 0.40\text{ m/s}^2$ to prevent drinks spilling.
+2.  **Anti-spill acceleration constraints ($V_d$):**
     $$V_d = \{(v, \omega) \mid v \in [v_c - a_{\text{break}}\Delta t, \; v_c + a_{\text{acc}}\Delta t], \; \omega \in [\omega_c - \alpha_{\text{break}}\Delta t, \; \omega_c + \alpha_{\text{acc}}\Delta t]\}$$
-    *   Khống chế gia tốc dài: $a_{\text{acc}} = 0.40\text{ m/s}^2$, $a_{\text{break}} = 0.40\text{ m/s}^2$. Thân xe có tải trọng danh định $65\text{ kg}$ với trọng tâm thấp ($h \approx 0.16\text{ m}$ so với mặt đế), việc giới hạn gia tốc dưới $0.4\text{ m/s}^2$ giúp triệt tiêu hoàn toàn nguy cơ xô đổ thức ăn dạng lỏng (canh, súp).
-    *   Khống chế gia tốc góc: $\alpha_{\text{acc}} = 0.60\text{ rad/s}^2$, $\alpha_{\text{break}} = 0.60\text{ rad/s}^2$.
-3.  **Ràng buộc khoảng cách phanh dừng an toàn ($V_a$):**
-    Loại bỏ các quỹ đạo không thể dừng xe trước khi va chạm với vật cản ở khoảng cách đo được từ LiDAR.
+    *   Linear acceleration: $a_{\text{acc}} = 0.40\text{ m/s}^2$, $a_{\text{break}} = 0.40\text{ m/s}^2$. The nominal 65 kg robot has a low center of gravity ($h \approx 0.16\text{ m}$ above the base); limiting acceleration below 0.4 m/s² eliminates the risk of spilling liquids such as soup.
+    *   Angular acceleration: $\alpha_{\text{acc}} = 0.60\text{ rad/s}^2$, $\alpha_{\text{break}} = 0.60\text{ rad/s}^2$.
+3.  **Safe braking-distance constraints ($V_a$):**
+    Reject trajectories that cannot stop before colliding with obstacles at the LiDAR-measured distance.
 
-#### b) Rời rạc hóa và Chấm điểm Quỹ đạo (Trajectory Critics)
+#### b) Discretization and trajectory scoring (Trajectory Critics)
 
-Từ cửa sổ động $V$, DWB tạo ra $20 \times 1 \times 25 = 500$ cặp vận tốc ứng viên $(v_i, \omega_j)$. Mỗi cặp tạo ra một cung tròn dự đoán ngắn hạn trong khoảng thời gian $T_{\text{sim}} = 1.5\text{ s}$:
+From window $V$, DWB generates $20 \times 1 \times 25 = 500$ candidate velocity pairs $(v_i,\omega_j)$. Each pair predicts a short circular arc over $T_{\text{sim}} = 1.5\text{ s}$:
 $$\begin{cases} x(t+\delta t) = x(t) + v_i \cos\psi(t)\delta t \\ y(t+\delta t) = y(t) + v_i \sin\psi(t)\delta t \\ \psi(t+\delta t) = \psi(t) + \omega_j \delta t \end{cases}$$
 
-Tổng chi phí của một quỹ đạo được tính bằng tổng có trọng số:
+The total trajectory cost is a weighted sum:
 $$Cost(v, \omega) = \sum_{k} \omega_k Critic_k(v, \omega)$$
 
-##### Thiết lập thông số ROS 2 cho DWB Controller ([nav2_params.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L70-L155))
+##### ROS 2 parameters for DWB Controller ([nav2_params.yaml](file:///home/quangtran/Projects/capstone_ros2/src/amr_navigation/config/nav2_params.yaml#L70-L155))
 
-| Thông số cấu hình | Giá trị thiết lập | Lý do thiết kế & Căn cứ kỹ thuật |
+| Configuration parameter | Configured value | Design rationale and technical basis |
 | :--- | :--- | :--- |
-| `controller_frequency` | `10.0` Hz ($\Delta t = 0.1\text{ s}$) | Đồng bộ chính xác với tần số quét của cảm biến LiDAR ($10\text{ Hz}$), vừa đủ thời gian tính toán cho CPU, loại bỏ triệt để lỗi cảnh báo trễ nhịp điều khiển (`missed loop rate`). |
-| `min_vel_x` / `min_speed_xy` | `0.0` m/s | **Tuyệt đối cấm lùi xe tự hành:** Tránh điểm mù quang học phía sau khay thức ăn, bảo vệ an toàn cho thực khách trong nhà hàng. |
-| `max_vel_x` / `max_speed_xy` | `0.60` m/s | Giới hạn tốc độ phục vụ tối đa trong nhà hàng nhằm bảo đảm an toàn va chạm và chống xóc nảy đổ thức ăn. |
-| `max_vel_theta` | `0.80` rad/s | Hạn chế lực ly tâm khi vào cua, bảo vệ đồ uống và súp nóng trên khay 3 tầng. |
-| `acc_lim_x` / `decel_lim_x` | `0.40` m/s² / `-0.40` m/s² | Ràng buộc gia tốc động học chống đổ thức ăn (Anti-spill condition: $|a| \le 0.40\text{ m/s}^2$). |
-| `acc_lim_theta` / `decel_lim_theta` | `0.60` rad/s² / `-0.60` rad/s² | Hạn chế gia tốc góc, đảm bảo khởi động xoay êm ái, không gây giật quán tính cho khay đồ ăn. |
-| `vx_samples` / `vy_samples` / `vtheta_samples` | `20` / `1` / `25` | Tổng cộng $20 \times 1 \times 25 = 500$ quỹ đạo ứng viên (giảm $52\%$ số lượng mẫu so với mặc định 800 mẫu, tiết kiệm đáng kể CPU nhưng vẫn đảm bảo bước chia vận tốc mịn: $\Delta v_x = 0.03\text{ m/s}$, $\Delta \omega = 0.064\text{ rad/s}$). |
-| `sim_time` | `1.5` s | Tầm nhìn dự đoán trước $0.90\text{ m}$ (tại tốc độ $0.60\text{ m/s}$), vừa đủ để phản xạ trước người đi bộ cắt ngang mà không tốn tài nguyên tính toán quỹ đạo xa. |
-| `PathAlign.scale` | `32.0` (`forward_point_distance: 0.20` m) | Trọng số rất cao ($32.0$) cưỡng bức robot phải xoay tại chỗ đưa hướng mũi xe trùng với tiếp tuyến đường đi toàn cục ngay tại vạch xuất phát trước khi tiến thẳng. |
-| `RotateToGoal.scale` | `32.0` (`slowing_factor: 5.0`) | Tự động kích hoạt khi xe tiến vào vùng dung sai vị trí đích ($0.15\text{ m}$), điều khiển xoay hướng thân xe chuẩn xác vuông góc với bàn ăn để phục vụ khách. |
-| `PathDist.scale` / `GoalDist.scale` | `12.0` / `8.0` | Cân đối giữa việc giữ thân xe bám sát tim đường tham chiếu ($12.0$) và thúc đẩy xe tiến về phía trước ($8.0$). |
-| `GoalAlign.scale` | `0.0` | Tắt hoàn toàn (gán bằng 0) để tránh xung đột giằng co định hướng với `PathAlign` khi robot còn đang di chuyển trên đường. |
-| `BaseObstacle.scale` / `ObstacleFootprint.scale` | `0.01` / `0.01` | Kiểm tra va chạm hộp bao đa giác thân xe thực tế. Quỹ đạo có nguy cơ va chạm bị loại bỏ ngay lập tức nhờ cờ ngắt sớm `short_circuit_trajectory_evaluation: True`. |
-| `Oscillation.scale` | `0.2` (`x_only_threshold: 0.05` m/s) | Triệt tiêu hiện tượng đảo lắc tay lái qua lại khi robot len lỏi qua các khe bàn hẹp. |
-| **Lực kích hoạt Bumpers an toàn** | **Chưa có trên phần cứng thực tế** | *Trong mô phỏng Gazebo:* Va chạm được phát hiện bằng hình học vật lý bounding box.<br>*Kế hoạch phần cứng thực tế:* Khi gia công thanh cản cao su cơ khí phía trước và sau xe, lực ngưỡng đóng tiếp điểm ngắt khẩn cấp (E-Stop Bumper) $F_{\text{threshold}} \approx 10 - 20\text{ N}$ sẽ được hiệu chuẩn bằng lò xo hồi vị cơ học. |
+| `controller_frequency` | `10.0` Hz ($\Delta t = 0.1\text{ s}$) | Matches the 10 Hz LiDAR scan frequency, provides sufficient CPU computation time, and eliminates missed-loop-rate warnings. |
+| `min_vel_x` / `min_speed_xy` | `0.0` m/s | **Autonomous reversing prohibited:** Avoids the optical blind spot behind the food trays and protects restaurant guests. |
+| `max_vel_x` / `max_speed_xy` | `0.60` m/s | Limits maximum restaurant service speed for collision safety and to prevent food spilling from jolts. |
+| `max_vel_theta` | `0.80` rad/s | Limits centrifugal effects during turns to protect drinks and hot soup on the three trays. |
+| `acc_lim_x` / `decel_lim_x` | `0.40` m/s² / `-0.40` m/s² | Anti-spill kinematic acceleration constraint: $\lvert a\rvert \le 0.40\text{ m/s}^2$. |
+| `acc_lim_theta` / `decel_lim_theta` | `0.60` rad/s² / `-0.60` rad/s² | Limits angular acceleration for smooth rotation starts without inertial shocks to food trays. |
+| `vx_samples` / `vy_samples` / `vtheta_samples` | `20` / `1` / `25` | 20 × 1 × 25 = 500 candidates (52% fewer than the default 800), saving CPU while retaining fine velocity increments: Δvx = 0.03 m/s, Δomega = 0.064 rad/s. |
+| `sim_time` | `1.5` s | A 0.90 m prediction horizon at 0.60 m/s provides time to react to crossing pedestrians without computing unnecessarily distant trajectories. |
+| `PathAlign.scale` | `32.0` (`forward_point_distance: 0.20` m) | The high weight (32.0) forces initial in-place alignment of the robot heading with the global-path tangent before driving forward. |
+| `RotateToGoal.scale` | `32.0` (`slowing_factor: 5.0`) | Activates within the 0.15 m goal-position tolerance to rotate the body perpendicular to the dining table for service. |
+| `PathDist.scale` / `GoalDist.scale` | `12.0` / `8.0` | Balances tracking the reference-path centerline (12.0) with forward progress (8.0). |
+| `GoalAlign.scale` | `0.0` | Disabled (zero) to avoid competing orientation objectives with PathAlign while traveling. |
+| `BaseObstacle.scale` / `ObstacleFootprint.scale` | `0.01` / `0.01` | Checks the polygonal body envelope for collision. Dangerous trajectories are immediately rejected through short_circuit_trajectory_evaluation: True. |
+| `Oscillation.scale` | `0.2` (`x_only_threshold: 0.05` m/s) | Suppresses repeated steering reversals when navigating narrow table gaps. |
+| **Safety bumper activation force** | **Not yet available on physical hardware** | *Gazebo:* Collisions are detected using physical bounding-box geometry.<br>*Hardware plan:* Calibrate the front/rear rubber E-stop bumper contact force, approximately 10–20 N, using mechanical return springs. |
 
-#### c) Quy đổi Động học Nghịch tới cơ cấu chấp hành
+#### c) Inverse kinematic conversion for actuators
 
-Cặp vận tốc tối ưu $(v^*, \omega^*)$ có điểm chi phí thấp nhất được khối Động học nghịch (Inverse Kinematics) quy đổi thành vận tốc góc đặt cho hai bánh xe chủ động trái và phải $(\omega_L^*, \omega_R^*)$ theo các thông số hình học xe ($r = 0.075\text{ m}$, $b = 0.500\text{ m}$):
+The lowest-cost velocity pair $(v^*,\omega^*)$ is converted by inverse kinematics into angular setpoints for the two drive wheels:
 
 $$\begin{cases} \omega_R^* = \dfrac{2v^* + b\omega^*}{2r} = \dfrac{v^* + 0.25\omega^*}{0.075} \\[8pt] \omega_L^* = \dfrac{2v^* - b\omega^*}{2r} = \dfrac{v^* - 0.25\omega^*}{0.075} \end{cases}$$
 
-Tín hiệu này được xuất qua topic `/cmd_vel` để truyền đến vi điều khiển STM32 (hoặc plugin `gz-sim-diff-drive-system` trong mô phỏng Gazebo), khép kín vòng điều khiển chuyển động tự hành của robot AMR.
+The command is sent on `/cmd_vel` to the STM32 controller (or the `gz-sim-diff-drive-system` plugin in Gazebo), closing the kinematic control loop.
