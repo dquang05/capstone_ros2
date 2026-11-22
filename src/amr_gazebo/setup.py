@@ -38,6 +38,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'wheel_limiter = amr_gazebo.wheel_limiter_node:main',
         ],
     },
 )

@@ -182,6 +182,14 @@ def generate_launch_description():
         condition=IfCondition(spawn_robot)
     )
 
+    # Normal simulation commands pass through the wheel-space limiter.
+    wheel_limiter = Node(
+        package='amr_gazebo', executable='wheel_limiter',
+        name='wheel_limiter', output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
+        condition=IfCondition(spawn_robot),
+    )
+
     # ROS-Gz Bridge: Bidirectional topic translation (active when spawn_robot is true)
     bridge = Node(
         package='ros_gz_bridge',
@@ -204,6 +212,7 @@ def generate_launch_description():
             # Joint states (Encoder feedback)
             '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
         ],
+        remappings=[('/cmd_vel', '/cmd_vel_limited')],
         condition=IfCondition(spawn_robot)
     )
 
@@ -224,5 +233,6 @@ def generate_launch_description():
         gazebo_sim_gui,
         gazebo_sim_headless,
         spawn_amr,
+        wheel_limiter,
         bridge
     ])

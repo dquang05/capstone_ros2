@@ -18,6 +18,8 @@
       <render_engine>ogre2</render_engine>
     </plugin>
 
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+
     <!-- Sun Directional Light (Even, high visibility) -->
     <light type="directional" name="sun">
       <cast_shadows>false</cast_shadows>

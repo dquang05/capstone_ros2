@@ -19,10 +19,12 @@
     <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
       <left_joint>left_wheel_joint</left_joint>
       <right_joint>right_wheel_joint</right_joint>
-      <wheel_separation>${wheel_track}</wheel_separation>
+      <wheel_separation>${wheel_track * wheel_separation_multiplier}</wheel_separation>
       <wheel_radius>${wheel_radius}</wheel_radius>
-      <max_linear_acceleration>2.0</max_linear_acceleration>
-      <max_angular_acceleration>2.0</max_angular_acceleration>
+      <min_linear_acceleration>${-wheel_acceleration_limit}</min_linear_acceleration>
+      <max_linear_acceleration>${wheel_acceleration_limit}</max_linear_acceleration>
+      <min_angular_acceleration>${-2.0 * wheel_acceleration_limit / (wheel_track * wheel_separation_multiplier)}</min_angular_acceleration>
+      <max_angular_acceleration>${2.0 * wheel_acceleration_limit / (wheel_track * wheel_separation_multiplier)}</max_angular_acceleration>
       <topic>cmd_vel</topic>
       <odom_topic>wheel/odom</odom_topic>
       <frame_id>odom</frame_id>
@@ -34,9 +36,10 @@
   <!-- Ground Truth Odometry Publisher (for EKF Benchmarking against Ground Truth) -->
   <gazebo>
     <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
-      <odom_frame>odom</odom_frame>
+      <!-- Pose is the Gazebo model world pose; this is not EKF odom. -->
+      <odom_frame>world</odom_frame>
       <robot_base_frame>base_footprint</robot_base_frame>
-      <dimensions>2D</dimensions>
+      <dimensions>2</dimensions>
       <odom_topic>ground_truth/odom</odom_topic>
       <odom_publish_frequency>50</odom_publish_frequency>
     </plugin>

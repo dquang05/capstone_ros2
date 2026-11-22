@@ -26,3 +26,10 @@ dist/
 # Gazebo log files
 *.log
 ~/.gazebo/
+
+# Report files
+report/
+
+# Generated benchmark runs
+benchmark/
+scripts

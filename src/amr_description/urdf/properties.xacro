@@ -12,6 +12,10 @@
   <!-- Distance from robot center (Y-axis): 250mm (Track width = 500mm) -->
   <xacro:property name="wheel_y_offset" value="0.250"/>
   <xacro:property name="wheel_track"    value="${2.0 * wheel_y_offset}"/>
+  <!-- Gazebo contact calibration; does not change wheel geometry or joints. -->
+  <xacro:property name="wheel_separation_multiplier" value="1.10"/>
+  <!-- Tangential acceleration/deceleration magnitude of each driven wheel. -->
+  <xacro:property name="wheel_acceleration_limit" value="0.5"/>
 
   <!-- Passive Caster Wheels specifications (Ball transfer unit D = 50mm) -->
   <xacro:property name="caster_radius"   value="0.025"/>
